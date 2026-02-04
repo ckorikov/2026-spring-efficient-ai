@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<title>Вводное занятие — Effective AI 2026</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+	<!-- Reveal.js core -->
+	<link rel="stylesheet" href="sys/reset.css">
+	<link rel="stylesheet" href="sys/reveal.css">
+	<link rel="stylesheet" href="sys/theme/effective-ai.css" id="theme">
+	<link rel="stylesheet" href="sys/plugin/highlight/warm-paper.css">
+
+	<style>
+		/* Bloom's Pyramid */
+		.bloom-pyramid {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 4px;
+		}
+		.bloom-level {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 36px;
+			font-size: 13px;
+			font-weight: 500;
+			box-sizing: border-box;
+		}
+		.bloom-level.top {
+			border: 1.5px solid var(--r-accent);
+			color: var(--r-accent);
+		}
+		.bloom-level.bottom {
+			border: 1px solid var(--r-subtle);
+			color: var(--r-muted);
+		}
+	</style>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<!-- Persistent margin overlay -->
+			<div class="slide-margins">
+				<div class="slide-corner-tl"></div>
+				<div class="slide-corner-tr"></div>
+				<div class="slide-corner-bl"></div>
+				<div class="slide-corner-br"></div>
+			</div>
+
+			<!-- SLIDE 1 — Title -->
+			<section data-tl="Занятие 01 · 15" data-bl="4 февраля 2026">
+				<div class="slide-single align-left">
+					<h1 class="slide-title">О чём курс?</h1>
+					<p class="slide-subtitle text-muted">
+						Эффективные методы реализации моделей ИИ
+					</p>
+					<div class="author">
+						<div class="author-photo has-image">
+							<img src="assets/ck.jpeg" alt="Constantine Korikov"
+								 onerror="this.parentElement.classList.remove('has-image')">
+						</div>
+						<div>
+							<div class="author-name">Константин Кориков</div>
+							<div class="author-role">PhD, AI Research Engineer</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 2 — TOC -->
+			<section data-header="План">
+				<div class="slide-single align-center">
+					<div class="toc">
+						<div class="toc-item">
+							<span class="toc-title">Знакомство</span>
+							<span class="toc-page">15 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">ИИ в образовании</span>
+							<span class="toc-page">25 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Строим курс</span>
+							<span class="toc-page">35 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Формат курса</span>
+							<span class="toc-page">15 мин</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 3 — Divider: Знакомство -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Знакомство</h2>
+				</div>
+			</section>
+
+			<!-- SLIDE 4 — Три вопроса -->
+			<section data-header="Знакомство">
+				<div class="slide-single align-center">
+					<p style="font-size: 1.0em; max-width: 600px; text-align: left; line-height: 1.8;">
+						1. Как вас зовут?<br>
+						2. Когда вы впервые попробовали AI?<br>
+						3. Самый необычный опыт с AI?
+					</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 5 — Divider: ИИ в образовании -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>ИИ в образовании</h2>
+				</div>
+			</section>
+
+			<!-- SLIDE 6 — Таксономия Блума -->
+			<section data-header="Таксономия Блума">
+				<div class="slide-single align-center">
+					<div class="bloom-pyramid">
+						<div class="bloom-level top" style="width: 160px;">Создание</div>
+						<div class="bloom-level top" style="width: 210px;">Оценка</div>
+						<div class="bloom-level top" style="width: 260px;">Анализ</div>
+						<div class="bloom-level bottom" style="width: 310px;">Применение</div>
+						<div class="bloom-level bottom" style="width: 360px;">Понимание</div>
+						<div class="bloom-level bottom" style="width: 410px;">Знание</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 7 — Divider: Строим курс -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Строим курс</h2>
+				</div>
+			</section>
+
+			<!-- SLIDE 8 — Формат курса -->
+			<section data-header="Формат курса">
+				<div class="slide-single align-center">
+					<div class="subsections">
+						<div class="subsection">
+							<h3>Связь</h3>
+							<p>Telegram-группа для вопросов и объявлений</p>
+							<p>Материалы — на GitHub</p>
+						</div>
+						<div class="subsection">
+							<h3>Формат</h3>
+							<p>15 многоформатных занятий</p>
+							<p>Практика</p>
+						</div>
+						<div class="subsection">
+							<h3>Экзамен</h3>
+							<p>Верх таксономии Блума</p>
+							<p>Промежуточная оценка</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 9 — Final -->
+			<section data-header="" data-tr="" data-bl="">
+				<div class="slide-single align-center">
+					<p class="text-muted" style="font-size: 13px;">
+						<a href="mailto:constantine.korikov@gmail.com">constantine.korikov@gmail.com</a>
+					</p>
+				</div>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="sys/reveal.js"></script>
+	<script src="sys/plugin/notes/notes.js"></script>
+	<script src="sys/plugin/highlight/highlight.js"></script>
+	<script src="sys/slide-kit.js"></script>
+
+	<script>
+		SlideKit.configure({
+			tr: 'Effective AI 2026',
+			bl: 'Константин Кориков',
+			sub: 'Занятие 01'
+		});
+
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			center: false,
+			hash: true,
+			transition: 'fade',
+			plugins: [RevealNotes, RevealHighlight]
+		});
+	</script>
+</body>
+</html>

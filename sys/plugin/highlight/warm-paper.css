@@ -1,0 +1,107 @@
+/*
+ * Warm Paper — highlight.js theme for Effective AI 2026
+ *
+ * Light warm palette matching the beige slide background.
+ */
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: rgba(0, 0, 0, 0.03);
+  color: #2d2a26;
+}
+
+/* keywords, control flow */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-selector-id {
+  color: #9d4a30;
+  font-weight: 600;
+}
+
+/* function / class definitions */
+.hljs-title,
+.hljs-title.function_,
+.hljs-title.class_ {
+  color: #2d6a4f;
+  font-weight: 500;
+}
+
+/* strings */
+.hljs-string,
+.hljs-template-variable,
+.hljs-addition,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #4a7a5a;
+}
+
+/* numbers, constants */
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet {
+  color: #a05a5a;
+}
+
+/* built-in types, attributes */
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-type {
+  color: #4a6a8a;
+}
+
+/* comments, meta */
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+  color: #8a857d;
+  font-style: italic;
+}
+
+/* variables, parameters */
+.hljs-variable,
+.hljs-params {
+  color: #5a4a78;
+}
+
+/* operators, punctuation */
+.hljs-operator,
+.hljs-punctuation {
+  color: #7a5a3a;
+}
+
+/* tags (HTML/XML) */
+.hljs-tag,
+.hljs-name,
+.hljs-strong {
+  color: #9d4a30;
+}
+
+/* attributes */
+.hljs-attribute,
+.hljs-regexp,
+.hljs-link {
+  color: #5a5a7a;
+}
+
+/* deletion (diffs) */
+.hljs-deletion {
+  color: #a05a5a;
+}
+
+/* emphasis */
+.hljs-emphasis {
+  font-style: italic;
+}
+
+/* code blocks */
+.hljs-code {
+  color: #4a6a8a;
+}
+
+.hljs-class .hljs-title {
+  color: #2d6a4f;
+}
