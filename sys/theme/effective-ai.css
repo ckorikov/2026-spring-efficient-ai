@@ -421,6 +421,11 @@
   max-width: 100%;
 }
 
+.slide-single img,
+.slide-two-col img {
+  filter: grayscale(0.35) sepia(0.2) contrast(0.85) brightness(0.95);
+}
+
 .slide-single pre,
 .slide-two-col pre {
   width: 100%;
