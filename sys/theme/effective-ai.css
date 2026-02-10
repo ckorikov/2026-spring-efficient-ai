@@ -411,6 +411,30 @@
 .slide-two-col .col-left   { text-align: left;   align-self: center; }
 .slide-two-col .col-top    { text-align: left;   align-self: start;  }
 
+/* Override Reveal.js defaults — our padding already handles margins */
+.slide-single img,
+.slide-single video,
+.slide-single iframe,
+.slide-two-col img,
+.slide-two-col video,
+.slide-two-col iframe {
+  max-width: 100%;
+}
+
+.slide-single pre,
+.slide-two-col pre {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.slide-single blockquote,
+.slide-two-col blockquote {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
 /*********************************************
  * COMPONENT — author block
  *********************************************/
@@ -500,8 +524,17 @@
 }
 
 /*********************************************
- * COMPONENT — slide header (corner-tl variant)
+ * COMPONENT — slide header (in-section element)
  *********************************************/
+.slide-header {
+  position: absolute;
+  top: var(--margin-edge);
+  left: var(--content-x);
+  z-index: 5;
+  pointer-events: none;
+  text-align: right;
+}
+
 .slide-header-title {
   font-size: 16px;
   font-weight: 500;
@@ -659,4 +692,27 @@
   font-size: 13px;
   line-height: 1.6;
   color: var(--r-muted);
+}
+
+/*********************************************
+ * MOBILE — must be last to override components
+ *********************************************/
+@media (max-width: 1024px) {
+  .slide-margins {
+    display: none;
+  }
+
+  .slide-header {
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .slide-header-title {
+    font-size: 32px;
+  }
+
+  .slide-header-sub {
+    display: none;
+  }
 }
