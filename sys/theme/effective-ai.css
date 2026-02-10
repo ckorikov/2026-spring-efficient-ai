@@ -687,6 +687,12 @@
   flex: 1;
 }
 
+.subsection svg {
+  display: block;
+  margin: 0 auto 12px;
+  color: var(--r-accent);
+}
+
 .subsection h3 {
   font-size: 15px;
   font-weight: 500;
