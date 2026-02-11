@@ -706,6 +706,45 @@
 }
 
 /*********************************************
+ * COMPONENT — course timeline (3-phase)
+ *********************************************/
+.course-timeline {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+}
+
+.course-timeline .timeline-phase {
+  flex: 1;
+  border-top: 3px solid var(--r-accent);
+  padding-top: 16px;
+}
+
+.course-timeline .timeline-phase-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--r-main-color);
+  margin-bottom: 4px;
+}
+
+.course-timeline .timeline-phase-range {
+  font-size: 11px;
+  color: var(--r-muted);
+  margin-bottom: 12px;
+}
+
+.course-timeline .timeline-phase-body {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--r-muted);
+}
+
+.course-timeline .timeline-phase-body strong {
+  color: var(--r-main-color);
+  font-weight: 500;
+}
+
+/*********************************************
  * MOBILE — must be last to override components
  *********************************************/
 @media (max-width: 1024px) {
