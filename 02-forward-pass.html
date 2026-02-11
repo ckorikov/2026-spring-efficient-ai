@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Путь к forward pass — Effective AI 2026</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap"
+		rel="stylesheet">
+
+	<!-- Reveal.js core -->
+	<link rel="stylesheet" href="sys/reset.css">
+	<link rel="stylesheet" href="sys/reveal.css">
+	<link rel="stylesheet" href="sys/theme/effective-ai.css" id="theme">
+	<link rel="stylesheet" href="sys/plugin/highlight/warm-paper.css">
+
+	<!-- CodeMirror -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/gas/gas.min.js"></script>
+
+	<style>
+		.task-card {
+			border-left: 3px solid var(--r-accent);
+			padding: 12px 16px;
+			margin: 12px 0;
+			font-size: 13px;
+			line-height: 1.6;
+		}
+
+		.task-card p {
+			margin: 4px 0;
+		}
+
+		.score-table {
+			font-size: 12px;
+			margin: 16px 0;
+		}
+
+		.score-table td,
+		.score-table th {
+			padding: 6px 12px;
+			font-size: 12px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<!-- Persistent margin overlay -->
+			<div class="slide-margins">
+				<div class="slide-corner-tl"></div>
+				<div class="slide-corner-tr"></div>
+				<div class="slide-corner-bl"></div>
+				<div class="slide-corner-br"></div>
+			</div>
+
+			<!-- SLIDE 1 — Title -->
+			<section data-tl="Занятие 02 · 14" data-bl="11 февраля 2026">
+				<div class="slide-single align-left">
+					<h1 class="slide-title">Путь к forward pass</h1>
+					<p class="slide-subtitle text-muted">
+						Эффективные методы реализации моделей ИИ
+					</p>
+					<div class="author">
+						<div class="author-photo has-image">
+							<img src="assets/ck.jpeg" alt="Constantine Korikov"
+								onerror="this.parentElement.classList.remove('has-image')">
+						</div>
+						<div>
+							<div class="author-name">Константин Кориков</div>
+							<div class="author-role">PhD, AI Research Engineer</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 2 — TOC -->
+			<section data-header="План">
+				<div class="slide-single align-center">
+					<div class="toc">
+						<div class="toc-item">
+							<span class="toc-title">Симулятор: спецификация + демо</span>
+							<span class="toc-page">15 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Ассемблерная эстафета</span>
+							<span class="toc-page">35 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Домашнее задание</span>
+							<span class="toc-page">10 мин</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 3 — Divider: Симулятор -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Симулятор</h2>
+					<p class="divider-sub">8-bit CPU → forward pass трансформера</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 4 — Зачем симулятор -->
+			<section data-header="Зачем симулятор">
+				<div class="slide-single align-center">
+					<p style="font-size: 14px; max-width: 600px; text-align: center; line-height: 1.8;">
+						Чтобы понять <strong>квантизацию</strong> — нужно понимать биты.<br>
+						Чтобы понять <strong>Flash Attention</strong> — нужно понимать память.<br>
+						Чтобы понять <strong>оптимизацию</strong> — нужно считать руками.
+					</p>
+					<p class="text-muted" style="font-size: 12px; margin-top: 24px;">
+						Путь: 8-bit CPU → арифметика → float → матрицы → forward pass
+					</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 5 — Спецификация CPU -->
+			<section data-header="Спецификация">
+				<div class="slide-single align-center">
+					<div class="subsections">
+						<div class="subsection">
+							<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+								<rect x="4" y="4" width="16" height="16" rx="2"/>
+								<rect x="9" y="9" width="6" height="6"/>
+								<path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
+							</svg>
+							<h3>CPU</h3>
+							<p>8-bit, 4 регистра (A, B, C, D), SP, флаги Zero и Carry</p>
+						</div>
+						<div class="subsection">
+							<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+								<rect x="2" y="6" width="20" height="12" rx="2"/>
+								<path d="M6 12h4M14 12h4"/>
+							</svg>
+							<h3>Память</h3>
+							<p>256 байт общей памяти, консоль на 0xE8–0xFF (24 символа)</p>
+						</div>
+						<div class="subsection">
+							<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="12" cy="12" r="10"/>
+								<path d="M4.93 4.93l14.14 14.14"/>
+							</svg>
+							<h3>Чего нет</h3>
+							<p>Нет MUL, DIV, float. Умножение — только через сложение и сдвиги</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 6 — Hello World -->
+			<section data-init="codemirror" data-header="Hello World">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<textarea data-lang="gas">	MOV A, 232    ; console start
+	MOV B, hello  ; string ptr
+loop:
+	MOV C, [B]    ; load char
+	CMP C, 0      ; null?
+	JZ  done
+	MOV [A], C    ; print
+	INC A
+	INC B
+	JMP loop
+done:
+	HLT
+
+hello:
+	DB "Hello!"
+	DB 0</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Первая программа</p>
+						<p class="text-muted">
+							<span class="text-ink">MOV</span> — загрузка значения в регистр.
+							Квадратные скобки — чтение из памяти.
+						</p>
+						<p class="text-muted">
+							Консоль начинается с адреса <span class="text-ink">0xE8</span> (232).
+							Запись байта в этот диапазон выводит символ.
+						</p>
+						<p class="text-muted">
+							<span class="text-ink">DB</span> — директива данных,
+							размещает строку прямо в памяти программы.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 7 — Divider: Ассемблерная эстафета -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Ассемблерная эстафета</h2>
+					<p class="divider-sub">3 раунда · 2 команды · 35 минут</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 9 — Раунд 1: Обратный отсчёт -->
+			<section data-header="Раунд 1">
+				<div class="slide-single align-center">
+					<div class="task-card">
+						<p><strong>Обратный отсчёт</strong></p>
+						<p>Выведите в консоль: <code>5 4 3 2 1 0</code></p>
+						<p class="text-muted">Подсказка: ASCII код символа '0' = 48</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 10 — Раунд 2: Сумма массива -->
+			<section data-header="Раунд 2">
+				<div class="slide-single align-center">
+					<div class="task-card">
+						<p><strong>Сумма массива</strong></p>
+						<p>Массив из 5 чисел: 10, 20, 30, 15, 25</p>
+						<p>Посчитайте сумму (= 100) и выведите в консоль</p>
+						<p class="text-muted">Это и есть dot product — только без умножения</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 11 — Раунд 3: Умножение -->
+			<section data-header="Раунд 3">
+				<div class="slide-single align-center">
+					<div class="task-card">
+						<p><strong>Умножение без MUL</strong></p>
+						<p>Вычислите 7 × 6 и выведите результат (= 42)</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 12 — Divider: Домашнее задание -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Домашнее задание</h2>
+				</div>
+			</section>
+
+			<!-- SLIDE 14 — Final -->
+			<section data-header="" data-tr="" data-bl="">
+				<div class="slide-single align-center">
+					<p class="text-muted" style="font-size: 13px;">
+						<a href="mailto:constantine.korikov@gmail.com">constantine.korikov@gmail.com</a>
+					</p>
+				</div>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="sys/reveal.js"></script>
+	<script src="sys/plugin/notes/notes.js"></script>
+	<script src="sys/plugin/highlight/highlight.js"></script>
+	<script src="sys/slide-kit.js"></script>
+	<script src="sys/codemirror-kit.js"></script>
+
+	<script>
+		SlideKit.configure({
+			tr: 'Effective AI 2026',
+			bl: 'Константин Кориков',
+			sub: 'Занятие 02'
+		});
+
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			center: false,
+			hash: true,
+			transition: 'fade',
+			plugins: [RevealNotes, RevealHighlight]
+		});
+	</script>
+</body>
+
+</html>
