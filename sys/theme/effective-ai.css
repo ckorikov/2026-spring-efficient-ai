@@ -706,42 +706,89 @@
 }
 
 /*********************************************
- * COMPONENT — course timeline (3-phase)
+ * COMPONENT — course pipeline (timeline)
  *********************************************/
-.course-timeline {
+.course-pipeline {
+  position: relative;
   display: flex;
-  gap: 24px;
   width: 100%;
 }
 
-.course-timeline .timeline-phase {
-  flex: 1;
-  border-top: 3px solid var(--r-accent);
-  padding-top: 16px;
+/* Continuous horizontal line */
+.course-pipeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 30px;
+  height: 1px;
+  background: var(--r-main-color);
 }
 
-.course-timeline .timeline-phase-title {
-  font-size: 15px;
+.pipeline-segment {
+  position: relative;
+  padding-top: 44px;
+  min-width: 0;
+}
+
+/* Solid dot at left edge of each segment */
+.pipeline-segment::before,
+.pipeline-endpoint::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--r-main-color);
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* Range label centered above the line */
+.pipeline-range {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--r-muted);
+  white-space: nowrap;
+}
+
+.pipeline-step {
+  font-size: 13px;
   font-weight: 600;
   color: var(--r-main-color);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
-.course-timeline .timeline-phase-range {
+.pipeline-desc {
   font-size: 11px;
   color: var(--r-muted);
-  margin-bottom: 12px;
+  line-height: 1.5;
 }
 
-.course-timeline .timeline-phase-body {
-  font-size: 11px;
-  line-height: 1.6;
-  color: var(--r-muted);
+/* Final endpoint */
+.pipeline-endpoint {
+  position: relative;
+  flex: 0 0 auto;
+  min-width: 60px;
+  padding-top: 44px;
 }
 
-.course-timeline .timeline-phase-body strong {
-  color: var(--r-main-color);
-  font-weight: 500;
+/* Accent color for final point */
+.pipeline-accent::before {
+  background: var(--r-accent);
+}
+
+.pipeline-accent .pipeline-step,
+.pipeline-accent .pipeline-desc {
+  color: var(--r-accent);
 }
 
 /*********************************************
@@ -764,5 +811,43 @@
 
   .slide-header-sub {
     display: none;
+  }
+
+  .course-pipeline {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .course-pipeline::before {
+    display: none;
+  }
+
+  .pipeline-segment {
+    padding-top: 0;
+    padding-left: 24px;
+    padding-bottom: 20px;
+    border-left: 1px solid var(--r-main-color);
+    margin-left: 6px;
+  }
+
+  .pipeline-segment::before,
+  .pipeline-endpoint::before {
+    left: -6px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    transform: translateX(0);
+  }
+
+  .pipeline-range {
+    position: static;
+    text-align: left;
+    margin-bottom: 4px;
+  }
+
+  .pipeline-endpoint {
+    padding-top: 0;
+    padding-left: 24px;
+    margin-left: 6px;
   }
 }
