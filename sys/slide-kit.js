@@ -3,12 +3,14 @@
  */
 (function() {
 	var inits = {};
-	var defaults = { tr: '', bl: '', sub: '' };
+	var defaults = { tr: '', bl: '', sub: '', trUrl: '', blUrl: '' };
 
 	function configure(cfg) {
 		if (cfg.tr !== undefined) defaults.tr = cfg.tr;
 		if (cfg.bl !== undefined) defaults.bl = cfg.bl;
 		if (cfg.sub !== undefined) defaults.sub = cfg.sub;
+		if (cfg.trUrl !== undefined) defaults.trUrl = cfg.trUrl;
+		if (cfg.blUrl !== undefined) defaults.blUrl = cfg.blUrl;
 	}
 
 	function theme() {
@@ -23,6 +25,21 @@
 		};
 	}
 
+	function setCorner(el, text, url) {
+		if (text && url) {
+			var a = el.querySelector('a') || document.createElement('a');
+			a.href = url;
+			a.target = '_blank';
+			a.textContent = text;
+			a.onclick = function(e) { e.stopPropagation(); };
+			if (!a.parentNode) { el.textContent = ''; el.appendChild(a); }
+			el.style.pointerEvents = 'auto';
+		} else {
+			el.textContent = text;
+			el.style.pointerEvents = '';
+		}
+	}
+
 	function updateMargins(slide) {
 		var corners = {
 			tl: document.querySelector('.slide-margins .slide-corner-tl'),
@@ -34,25 +51,19 @@
 		// Top-left: data-tl (plain) or empty — structured header moved to .slide-header
 		var header = slide.getAttribute('data-header');
 		var dataTl = slide.getAttribute('data-tl');
-		if (header !== null) {
-			corners.tl.innerHTML = '';
-		} else if (dataTl !== null) {
-			corners.tl.textContent = dataTl;
-		} else {
-			corners.tl.innerHTML = '';
-		}
+		setCorner(corners.tl, (dataTl !== null && header === null) ? dataTl : '', '');
 
-		// Top-right: data-tr or default
+		// Top-right: data-tr or default (with optional link)
 		var dataTr = slide.getAttribute('data-tr');
-		corners.tr.textContent = dataTr !== null ? dataTr : defaults.tr;
+		setCorner(corners.tr, dataTr !== null ? dataTr : defaults.tr, dataTr === null ? defaults.trUrl : '');
 
-		// Bottom-left: data-bl or default
+		// Bottom-left: data-bl or default (with optional link)
 		var dataBl = slide.getAttribute('data-bl');
-		corners.bl.textContent = dataBl !== null ? dataBl : defaults.bl;
+		setCorner(corners.bl, dataBl !== null ? dataBl : defaults.bl, dataBl === null ? defaults.blUrl : '');
 
 		// Bottom-right: data-br or empty
 		var dataBr = slide.getAttribute('data-br');
-		corners.br.textContent = dataBr !== null ? dataBr : '';
+		setCorner(corners.br, dataBr !== null ? dataBr : '', '');
 
 		// In-section header — consistent across all viewports
 		updateSlideHeader(slide, header);
