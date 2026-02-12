@@ -729,6 +729,7 @@
   position: relative;
   padding-top: 44px;
   min-width: 0;
+  text-align: left;
 }
 
 /* Solid dot at left edge of each segment */
@@ -761,16 +762,19 @@
 }
 
 .pipeline-step {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--r-main-color);
-  margin-bottom: 2px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--r-muted);
+  margin-bottom: 4px;
 }
 
 .pipeline-desc {
-  font-size: 11px;
-  color: var(--r-muted);
-  line-height: 1.5;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--r-main-color);
+  line-height: 1.4;
 }
 
 /* Final endpoint */
@@ -781,6 +785,18 @@
   padding-top: 44px;
 }
 
+/* Mask line past the final dot */
+.pipeline-endpoint::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 0;
+  top: 29px;
+  height: 3px;
+  background: var(--r-background-color);
+  z-index: 1;
+}
+
 /* Accent color for final point */
 .pipeline-accent::before {
   background: var(--r-accent);
@@ -789,6 +805,18 @@
 .pipeline-accent .pipeline-step,
 .pipeline-accent .pipeline-desc {
   color: var(--r-accent);
+}
+
+.pipeline-topics {
+  margin-top: 12px;
+  font-size: 10px;
+  color: var(--r-muted);
+  line-height: 1.6;
+}
+
+.pipeline-step svg {
+  vertical-align: -2px;
+  margin-right: 3px;
 }
 
 /*********************************************
@@ -849,5 +877,9 @@
     padding-top: 0;
     padding-left: 24px;
     margin-left: 6px;
+  }
+
+  .pipeline-endpoint::after {
+    display: none;
   }
 }
