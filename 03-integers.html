@@ -37,6 +37,44 @@
 				calc(var(--content-x) - 20px)
 			);
 		}
+
+		.reveal .slides section.slide-method-cards .method-cards {
+			align-items: center;
+			justify-content: flex-start !important;
+			padding-top: 4px;
+		}
+
+		.reveal .slides section.slide-method-cards .encoded-value {
+			margin: 0;
+			font-size: 11px;
+			line-height: 1.35;
+			text-align: center;
+		}
+
+		.reveal .slides section.slide-method-cards .cards-board {
+			min-height: 190px;
+		}
+
+		.reveal .slides section.slide-method-cards .playing-card {
+			overflow: visible;
+			cursor: pointer;
+		}
+
+		.reveal .slides section.slide-method-cards .bit-label {
+			position: absolute;
+			top: -18px;
+			left: 50%;
+			transform: translateX(-50%);
+			font-size: 11px;
+			font-weight: 600;
+			line-height: 1;
+			color: var(--r-main-color);
+			pointer-events: none;
+		}
+
+		.reveal .slides section.slide-method-cards .bit-label.is-red {
+			color: var(--r-accent);
+		}
 	</style>
 
 </head>
@@ -141,13 +179,13 @@
 			</section>
 
 			<!-- SLIDE 7 — Метод 1: прямой код -->
-			<section class="slide-direct-code" data-header="Прямой код">
+			<section class="slide-direct-code slide-method-cards" data-header="Прямой код" data-code-method="direct">
 				<div class="slide-two-col cols-equal">
-					<div class="col-left" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-						<p class="text-muted" style="font-size: 11px; margin: 0;">Кодирование <span class="text-ink">-3</span> на 4 битах: <span class="text-ink">1011</span></p>
+					<div class="col-left method-cards" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+						<p class="text-muted encoded-value"></p>
 						<div class="cards-board" data-layout="spread" style="--card-width: 76px; gap: 6px;">
 							<div class="playing-card" data-rank="A" data-suit="hearts"></div>
-							<div class="playing-card" data-face="back"></div>
+							<div class="playing-card" data-face="back" data-rank="10" data-suit="spades"></div>
 							<div class="playing-card" data-rank="K" data-suit="spades"></div>
 							<div class="playing-card" data-rank="J" data-suit="spades"></div>
 						</div>
@@ -162,15 +200,15 @@
 			</section>
 
 			<!-- SLIDE 8 — Метод 2: обратный код -->
-			<section data-header="Обратный код">
+			<section class="slide-method-cards" data-header="Обратный код" data-code-method="ones">
 				<div class="slide-two-col cols-equal">
-					<div class="col-left" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-						<p class="text-muted" style="font-size: 11px; margin: 0;">Кодирование <span class="text-ink">-3</span> на 4 битах: <span class="text-ink">1100</span></p>
+					<div class="col-left method-cards" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+						<p class="text-muted encoded-value"></p>
 						<div class="cards-board" data-layout="spread" style="--card-width: 76px; gap: 6px;">
 							<div class="playing-card" data-rank="K" data-suit="hearts"></div>
 							<div class="playing-card" data-rank="A" data-suit="spades"></div>
-							<div class="playing-card" data-face="back"></div>
-							<div class="playing-card" data-face="back"></div>
+							<div class="playing-card" data-face="back" data-rank="Q" data-suit="spades"></div>
+							<div class="playing-card" data-face="back" data-rank="10" data-suit="clubs"></div>
 						</div>
 					</div>
 					<div class="col-left col-prose" style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
@@ -183,14 +221,14 @@
 			</section>
 
 			<!-- SLIDE 9 — Метод 3: дополнительный код -->
-			<section data-header="Дополнительный код">
+			<section class="slide-method-cards" data-header="Дополнительный код" data-code-method="twos">
 				<div class="slide-two-col cols-equal">
-					<div class="col-left" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-						<p class="text-muted" style="font-size: 11px; margin: 0;">Кодирование <span class="text-ink">-3</span> на 4 битах: <span class="text-ink">1101</span></p>
+					<div class="col-left method-cards" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+						<p class="text-muted encoded-value"></p>
 						<div class="cards-board" data-layout="spread" style="--card-width: 76px; gap: 6px;">
 							<div class="playing-card" data-rank="Q" data-suit="hearts"></div>
 							<div class="playing-card" data-rank="J" data-suit="spades"></div>
-							<div class="playing-card" data-face="back"></div>
+							<div class="playing-card" data-face="back" data-rank="10" data-suit="spades"></div>
 							<div class="playing-card" data-rank="A" data-suit="clubs"></div>
 						</div>
 					</div>
@@ -457,6 +495,127 @@ start:
 			transition: 'fade',
 			plugins: [RevealNotes, RevealHighlight]
 		});
+	</script>
+
+	<script>
+		(function () {
+			var RED_SUITS = { hearts: true, diamonds: true };
+			var SUIT_SYMBOLS = { spades: '♠', hearts: '♥', diamonds: '♦', clubs: '♣' };
+
+			function cardBit(card) {
+				return card.getAttribute('data-face') === 'back' ? 0 : 1;
+			}
+
+			function bitsToValue(bits, method) {
+				var raw = (bits[0] << 3) | (bits[1] << 2) | (bits[2] << 1) | bits[3];
+				if (method === 'direct') {
+					var sign = bits[0];
+					var mag = (bits[1] << 2) | (bits[2] << 1) | bits[3];
+					if (!sign) return mag;
+					return mag === 0 ? '-0' : -mag;
+				}
+				if (method === 'ones') {
+					if (!bits[0]) return raw;
+					var inv = (~raw) & 0b1111;
+					return inv === 0 ? '-0' : -inv;
+				}
+				if (method === 'twos') {
+					return bits[0] ? raw - 16 : raw;
+				}
+				return raw;
+			}
+
+			function ensureFrontVisual(card) {
+				var suit = card.getAttribute('data-suit') || 'spades';
+				card.setAttribute('data-suit', suit);
+				card.setAttribute('data-rank', card.getAttribute('data-rank') || 'A');
+				card.setAttribute('data-suit-symbol', SUIT_SYMBOLS[suit] || '♠');
+				if (!card.querySelector('.playing-card-center')) {
+					var center = document.createElement('div');
+					center.className = 'playing-card-center';
+					center.textContent = SUIT_SYMBOLS[suit] || '♠';
+					card.appendChild(center);
+				} else {
+					card.querySelector('.playing-card-center').textContent = SUIT_SYMBOLS[suit] || '♠';
+				}
+			}
+
+			function setBack(card) {
+				card.setAttribute('data-face', 'back');
+				card.removeAttribute('data-suit-symbol');
+			}
+
+			function setFront(card) {
+				card.removeAttribute('data-face');
+				ensureFrontVisual(card);
+			}
+
+			function updateSlide(slide) {
+				var board = slide.querySelector('.cards-board');
+				if (!board) return;
+
+				var cards = Array.prototype.slice.call(board.querySelectorAll('.playing-card'));
+				if (cards.length !== 4) return;
+
+				var bits = cards.map(cardBit);
+				var method = slide.getAttribute('data-code-method') || 'direct';
+				var value = bitsToValue(bits, method);
+				var label = slide.querySelector('.encoded-value');
+				if (label) {
+					label.innerHTML = 'Закодировано <span class="text-ink">' + value + '</span> на <span class="text-ink">4 битах</span>';
+				}
+
+				cards.forEach(function (card, index) {
+					var bitLabel = card.querySelector('.bit-label');
+					if (!bitLabel) {
+						bitLabel = document.createElement('span');
+						bitLabel.className = 'bit-label';
+						card.appendChild(bitLabel);
+					}
+					var suit = (card.getAttribute('data-suit') || '').toLowerCase();
+					bitLabel.textContent = String(bits[index]);
+					bitLabel.classList.toggle('is-red', !!RED_SUITS[suit]);
+				});
+			}
+
+			function initSlide(slide) {
+				if (!slide || slide.dataset.methodCardsReady === '1') return;
+				slide.dataset.methodCardsReady = '1';
+
+				var cards = slide.querySelectorAll('.cards-board .playing-card');
+				cards.forEach(function (card) {
+					ensureFrontVisual(card);
+					if (card.getAttribute('data-face') === 'back') {
+						setBack(card);
+					}
+					card.addEventListener('click', function () {
+						if (card.getAttribute('data-face') === 'back') {
+							setFront(card);
+						} else {
+							setBack(card);
+						}
+						updateSlide(slide);
+					});
+				});
+
+				updateSlide(slide);
+			}
+
+			function initAll() {
+				document.querySelectorAll('.slide-method-cards').forEach(initSlide);
+			}
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initAll);
+			} else {
+				initAll();
+			}
+
+			if (typeof Reveal !== 'undefined') {
+				Reveal.on('ready', function () { initAll(); });
+				Reveal.on('slidechanged', function (event) { initSlide(event.currentSlide); });
+			}
+		})();
 	</script>
 
 	<script>
