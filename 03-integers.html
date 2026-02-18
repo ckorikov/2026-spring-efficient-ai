@@ -28,6 +28,17 @@
 	<!-- GSAP -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
+	<style>
+		.reveal .slides section.slide-direct-code .slide-two-col {
+			clip-path: inset(
+				calc(var(--content-top) - 20px)
+				calc(var(--content-x) - 20px)
+				calc(var(--content-bottom) - 20px)
+				calc(var(--content-x) - 20px)
+			);
+		}
+	</style>
+
 </head>
 
 <body>
@@ -68,15 +79,15 @@
 					<div class="toc">
 						<div class="toc-item">
 							<span class="toc-title">Домашнее задание</span>
-							<span class="toc-page">5 мин</span>
+							<span class="toc-page">15 мин</span>
 						</div>
 						<div class="toc-item">
 							<span class="toc-title">Целые числа</span>
-							<span class="toc-page">25 мин</span>
+							<span class="toc-page">45 мин</span>
 						</div>
 						<div class="toc-item">
 							<span class="toc-title">Дробные числа</span>
-							<span class="toc-page">50 мин</span>
+							<span class="toc-page">20 мин</span>
 						</div>
 					</div>
 				</div>
@@ -129,8 +140,8 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 7 — Метод 1: знак-модуль -->
-			<section data-header="Знак-модуль">
+			<!-- SLIDE 7 — Метод 1: прямой код -->
+			<section class="slide-direct-code" data-header="Прямой код">
 				<div class="slide-two-col cols-equal">
 					<div class="col-left" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
 						<p class="text-muted" style="font-size: 11px; margin: 0;">Кодирование <span class="text-ink">-3</span> на 4 битах: <span class="text-ink">1011</span></p>
@@ -142,7 +153,7 @@
 						</div>
 					</div>
 					<div class="col-left col-prose" style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
-						<p class="col-prose-heading" style="margin-bottom: 2px;">Знак-модуль</p>
+						<p class="col-prose-heading" style="margin-bottom: 2px;">Прямой код</p>
 						<p class="text-muted" style="margin: 0;"><span class="text-ink">Плюсы:</span> максимально простая идея хранения знака и модуля.</p>
 						<p class="text-muted" style="margin: 0;"><span class="text-ink">Минусы:</span> два нуля (<span class="text-ink">+0</span> и <span class="text-ink">-0</span>), сложная логика вычитания.</p>
 						<p class="text-muted" style="margin: 0;">Вычитание: <span class="text-ink">3 - 1</span> = <span class="text-ink">0011 - 0001 = 0010</span> (через сравнение модулей).</p>
