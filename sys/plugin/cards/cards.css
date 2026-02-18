@@ -121,6 +121,23 @@
 	display: none;
 }
 
+/* Optional mode: cards as bits (enabled via data-bit-encoding="1") */
+.cards-board[data-bit-encoding="1"] .bit-label {
+	position: absolute;
+	top: -18px;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--r-main-color);
+	pointer-events: none;
+}
+
+.cards-board[data-bit-encoding="1"] .bit-label.is-red {
+	color: var(--r-accent);
+}
+
 @media (max-width: 1024px) {
 	.cards-board {
 		min-height: 180px;
