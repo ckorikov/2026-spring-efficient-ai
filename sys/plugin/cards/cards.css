@@ -1,0 +1,145 @@
+/*********************************************
+ * Playing Cards plugin
+ * Inspired by CSS card layout tricks
+ *********************************************/
+.cards-board {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
+	min-height: 240px;
+	width: 100%;
+	perspective: 1200px;
+}
+
+.cards-board[data-layout="fan"] {
+	gap: 0;
+}
+
+.cards-board[data-layout="stack"] {
+	gap: 0;
+}
+
+.playing-card {
+	position: relative;
+	width: var(--card-width, 112px);
+	height: calc(var(--card-width, 112px) * 1.4);
+	background: var(--r-background-color);
+	color: var(--r-main-color);
+	border: 1px solid var(--r-subtle);
+	border-radius: 10px;
+	box-shadow: 0 6px 16px color-mix(in srgb, var(--r-main-color) 12%, transparent);
+	transform-origin: center 88%;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	overflow: hidden;
+	flex: 0 0 auto;
+}
+
+.cards-board[data-layout="stack"] .playing-card {
+	margin-left: -72px;
+}
+
+.cards-board[data-layout="fan"] .playing-card {
+	margin-left: -52px;
+	transform: rotate(calc((var(--i) - (var(--count) - 1) / 2) * 8deg));
+}
+
+.cards-board[data-layout="fan"] .playing-card:first-child,
+.cards-board[data-layout="stack"] .playing-card:first-child {
+	margin-left: 0;
+}
+
+.cards-board[data-layout="spread"] .playing-card {
+	transform: rotate(calc((var(--i) - (var(--count) - 1) / 2) * 2deg));
+}
+
+.playing-card:hover {
+	z-index: 20;
+	transform: translateY(-10px) scale(1.03);
+	box-shadow: 0 10px 24px color-mix(in srgb, var(--r-main-color) 18%, transparent);
+}
+
+.cards-board[data-layout="fan"] .playing-card:hover {
+	transform: rotate(calc((var(--i) - (var(--count) - 1) / 2) * 8deg)) translateY(-10px) scale(1.03);
+}
+
+.cards-board[data-layout="spread"] .playing-card:hover {
+	transform: rotate(calc((var(--i) - (var(--count) - 1) / 2) * 2deg)) translateY(-10px) scale(1.03);
+}
+
+.playing-card::before,
+.playing-card::after {
+	position: absolute;
+	font-size: 13px;
+	line-height: 1.15;
+	white-space: pre;
+}
+
+.playing-card::before {
+	content: attr(data-rank) "\A" attr(data-suit-symbol);
+	left: 10px;
+	top: 8px;
+	color: var(--card-suit-color, var(--r-main-color));
+}
+
+.playing-card::after {
+	content: attr(data-rank) "\A" attr(data-suit-symbol);
+	right: 10px;
+	bottom: 8px;
+	color: var(--card-suit-color, var(--r-main-color));
+	transform: rotate(180deg);
+}
+
+.playing-card-center {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 36px;
+	font-weight: 500;
+	color: var(--card-suit-color, var(--r-main-color));
+	opacity: 0.85;
+}
+
+.playing-card[data-face="back"] {
+	background:
+		repeating-linear-gradient(
+			45deg,
+			color-mix(in srgb, var(--r-main-color) 14%, transparent) 0,
+			color-mix(in srgb, var(--r-main-color) 14%, transparent) 4px,
+			transparent 4px,
+			transparent 10px
+		),
+		var(--r-background-color);
+}
+
+.playing-card[data-face="back"]::before,
+.playing-card[data-face="back"]::after,
+.playing-card[data-face="back"] .playing-card-center {
+	display: none;
+}
+
+@media (max-width: 1024px) {
+	.cards-board {
+		min-height: 180px;
+	}
+
+	.playing-card {
+		width: var(--card-width-mobile, 84px);
+		height: calc(var(--card-width-mobile, 84px) * 1.4);
+	}
+
+	.playing-card-center {
+		font-size: 28px;
+	}
+
+	.cards-board[data-layout="fan"] .playing-card {
+		margin-left: -40px;
+	}
+
+	.cards-board[data-layout="stack"] .playing-card {
+		margin-left: -52px;
+	}
+}

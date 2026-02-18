@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Числа — Effective AI 2026</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap"
+		rel="stylesheet">
+
+	<!-- Reveal.js core -->
+	<link rel="stylesheet" href="sys/reset.css">
+	<link rel="stylesheet" href="sys/reveal.css">
+	<link rel="stylesheet" href="sys/theme/effective-ai.css" id="theme">
+	<link rel="stylesheet" href="sys/plugin/highlight/warm-paper.css">
+	<link rel="stylesheet" href="sys/plugin/cards/cards.css">
+
+	<!-- CodeMirror -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+
+	<!-- GSAP -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<!-- Persistent margin overlay -->
+			<div class="slide-margins">
+				<div class="slide-corner-tl"></div>
+				<div class="slide-corner-tr"></div>
+				<div class="slide-corner-bl"></div>
+				<div class="slide-corner-br"></div>
+			</div>
+
+			<!-- SLIDE 1 — Title -->
+			<section data-tl="Занятие 03 · 15" data-bl="18 февраля 2026">
+				<div class="slide-single align-left">
+					<h1 class="slide-title">Числа</h1>
+					<p class="slide-subtitle text-muted">
+						Эффективные методы реализации моделей ИИ
+					</p>
+					<div class="author">
+						<div class="author-photo has-image">
+							<img src="assets/ck.jpeg" alt="Constantine Korikov"
+								onerror="this.parentElement.classList.remove('has-image')">
+						</div>
+						<div>
+							<div class="author-name">Константин Кориков</div>
+							<div class="author-role">PhD, AI Research Engineer</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 2 — TOC -->
+			<section data-header="План">
+				<div class="slide-single align-center">
+					<div class="toc">
+						<div class="toc-item">
+							<span class="toc-title">Домашнее задание</span>
+							<span class="toc-page">5 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Целые числа</span>
+							<span class="toc-page">25 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Дробные числа</span>
+							<span class="toc-page">50 мин</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 3 — Divider: Домашнее задание -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Домашнее задание</h2>
+					<p class="divider-sub"><a href="02-simulator.html#8">Занятие 02</a></p>
+				</div>
+			</section>
+
+			<!-- SLIDE 4 — Divider: Целые числа -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Целые числа</h2>
+					<p class="divider-sub">Как считает CPU</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 5 — Сумматор -->
+			<section data-init="adder" data-header="Сумматор">
+				<div class="slide-single align-center">
+					<svg id="adder-svg" viewBox="0 0 600 420" style="width: 100%; max-width: 600px; font-family: 'IBM Plex Mono', monospace;"></svg>
+				</div>
+			</section>
+
+			<!-- SLIDE 6 — Бит и знак -->
+			<section data-header="Отрицательные числа">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left" style="display: flex; align-items: center; justify-content: center;">
+						<div class="cards-board" data-layout="spread" style="--card-width: 118px;">
+							<div class="playing-card" data-rank="2" data-suit="spades"></div>
+							<div class="playing-card" data-face="back"></div>
+						</div>
+					</div>
+					<div class="col-left col-prose" style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
+						<p class="col-prose-heading" style="font-size: 1.08em; line-height: 1.3; margin-bottom: 6px;">Как использовать отрицательные числа?</p>
+						<p class="text-muted" style="font-size: 0.92em; line-height: 1.55; margin: 0;">
+							1) Как кодировать знак: <span class="text-ink">1</span> и <span class="text-ink">0</span>?
+						</p>
+						<p class="text-muted" style="font-size: 0.92em; line-height: 1.55; margin: 0;">
+							2) Как выполнять вычитание?
+						</p>
+						<p class="text-muted" style="font-size: 0.92em; line-height: 1.55; margin: 0;">
+							3) Как представлять нуль?
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 7 — Метод 1: знак-модуль -->
+			<section data-header="Знак-модуль">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+						<p class="text-muted" style="font-size: 11px; margin: 0;">Кодирование <span class="text-ink">-3</span> на 4 битах: <span class="text-ink">1011</span></p>
+						<div class="cards-board" data-layout="spread" style="--card-width: 76px; gap: 6px;">
+							<div class="playing-card" data-rank="A" data-suit="hearts"></div>
+							<div class="playing-card" data-face="back"></div>
+							<div class="playing-card" data-rank="K" data-suit="spades"></div>
+							<div class="playing-card" data-rank="J" data-suit="spades"></div>
+						</div>
+					</div>
+					<div class="col-left col-prose" style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
+						<p class="col-prose-heading" style="margin-bottom: 2px;">Знак-модуль</p>
+						<p class="text-muted" style="margin: 0;"><span class="text-ink">Плюсы:</span> максимально простая идея хранения знака и модуля.</p>
+						<p class="text-muted" style="margin: 0;"><span class="text-ink">Минусы:</span> два нуля (<span class="text-ink">+0</span> и <span class="text-ink">-0</span>), сложная логика вычитания.</p>
+						<p class="text-muted" style="margin: 0;">Вычитание: <span class="text-ink">3 - 1</span> = <span class="text-ink">0011 - 0001 = 0010</span> (через сравнение модулей).</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 8 — Метод 2: обратный код -->
+			<section data-header="Обратный код">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+						<p class="text-muted" style="font-size: 11px; margin: 0;">Кодирование <span class="text-ink">-3</span> на 4 битах: <span class="text-ink">1100</span></p>
+						<div class="cards-board" data-layout="spread" style="--card-width: 76px; gap: 6px;">
+							<div class="playing-card" data-rank="K" data-suit="hearts"></div>
+							<div class="playing-card" data-rank="A" data-suit="spades"></div>
+							<div class="playing-card" data-face="back"></div>
+							<div class="playing-card" data-face="back"></div>
+						</div>
+					</div>
+					<div class="col-left col-prose" style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
+						<p class="col-prose-heading" style="margin-bottom: 2px;">Обратный код</p>
+						<p class="text-muted" style="margin: 0;"><span class="text-ink">Плюсы:</span> отрицательные значения получаются простой инверсией битов.</p>
+						<p class="text-muted" style="margin: 0;"><span class="text-ink">Минусы:</span> два нуля и обязательная коррекция end-around carry.</p>
+						<p class="text-muted" style="margin: 0;">Вычитание: <span class="text-ink">3 - 1 = 3 + (−1)</span>: <span class="text-ink">0011 + 1110 = 1 0001 → 0010</span>.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 9 — Метод 3: дополнительный код -->
+			<section data-header="Дополнительный код">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+						<p class="text-muted" style="font-size: 11px; margin: 0;">Кодирование <span class="text-ink">-3</span> на 4 битах: <span class="text-ink">1101</span></p>
+						<div class="cards-board" data-layout="spread" style="--card-width: 76px; gap: 6px;">
+							<div class="playing-card" data-rank="Q" data-suit="hearts"></div>
+							<div class="playing-card" data-rank="J" data-suit="spades"></div>
+							<div class="playing-card" data-face="back"></div>
+							<div class="playing-card" data-rank="A" data-suit="clubs"></div>
+						</div>
+					</div>
+					<div class="col-left col-prose" style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
+						<p class="col-prose-heading" style="margin-bottom: 2px;">Дополнительный код</p>
+						<p class="text-muted" style="margin: 0;"><span class="text-ink">Плюсы:</span> единая арифметика сложения/вычитания, только один ноль.</p>
+						<p class="text-muted" style="margin: 0;"><span class="text-ink">Минусы:</span> диапазон несимметричен по краям.</p>
+						<p class="text-muted" style="margin: 0;">Вычитание: <span class="text-ink">3 - 1 = 3 + (−1)</span>: <span class="text-ink">0011 + 1111 = 1 0010 → 0010</span>.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 10 — Divider: Дробные числа -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Дробные числа</h2>
+					<p class="divider-sub">От целого числа к фиксированной точке</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 11 — Рациональные дроби -->
+			<section data-header="Рациональные дроби">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<table style="font-size: 11px; width: 100%;">
+							<thead>
+								<tr>
+									<th>Запись</th>
+									<th>Смысл</th>
+									<th>Пример</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><strong>p / q</strong></td>
+									<td>Числитель и знаменатель</td>
+									<td>27 / 4</td>
+								</tr>
+								<tr>
+									<td><strong>Сокращение</strong></td>
+									<td>Делим p и q на НОД</td>
+									<td>42 / 56 → 3 / 4</td>
+								</tr>
+								<tr>
+									<td><strong>Знак</strong></td>
+									<td>Храним отдельно или в p</td>
+									<td>-7 / 3</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Пример: 27/4</p>
+						<p class="text-muted">
+							Сохраняем два целых: <span class="text-ink">p=27</span>, <span class="text-ink">q=4</span>.
+						</p>
+						<p class="text-muted">
+							Сложение: <span class="text-ink">a/b + c/d = (ad + bc) / bd</span>.
+						</p>
+						<p class="text-muted">
+							Плюс: точное представление дроби.<br>
+							Минус: знаменатель быстро растёт.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 12 — Фиксированная точка -->
+			<section data-header="Фиксированная точка">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<table style="font-size: 11px; width: 100%;">
+							<thead>
+								<tr>
+									<th>Формат</th>
+									<th>Идея</th>
+									<th>Пример</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><strong>Qm.n</strong></td>
+									<td>n бит под дробную часть</td>
+									<td>Q4.4</td>
+								</tr>
+								<tr>
+									<td><strong>Масштаб</strong></td>
+									<td>x = int / 2<sup>n</sup></td>
+									<td>108 / 16</td>
+								</tr>
+								<tr>
+									<td><strong>Операции</strong></td>
+									<td>Сложение как для int</td>
+									<td>быстро в CPU</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Пример: Q4.4 = 6.75</p>
+						<p class="text-muted">
+							Биты: <span class="text-ink">0110.1100</span>
+						</p>
+						<p class="text-muted">
+							Целая часть: <span class="text-ink">0110 = 6</span>
+						</p>
+						<p class="text-muted">
+							Дробная часть: <span class="text-ink">1100 = 0.75</span>
+						</p>
+						<p class="text-muted">
+							Итого: <span class="text-ink">6.75</span>
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 13 — Задание: ассемблер -->
+			<section data-init="codemirror" data-header="Задание">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<textarea data-lang="asm8">; Q4.4: a = 2.5 (0x28), b = 1.25 (0x14)
+JMP start
+
+a_val:
+	DB 0x28
+b_val:
+	DB 0x14
+
+start:
+	MOV A, [a_val]
+	MOV B, [b_val]
+
+	; ваш код здесь
+	; 1) получить c = a + b
+	; 2) получить d = a - b
+	; 3) сохранить c и d в память
+
+	HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Закодируем фиксированную точку на ассемблере</p>
+						<p class="text-muted">
+							Формат: <span class="text-ink">Q4.4</span>, 1 байт на число.
+						</p>
+						<p class="text-muted">
+							Реализуйте <span class="text-ink">сложение</span> и <span class="text-ink">вычитание</span>
+							двух Q4.4 чисел в регистрах без использования готового решения.
+						</p>
+						<p class="text-muted">
+							Проверка: <span class="text-ink">c = 3.75</span>, <span class="text-ink">d = 1.25</span>
+							после декодирования в десятичный вид.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 14 — Задание: умножение Q4.4 -->
+			<section data-init="codemirror" data-header="Задание">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<textarea data-lang="asm8">; Q4.4: a = 1.5 (0x18), b = 2.0 (0x20)
+JMP start
+
+a_val:
+	DB 0x18
+b_val:
+	DB 0x20
+res:
+	DB 0x00
+
+start:
+	MOV A, [a_val]
+	MOV B, [b_val]
+
+	; ваш код здесь
+	; 1) вычислить a * b в Q4.4
+	; 2) учесть масштаб (сдвиг вправо на 4)
+	; 3) сохранить результат в [res]
+
+	HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Умножение в фиксированной точке</p>
+						<p class="text-muted">
+							Формат: <span class="text-ink">Q4.4</span>.
+						</p>
+						<p class="text-muted">
+							Реализуйте умножение двух чисел и выполните нормализацию результата.
+						</p>
+						<p class="text-muted">
+							Проверка: после декодирования ожидается <span class="text-ink">3.0</span>.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 15 — Задание: расширение симулятора -->
+			<section data-header="Задание">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<table style="font-size: 11px; width: 100%;">
+							<thead>
+								<tr>
+									<th>Компонент</th>
+									<th>Что добавить</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr><td>Формат числа</td><td>Знак, экспонента, мантисса</td></tr>
+								<tr><td>Интерфейс</td><td>Переключатель int / fixed / float</td></tr>
+								<tr><td>Операции</td><td>Сложение и вычитание float</td></tr>
+								<tr><td>Отладка</td><td>Показ промежуточных шагов</td></tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Расширение симулятора под float</p>
+						<p class="text-muted">
+							Предложите архитектуру расширения симулятора для поддержки чисел с плавающей точкой.
+						</p>
+						<p class="text-muted">
+							Опишите: формат данных, минимальный набор операций и изменения UI.
+						</p>
+						<p class="text-muted">
+							Результат: короткий план реализации (3–5 шагов).
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 19 — Final -->
+			<section data-header="" data-tr="" data-bl="">
+				<div class="slide-single align-center">
+					<p class="text-muted" style="font-size: 13px;">
+						<a href="mailto:constantine.korikov@gmail.com">constantine.korikov@gmail.com</a>
+					</p>
+				</div>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="sys/reveal.js"></script>
+	<script src="sys/plugin/notes/notes.js"></script>
+	<script src="sys/plugin/highlight/highlight.js"></script>
+	<script src="sys/slide-kit.js"></script>
+	<script src="sys/codemirror-kit.js"></script>
+	<script src="sys/plugin/cards/cards.js"></script>
+
+	<script>
+		SlideKit.configure({
+			tr: 'Effective AI 2026',
+			trUrl: 'https://korikov.cc/teaching/2026-mipt-effective-ai-2026/',
+			bl: 'Константин Кориков',
+			blUrl: 'https://korikov.cc/about/',
+			sub: 'Занятие 03'
+		});
+
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			center: false,
+			hash: true,
+			transition: 'fade',
+			plugins: [RevealNotes, RevealHighlight]
+		});
+	</script>
+
+	<script>
+		// --- 4-bit Ripple-Carry Adder (adapted from adder.html) ---
+		(function() {
+			var sv;
+			var A=[0,0,0,0], B=[0,0,0,0], S=[0,0,0,0], C=new Array(5).fill(0);
+			var Cin=0;
+			var SUB='\u2080\u2081\u2082\u2083';
+
+			// Layout
+			var CX=[430,325,220,115];
+			var Ay=340, By=375, FAy=200, Sy=55;
+			var BW=24, BH=24, FAW=68, FAH=40;
+			var WA=-14, WB=14;
+
+			// Colors — warm paper palette
+			var OFF_W='#d5d0c8', OFF_B='#b5b0a8', OFF_T='#8a857d';
+			var ON_A='#9d4a30', ON_C='#a05a5a', ON_S='#2d6a4f';
+			var SRF='#edeae6', HATCH='#d0cbc3', DIM='#b5b0a8', FA_CLR='#4a6a8a';
+			var BG_A='#f5ece8', BG_C='#f0e4e4', BG_S='#e8f0ec';
+
+			function mk(t,a,p){var e=document.createElementNS('http://www.w3.org/2000/svg',t);for(var k in a)if(a.hasOwnProperty(k))e.setAttribute(k,a[k]);(p||sv).appendChild(e);return e}
+			function sA(id,k,v){var e=document.getElementById(id);if(e)e.setAttribute(k,v)}
+			function sT(id,t,f){var e=document.getElementById(id);if(e){e.textContent=t;e.setAttribute('fill',f)}}
+			function val(a){return a[0]+a[1]*2+a[2]*4+a[3]*8}
+
+			function init(slide) {
+				sv=slide.querySelector('#adder-svg');
+				if(!sv||sv._done)return;
+				sv._done=true;
+
+				// Hatch pattern
+				var defs=mk('defs',{});
+				var pat=mk('pattern',{id:'ah',width:'6',height:'6',patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
+				mk('line',{x1:'0',y1:'0',x2:'0',y2:'6',stroke:HATCH,'stroke-width':'0.7'},pat);
+
+				// Weight labels
+				for(var b=3;b>=0;b--)
+					mk('text',{x:CX[b],y:Ay-28,'text-anchor':'middle',fill:DIM,'font-size':'9'}).textContent='2'+['\u2070','\u00B9','\u00B2','\u00B3'][b];
+
+				// Row labels
+				mk('text',{x:CX[3]-50,y:Ay+6,'text-anchor':'end',fill:OFF_T,'font-size':'13','font-weight':'bold'}).textContent='A';
+				mk('text',{x:CX[3]-50,y:By+6,'text-anchor':'end',fill:OFF_T,'font-size':'13','font-weight':'bold'}).textContent='B';
+
+				// Per-bit elements
+				for(var b=0;b<4;b++){
+					var cx=CX[b], awX=cx+WA, bwX=cx+WB;
+
+					// Wires — exit from box centers
+					mk('line',{x1:awX,y1:Ay-BH/2,x2:awX,y2:FAy+FAH/2,stroke:OFF_W,'stroke-width':'1.8',id:'wA'+b});
+					mk('line',{x1:bwX,y1:By-BH/2,x2:bwX,y2:FAy+FAH/2,stroke:OFF_W,'stroke-width':'1.8',id:'wB'+b});
+					mk('line',{x1:cx,y1:FAy-FAH/2,x2:cx,y2:Sy+BH/2,stroke:OFF_W,'stroke-width':'1.8',id:'wS'+b});
+
+					// FA box with subscript label
+					mk('rect',{x:cx-FAW/2,y:FAy-FAH/2,width:FAW,height:FAH,rx:'5',fill:'url(#ah)',stroke:OFF_B,'stroke-width':'1.5',id:'fB'+b});
+					mk('text',{x:cx,y:FAy+4,'text-anchor':'middle','dominant-baseline':'middle',fill:OFF_T,'font-size':'11','font-weight':'bold',id:'fL'+b}).textContent='FA'+SUB[b];
+
+					// Input A — centered at awX
+					(function(bit,ax){
+						var g=mk('g',{cursor:'pointer'});
+						g.addEventListener('click',function(){A[bit]^=1;calc()});
+						mk('rect',{x:ax-BW/2,y:Ay-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'rA'+bit},g);
+						mk('text',{x:ax,y:Ay+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'tA'+bit},g).textContent='0';
+					})(b,awX);
+
+					// Input B — centered at bwX
+					(function(bit,bx){
+						var g=mk('g',{cursor:'pointer'});
+						g.addEventListener('click',function(){B[bit]^=1;calc()});
+						mk('rect',{x:bx-BW/2,y:By-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'rB'+bit},g);
+						mk('text',{x:bx,y:By+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'tB'+bit},g).textContent='0';
+					})(b,bwX);
+
+					// Sum output
+					mk('rect',{x:cx-BW/2,y:Sy-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'sB'+b});
+					mk('text',{x:cx,y:Sy+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'tS'+b}).textContent='0';
+					mk('text',{x:cx,y:Sy-18,'text-anchor':'middle',fill:DIM,'font-size':'8'}).textContent='S'+b;
+				}
+
+				// Carry chain — Cin
+				var cinX=CX[0]+FAW/2+35;
+				mk('line',{x1:CX[0]+FAW/2,y1:FAy,x2:cinX-BW/2-2,y2:FAy,stroke:OFF_W,'stroke-width':'1.8',id:'wCin'});
+				var gCin=mk('g',{cursor:'pointer'});
+				gCin.addEventListener('click',function(){Cin^=1;calc()});
+				mk('rect',{x:cinX-BW/2,y:FAy-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3','stroke-dasharray':'4 3',id:'rCin'},gCin);
+				mk('text',{x:cinX,y:FAy+5,'text-anchor':'middle',fill:OFF_T,'font-size':'13','font-weight':'800',id:'tCin'},gCin).textContent='0';
+				mk('text',{x:cinX,y:FAy-18,'text-anchor':'middle',fill:DIM,'font-size':'8'}).textContent='C\u1D62\u2099';
+
+				// Inter-FA carry wires
+				for(var i=0;i<3;i++){
+					var x1=CX[i]-FAW/2, x2=CX[i+1]+FAW/2;
+					mk('line',{x1:x1,y1:FAy,x2:x2,y2:FAy,stroke:OFF_W,'stroke-width':'1.8',id:'wC'+(i+1)});
+					mk('text',{x:(x1+x2)/2,y:FAy-9,'text-anchor':'middle',fill:DIM,'font-size':'7.5',id:'cL'+(i+1)}).textContent='C'+(i+1);
+				}
+
+				// Cout
+				var coTurnX=CX[3]-FAW/2-20;
+				mk('line',{x1:CX[3]-FAW/2,y1:FAy,x2:coTurnX,y2:FAy,stroke:OFF_W,'stroke-width':'1.8',id:'wCo'});
+				mk('line',{x1:coTurnX,y1:FAy,x2:coTurnX,y2:Sy+BH/2,stroke:OFF_W,'stroke-width':'1.8',id:'wCoV'});
+				mk('rect',{x:coTurnX-BW/2,y:Sy-BH/2,width:BW,height:BH,rx:'3',fill:'transparent',stroke:OFF_B,'stroke-width':'1.3','stroke-dasharray':'4 3',id:'coR'});
+				mk('text',{x:coTurnX,y:Sy+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'tCo'}).textContent='0';
+				mk('text',{x:coTurnX,y:Sy-18,'text-anchor':'middle',fill:DIM,'font-size':'8'}).textContent='C\u2092\u1D64\u209C';
+
+				// Decimal values
+				var dvX=CX[0]+52;
+				mk('text',{x:dvX,y:Ay+5,'text-anchor':'start',fill:OFF_T,'font-size':'12','font-weight':'bold',id:'dA'}).textContent='= 0';
+				mk('text',{x:dvX,y:By+5,'text-anchor':'start',fill:OFF_T,'font-size':'12','font-weight':'bold',id:'dB'}).textContent='= 0';
+				mk('text',{x:dvX,y:Sy+5,'text-anchor':'start',fill:ON_S,'font-size':'12','font-weight':'bold',id:'dS'}).textContent='= 0';
+
+				// S label
+				mk('text',{x:coTurnX-30,y:Sy+5,'text-anchor':'end',fill:ON_S,'font-size':'12','font-weight':'bold'}).textContent='S';
+
+				calc();
+				gsap.from(sv.querySelectorAll('rect, line, text'),{opacity:0,duration:0.3,stagger:0.008,ease:'power2.out'});
+			}
+
+			function calc(){
+				for(var b=0;b<4;b++){
+					var a=A[b],bb=B[b];
+					sT('tA'+b,a,a?ON_A:OFF_T);
+					sA('rA'+b,'stroke',a?ON_A:OFF_B); sA('rA'+b,'fill',a?BG_A:SRF);
+					sT('tB'+b,bb,bb?ON_A:OFF_T);
+					sA('rB'+b,'stroke',bb?ON_A:OFF_B); sA('rB'+b,'fill',bb?BG_A:SRF);
+					sA('wA'+b,'stroke',a?ON_A:OFF_W);
+					sA('wB'+b,'stroke',bb?ON_A:OFF_W);
+				}
+				sT('dA','= '+val(A),OFF_T);
+				sT('dB','= '+val(B),OFF_T);
+
+				// Cin
+				sT('tCin',Cin,Cin?ON_C:OFF_T);
+				sA('rCin','stroke',Cin?ON_C:OFF_B);
+				sA('rCin','fill',Cin?BG_C:SRF);
+				sA('rCin','stroke-dasharray',Cin?'none':'4 3');
+				sA('wCin','stroke',Cin?ON_C:OFF_W);
+
+				// Compute
+				var c=Cin; C[0]=Cin;
+				for(var b=0;b<4;b++){
+					S[b]=A[b]^B[b]^c;
+					C[b+1]=(A[b]&B[b])|(A[b]&c)|(B[b]&c);
+					c=C[b+1];
+					var act=A[b]||B[b]||C[b];
+					sA('fB'+b,'stroke',act?FA_CLR:OFF_B);
+					sT('fL'+b,'FA'+SUB[b],act?FA_CLR:OFF_T);
+				}
+
+				// Carry wires
+				for(var i=1;i<=3;i++){
+					var on=C[i];
+					sA('wC'+i,'stroke',on?ON_C:OFF_W);
+					sT('cL'+i,'C'+i+(on?'=1':''),on?ON_C:DIM);
+				}
+
+				// Cout
+				var co=C[4];
+				sA('wCo','stroke',co?ON_C:OFF_W);
+				sA('wCoV','stroke',co?ON_C:OFF_W);
+				sA('coR','stroke',co?ON_C:OFF_B);
+				sA('coR','fill',co?BG_C:'transparent');
+				sA('coR','stroke-dasharray',co?'none':'4 3');
+				sT('tCo',co,co?ON_C:OFF_T);
+
+				// Sum
+				for(var b=0;b<4;b++){
+					var on=S[b];
+					sA('wS'+b,'stroke',on?ON_S:OFF_W);
+					sA('sB'+b,'stroke',on?ON_S:OFF_B);
+					sA('sB'+b,'fill',on?BG_S:SRF);
+					sT('tS'+b,S[b],on?ON_S:OFF_T);
+				}
+
+				var total=val(S)+C[4]*16;
+				sT('dS','= '+total,ON_S);
+
+				// Pulse
+				gsap.fromTo(
+					[0,1,2,3].map(function(i){return document.getElementById('sB'+i)}).concat([document.getElementById('coR')]).filter(Boolean),
+					{scale:1.12,transformOrigin:'center center'},
+					{scale:1,duration:0.25,ease:'back.out(2)'}
+				);
+			}
+
+			SlideKit.registerInit('adder', init);
+		})();
+	</script>
+</body>
+
+</html>
