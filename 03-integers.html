@@ -189,6 +189,16 @@
 		.num-axis-viz .separator {
 			width: 100%; height: 1px; background: #e0ddd8; margin: 2px 0;
 		}
+
+		/* ── qmn-tradeoff ─────────────────────────────────────── */
+		.num-axis-viz .qmn-graph-container { width: 100%; height: 280px; }
+		.num-axis-viz .qmn-graph-canvas {
+			display: block; width: 100%; height: 280px; cursor: crosshair;
+		}
+		.num-axis-viz .qmn-scale-row {
+			display: flex; justify-content: center;
+		}
+		.num-axis-viz .qmn-scale-row .toggle-group { width: 140px; }
 	</style>
 
 </head>
@@ -565,6 +575,55 @@
 				</div>
 			</section>
 
+			<!-- SLIDE 12c — Qm.n Trade-off -->
+			<section id="qmn-tradeoff-slide" data-header="Диапазон/точность">
+				<div class="slide-single align-center">
+					<div class="num-axis-viz">
+						<div class="nv-row" style="align-items: flex-start;">
+							<div class="format-section frac-section" style="display: flex; flex-direction: column; gap: 8px;">
+								<div class="qmn-graph-container">
+									<canvas class="qmn-graph-canvas" id="qmn-graph-canvas"></canvas>
+								</div>
+								<div class="qmn-scale-row">
+									<div class="toggle-group frac-section" id="qmn-scale-toggle">
+										<button class="toggle-btn active" data-qmn-scale="linear">Линейный</button>
+										<button class="toggle-btn" data-qmn-scale="log">Log₂</button>
+									</div>
+								</div>
+								<div class="axis-container">
+									<canvas class="axis-canvas" id="qmn-axis-canvas"></canvas>
+								</div>
+							</div>
+							<div class="config-panel frac-section">
+								<div class="config-stats">
+									min: <strong id="qmn-min">-2</strong> · max: <strong id="qmn-max">1.75</strong><br>
+									шаг: <strong id="qmn-step">0.25</strong> · значений: <strong id="qmn-count">16</strong>
+								</div>
+								<div class="config-row">
+									<label>Всего бит <span class="value-display" id="qmn-total-val">4</span></label>
+									<input type="range" id="qmn-total" min="2" max="8" value="4">
+								</div>
+								<div class="config-row">
+									<label>Целые биты (m) <span class="value-display" id="qmn-m-val">2</span></label>
+									<input type="range" id="qmn-m" min="0" max="4" value="2">
+								</div>
+								<div class="config-row">
+									<label>Дробные биты (n) <span class="value-display" id="qmn-n-val">2</span></label>
+									<input type="range" id="qmn-n" min="0" max="4" value="2">
+								</div>
+								<div class="config-row">
+									<label>Знак</label>
+									<div class="toggle-group">
+										<button class="toggle-btn" data-qmn-val="unsigned">Без знака</button>
+										<button class="toggle-btn active" data-qmn-val="signed">Со знаком</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<!-- SLIDE 13 — Задание: ассемблер -->
 			<section data-init="codemirror" data-header="Задание 1">
 				<div class="slide-two-col cols-equal">
@@ -906,7 +965,7 @@ start:
 			const ratio = (x - pad) / (W - pad * 2);
 			const val = range.min + ratio * (range.max - range.min);
 			nvState[stateKey].clicked = snapToGrid(val, range);
-			nvUpdate();
+			if (stateKey === 'qmn') qmnUpdate(); else nvUpdate();
 		}
 
 		function syncFracSliders() {
@@ -984,12 +1043,279 @@ start:
 			nvHandleClick('nv-frac-canvas', e, () => fracRange(nvState.frac.m, nvState.frac.n, nvState.frac.signed), 'frac')
 		);
 
+		// ── Qm.n Trade-off ──────────────────────────────────────
+		const qmnState = { total: 4, m: 2, n: 2, signed: true, clicked: null, logScale: false };
+
+		function allConfigs(total, signed) {
+			const pts = [];
+			for (let ni = 0; ni <= total; ni++) {
+				const mi = total - ni;
+				const r = fracRange(mi, ni, signed);
+				pts.push({ m: mi, n: ni, max: r.max, step: r.step, min: r.min, count: r.count });
+			}
+			return pts;
+		}
+
+		function fmtG(v) {
+			if (v >= 1 || v === 0) return Number.isInteger(v) ? v.toString() : v.toFixed(2);
+			return v.toFixed(Math.max(2, Math.ceil(-Math.log10(v)) + 1));
+		}
+
+		function drawTradeoffGraph() {
+			const canvas = document.getElementById('qmn-graph-canvas');
+			if (!canvas) return;
+			const W = canvas.parentElement.offsetWidth;
+			const H = 280;
+			if (W === 0) return;
+			canvas.width = W * DPR; canvas.height = H * DPR;
+			canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+
+			const ctx = canvas.getContext('2d');
+			ctx.scale(DPR, DPR);
+			ctx.clearRect(0, 0, W, H);
+
+			const pad = { top: 24, right: 24, bottom: 40, left: 50 };
+			const gW = W - pad.left - pad.right;
+			const gH = H - pad.top - pad.bottom;
+
+			const pts = allConfigs(qmnState.total, qmnState.signed);
+			if (pts.length === 0) return;
+
+			const steps = pts.map(p => p.step);
+			const maxes = pts.map(p => p.max);
+			const posSteps = steps.filter(s => s > 0);
+			const posMaxes = maxes.filter(m => m > 0);
+			const minStepV = posSteps.length ? Math.min(...posSteps) : 1;
+			const maxStepV = Math.max(...steps);
+			const minMaxV  = posMaxes.length ? Math.min(...posMaxes) : 0.5;
+			const maxMaxV  = Math.max(...maxes);
+
+			let xFor, yFor, xLabel, yLabel;
+			if (qmnState.logScale && posSteps.length > 1 && posMaxes.length > 1) {
+				const lsMin = Math.log2(minStepV), lsMax = Math.log2(maxStepV);
+				const lmMin = Math.log2(minMaxV),  lmMax = Math.log2(maxMaxV);
+				xFor = s => s <= 0 ? pad.left : pad.left + ((Math.log2(s) - lsMin) / (lsMax - lsMin || 1)) * gW;
+				yFor = m => m <= 0 ? pad.top + gH : pad.top + gH - ((Math.log2(m) - lmMin) / (lmMax - lmMin || 1)) * gH;
+				xLabel = 'Шаг (точность) — log₂';
+				yLabel = 'Max — log₂';
+			} else {
+				xFor = s => pad.left + (s / (maxStepV || 1)) * gW;
+				yFor = m => pad.top + gH - (m / (maxMaxV || 1)) * gH;
+				xLabel = 'Шаг (точность)';
+				yLabel = 'Max (диапазон)';
+			}
+
+			// Grid
+			ctx.strokeStyle = '#ece8e1'; ctx.lineWidth = 1;
+			if (qmnState.logScale && posSteps.length > 1 && posMaxes.length > 1) {
+				const lsMin = Math.log2(minStepV), lsMax = Math.log2(maxStepV);
+				const lmMin = Math.log2(minMaxV),  lmMax = Math.log2(maxMaxV);
+				for (let p = Math.floor(lsMin); p <= Math.ceil(lsMax); p++) {
+					const x = xFor(Math.pow(2, p)); if (x < pad.left || x > pad.left + gW) continue;
+					ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + gH); ctx.stroke();
+				}
+				for (let p = Math.floor(lmMin); p <= Math.ceil(lmMax); p++) {
+					const y = yFor(Math.pow(2, p)); if (y < pad.top || y > pad.top + gH) continue;
+					ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + gW, y); ctx.stroke();
+				}
+			} else {
+				for (let i = 0; i <= 4; i++) {
+					const y = pad.top + (gH / 4) * i;
+					ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + gW, y); ctx.stroke();
+					const x = pad.left + (gW / 4) * i;
+					ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + gH); ctx.stroke();
+				}
+			}
+
+			// Axes
+			ctx.strokeStyle = COL_AXIS; ctx.lineWidth = 1;
+			ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top + gH); ctx.lineTo(pad.left + gW, pad.top + gH); ctx.stroke();
+
+			// Axis labels
+			ctx.fillStyle = COL_MUTED; ctx.font = '9px "IBM Plex Mono", monospace'; ctx.textAlign = 'center';
+			ctx.fillText(xLabel, pad.left + gW / 2, H - 6);
+			ctx.save(); ctx.translate(10, pad.top + gH / 2); ctx.rotate(-Math.PI / 2);
+			ctx.fillText(yLabel, 0, 0); ctx.restore();
+
+			// Tick labels
+			ctx.fillStyle = '#b5b0a8'; ctx.font = '9px "IBM Plex Mono", monospace';
+			if (qmnState.logScale && posSteps.length > 1 && posMaxes.length > 1) {
+				const lsMin = Math.log2(minStepV), lsMax = Math.log2(maxStepV);
+				const lmMin = Math.log2(minMaxV),  lmMax = Math.log2(maxMaxV);
+				for (let p = Math.floor(lsMin); p <= Math.ceil(lsMax); p++) {
+					const v = Math.pow(2, p), x = xFor(v); if (x < pad.left - 5 || x > pad.left + gW + 5) continue;
+					ctx.textAlign = 'center'; ctx.fillText(fmtG(v), x, pad.top + gH + 14);
+				}
+				for (let p = Math.floor(lmMin); p <= Math.ceil(lmMax); p++) {
+					const v = Math.pow(2, p), y = yFor(v); if (y < pad.top - 5 || y > pad.top + gH + 5) continue;
+					ctx.textAlign = 'right'; ctx.fillText(fmtG(v), pad.left - 6, y + 3);
+				}
+			} else {
+				for (let i = 0; i <= 4; i++) {
+					ctx.textAlign = 'center';
+					ctx.fillText(fmtG((maxStepV / 4) * i), pad.left + (gW / 4) * i, pad.top + gH + 14);
+					ctx.textAlign = 'right';
+					ctx.fillText(fmtG((maxMaxV / 4) * (4 - i)), pad.left - 6, pad.top + (gH / 4) * i + 3);
+				}
+			}
+
+			// Curve
+			ctx.strokeStyle = COL_FRAC + '55'; ctx.lineWidth = 2;
+			ctx.beginPath();
+			pts.forEach((p, i) => {
+				const x = xFor(p.step), y = yFor(p.max);
+				i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+			});
+			ctx.stroke();
+
+			// All points
+			pts.forEach(p => {
+				const isCur = p.m === qmnState.m && p.n === qmnState.n;
+				const x = xFor(p.step), y = yFor(p.max);
+				ctx.fillStyle = isCur ? COL_FRAC + '30' : COL_FRAC + '30';
+				ctx.beginPath(); ctx.arc(x, y, isCur ? 0 : 4, 0, Math.PI * 2); ctx.fill();
+				if (!isCur) {
+					ctx.fillStyle = COL_MUTED; ctx.font = '9px "IBM Plex Mono", monospace'; ctx.textAlign = 'center';
+					ctx.fillText('Q' + p.m + '.' + p.n, x, y - 8);
+				}
+			});
+
+			// Current point
+			const cur = pts.find(p => p.m === qmnState.m && p.n === qmnState.n);
+			if (cur) {
+				const x = xFor(cur.step), y = yFor(cur.max);
+				ctx.fillStyle = COL_FRAC + '20';
+				ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI * 2); ctx.fill();
+				ctx.fillStyle = COL_FRAC;
+				ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
+				ctx.strokeStyle = BG; ctx.lineWidth = 2;
+				ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.stroke();
+				ctx.fillStyle = COL_FRAC; ctx.font = 'bold 10px "IBM Plex Mono", monospace'; ctx.textAlign = 'center';
+				ctx.fillText('Q' + cur.m + '.' + cur.n, x, y - 16);
+				// Dashed guides
+				ctx.strokeStyle = COL_FRAC + '40'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+				ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, pad.top + gH); ctx.stroke();
+				ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(pad.left, y); ctx.stroke();
+				ctx.setLineDash([]);
+			}
+		}
+
+		function syncQmnSliders() {
+			const total = qmnState.total;
+			const ms = document.getElementById('qmn-m'), ns = document.getElementById('qmn-n');
+			ms.max = total; ns.max = total;
+			if (qmnState.m > total) qmnState.m = total;
+			qmnState.n = total - qmnState.m;
+			ms.value = qmnState.m; ns.value = qmnState.n;
+		}
+
+		function qmnUpdate() {
+			const fr = fracRange(qmnState.m, qmnState.n, qmnState.signed);
+
+			document.getElementById('qmn-total-val').textContent   = qmnState.total;
+			document.getElementById('qmn-m-val').textContent = qmnState.m;
+			document.getElementById('qmn-n-val').textContent = qmnState.n;
+			document.getElementById('qmn-min').textContent   = fmtVal(fr.min, fr.step);
+			document.getElementById('qmn-max').textContent   = fmtVal(fr.max, fr.step);
+			document.getElementById('qmn-step').textContent  = fr.step > 0 ? fmtVal(fr.step, fr.step) : '0';
+			document.getElementById('qmn-count').textContent = fr.count;
+
+			if (qmnState.clicked !== null) qmnState.clicked = snapToGrid(qmnState.clicked, fr);
+			drawTradeoffGraph();
+			drawAxis('qmn-axis-canvas', fr, COL_FRAC, qmnState.clicked, qmnState.m + qmnState.n, qmnState.signed, qmnState.n);
+		}
+
+		// Qm.n controls
+		document.getElementById('qmn-total').addEventListener('input', e => {
+			qmnState.total = +e.target.value; syncQmnSliders(); qmnUpdate();
+		});
+		document.getElementById('qmn-m').addEventListener('input', e => {
+			qmnState.m = Math.min(+e.target.value, qmnState.total);
+			qmnState.n = qmnState.total - qmnState.m;
+			document.getElementById('qmn-n').value = qmnState.n;
+			qmnUpdate();
+		});
+		document.getElementById('qmn-n').addEventListener('input', e => {
+			qmnState.n = Math.min(+e.target.value, qmnState.total);
+			qmnState.m = qmnState.total - qmnState.n;
+			document.getElementById('qmn-m').value = qmnState.m;
+			qmnUpdate();
+		});
+		document.querySelectorAll('[data-qmn-val]').forEach(btn => {
+			btn.addEventListener('click', () => {
+				btn.parentElement.querySelectorAll('[data-qmn-val]').forEach(b => b.classList.remove('active'));
+				btn.classList.add('active');
+				qmnState.signed = btn.dataset.qmnVal === 'signed';
+				qmnUpdate();
+			});
+		});
+		document.querySelectorAll('#qmn-scale-toggle .toggle-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				btn.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+				btn.classList.add('active');
+				qmnState.logScale = btn.dataset.qmnScale === 'log';
+				qmnUpdate();
+			});
+		});
+		document.getElementById('qmn-axis-canvas').addEventListener('click', e =>
+			nvHandleClick('qmn-axis-canvas', e, () => fracRange(qmnState.m, qmnState.n, qmnState.signed), 'qmn')
+		);
+		// Click on graph to select nearest Q config
+		document.getElementById('qmn-graph-canvas').addEventListener('click', function(e) {
+			const canvas = this;
+			const rect = canvas.getBoundingClientRect();
+			const scale = rect.width / canvas.offsetWidth;
+			const mx = (e.clientX - rect.left) / scale, my = (e.clientY - rect.top) / scale;
+			const W = canvas.offsetWidth, H = 280;
+			const p = { top: 24, right: 24, bottom: 40, left: 50 };
+			const gW = W - p.left - p.right, gH = H - p.top - p.bottom;
+			const pts = allConfigs(qmnState.total, qmnState.signed);
+			const posS = pts.map(x => x.step).filter(s => s > 0);
+			const posM = pts.map(x => x.max).filter(m => m > 0);
+			const maxSV = Math.max(...pts.map(x => x.step));
+			const maxMV = Math.max(...pts.map(x => x.max));
+
+			let xF, yF;
+			if (qmnState.logScale && posS.length > 1 && posM.length > 1) {
+				const lsMin = Math.log2(Math.min(...posS)), lsMax = Math.log2(Math.max(...posS));
+				const lmMin = Math.log2(Math.min(...posM)), lmMax = Math.log2(Math.max(...posM));
+				xF = s => s <= 0 ? p.left : p.left + ((Math.log2(s) - lsMin) / (lsMax - lsMin || 1)) * gW;
+				yF = m => m <= 0 ? p.top + gH : p.top + gH - ((Math.log2(m) - lmMin) / (lmMax - lmMin || 1)) * gH;
+			} else {
+				xF = s => p.left + (s / (maxSV || 1)) * gW;
+				yF = m => p.top + gH - (m / (maxMV || 1)) * gH;
+			}
+
+			let best = null, bestDist = Infinity;
+			pts.forEach(pt => {
+				const d = Math.hypot(mx - xF(pt.step), my - yF(pt.max));
+				if (d < bestDist) { bestDist = d; best = pt; }
+			});
+			if (best && bestDist < 40) {
+				qmnState.m = best.m; qmnState.n = best.n;
+				document.getElementById('qmn-m').value = qmnState.m;
+				document.getElementById('qmn-n').value = qmnState.n;
+				qmnUpdate();
+			}
+		});
+
+		// Extend nvState for qmn axis clicks
+		nvState.qmn = qmnState;
+
 		// Reveal.js lifecycle — rAF ensures layout is settled before canvas sizing
 		const axisSlide = document.getElementById('num-axis-slide');
+		const tradeoffSlide = document.getElementById('qmn-tradeoff-slide');
 		const nvShow = () => requestAnimationFrame(nvUpdate);
-		Reveal.on('ready',        e => { if (e.currentSlide === axisSlide) nvShow(); });
-		Reveal.on('slidechanged', e => { if (e.currentSlide === axisSlide) nvShow(); });
-		window.addEventListener('resize', nvShow);
+		const qmnShow = () => requestAnimationFrame(qmnUpdate);
+		Reveal.on('ready', e => {
+			if (e.currentSlide === axisSlide) nvShow();
+			if (e.currentSlide === tradeoffSlide) qmnShow();
+		});
+		Reveal.on('slidechanged', e => {
+			if (e.currentSlide === axisSlide) nvShow();
+			if (e.currentSlide === tradeoffSlide) qmnShow();
+		});
+		window.addEventListener('resize', () => { nvShow(); qmnShow(); });
 	})();
 	</script>
 
