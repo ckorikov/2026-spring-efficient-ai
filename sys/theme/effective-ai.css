@@ -449,6 +449,12 @@
   margin-right: 0;
 }
 
+.slide-single table,
+.slide-two-col table {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 /*********************************************
  * COMPONENT — author block
  *********************************************/
