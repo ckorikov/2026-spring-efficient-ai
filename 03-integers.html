@@ -199,6 +199,82 @@
 			display: flex; justify-content: center;
 		}
 		.num-axis-viz .qmn-scale-row .toggle-group { width: 140px; }
+
+		/* ── qmn-calc ─────────────────────────────────────────── */
+		.num-axis-viz .qc-calc-row {
+			display: flex; gap: 8px; align-items: stretch;
+		}
+		.num-axis-viz .qc-operand {
+			flex: 1; min-width: 0; background: rgba(45,42,38,0.03);
+			border: 1px solid #d5d0c8; border-radius: 4px; padding: 8px 10px;
+			box-sizing: border-box;
+		}
+		.num-axis-viz .qc-operand.overflow { border-color: #a07070; }
+		.num-axis-viz .qc-operand-label {
+			font-size: 9px; color: #8a857d; letter-spacing: 1px;
+			text-transform: uppercase; margin-bottom: 4px; font-weight: 500;
+		}
+		.num-axis-viz .qc-input {
+			width: 100%; box-sizing: border-box;
+			background: transparent; border: 1px solid #d5d0c8;
+			border-radius: 3px; padding: 4px 6px;
+			font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+			color: #2d2a26; outline: none;
+		}
+		.num-axis-viz .qc-input:focus { border-color: #a07060; }
+		.num-axis-viz .qc-input.err { border-color: #a07070; color: #a07070; }
+
+		.num-axis-viz .qc-repr .repr-row {
+			display: flex; gap: 6px; align-items: baseline; margin-top: 3px; font-size: 10px;
+		}
+		.num-axis-viz .qc-repr .repr-label { color: #a09a92; width: 24px; flex-shrink: 0; }
+		.num-axis-viz .qc-repr .repr-val { color: #5a5650; word-break: break-all; }
+		.num-axis-viz .qc-repr .repr-val .sign-bit { color: #a07070; }
+		.num-axis-viz .qc-repr .repr-val .int-bit { color: #6a8fa5; }
+		.num-axis-viz .qc-repr .repr-val .frac-bit { color: #7a9a7a; }
+		.num-axis-viz .qc-repr .overflow-tag {
+			display: inline-block; font-size: 8px; color: #a07070;
+			border: 1px solid rgba(160,112,112,0.4); border-radius: 3px;
+			padding: 1px 5px; margin-top: 3px; letter-spacing: 0.5px; text-transform: uppercase;
+		}
+
+		.num-axis-viz .qc-op-selector {
+			display: flex; flex-direction: column; justify-content: center; gap: 3px;
+			flex-shrink: 0;
+		}
+		.num-axis-viz .qc-op-btn {
+			width: 28px; height: 24px; border: 1px solid #d5d0c8; border-radius: 3px;
+			background: transparent; color: #8a857d; font-size: 13px;
+			font-family: 'IBM Plex Mono', monospace; cursor: pointer;
+			display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+		}
+		.num-axis-viz .qc-op-btn.active {
+			background: rgba(160,112,96,0.1); color: #a07060; border-color: rgba(160,112,96,0.4);
+		}
+		.num-axis-viz .qc-op-btn:hover { border-color: #a09a92; }
+
+		.num-axis-viz .qc-eq {
+			display: flex; align-items: center; color: #c8c3bb; font-size: 16px; padding: 0 2px;
+			flex-shrink: 0;
+		}
+
+		.num-axis-viz .qc-result {
+			background: rgba(160,112,96,0.04);
+			border-color: rgba(160,112,96,0.3);
+		}
+		.num-axis-viz .qc-result.overflow { border-color: #a07070; }
+		.num-axis-viz .qc-result-dec {
+			font-size: 16px; color: #a07060; margin-bottom: 2px;
+			font-family: 'IBM Plex Mono', monospace; font-weight: 500;
+		}
+
+		.num-axis-viz .qc-legend {
+			display: flex; gap: 12px; font-size: 9px; color: #a09a92; flex-wrap: wrap;
+		}
+		.num-axis-viz .qc-legend-item { display: inline-flex; align-items: center; gap: 4px; }
+		.num-axis-viz .qc-legend-dot {
+			display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+		}
 	</style>
 
 </head>
@@ -624,6 +700,89 @@
 				</div>
 			</section>
 
+			<!-- SLIDE 12d — Qm.n Калькулятор -->
+			<section id="qmn-calc-slide" data-header="Qm.n операции">
+				<div class="slide-single align-center">
+					<div class="num-axis-viz">
+						<div class="nv-row" style="align-items: flex-start;">
+							<div class="format-section frac-section" style="display: flex; flex-direction: column; gap: 8px;">
+
+								<div class="section-label">Q<span id="qc-ax-fmt">2.2</span> <span id="qc-ax-sign">со знаком</span></div>
+
+								<!-- Calculator row -->
+								<div class="qc-calc-row">
+									<div class="qc-operand" id="qc-box-a">
+										<div class="qc-operand-label">A</div>
+										<input class="qc-input" id="qc-input-a" type="text" value="1.5" placeholder="decimal">
+										<div class="qc-repr" id="qc-repr-a"></div>
+									</div>
+
+									<div class="qc-op-selector" id="qc-op-selector">
+										<button class="qc-op-btn active" data-qc-op="+">+</button>
+										<button class="qc-op-btn" data-qc-op="−">−</button>
+										<button class="qc-op-btn" data-qc-op="×">×</button>
+										<button class="qc-op-btn" data-qc-op="÷">÷</button>
+									</div>
+
+									<div class="qc-operand" id="qc-box-b">
+										<div class="qc-operand-label">B</div>
+										<input class="qc-input" id="qc-input-b" type="text" value="0.75" placeholder="decimal">
+										<div class="qc-repr" id="qc-repr-b"></div>
+									</div>
+
+									<div class="qc-eq">=</div>
+
+									<div class="qc-operand qc-result" id="qc-box-r">
+										<div class="qc-operand-label">Результат</div>
+										<div class="qc-result-dec" id="qc-result-dec">—</div>
+										<div class="qc-repr" id="qc-repr-r"></div>
+									</div>
+								</div>
+
+								<!-- Number line -->
+								<div class="axis-container">
+									<canvas class="axis-canvas" id="qc-axis-canvas"></canvas>
+								</div>
+
+								<div class="qc-legend">
+									<span class="qc-legend-item"><span class="qc-legend-dot" style="background:#6a8fa5"></span> A</span>
+									<span class="qc-legend-item"><span class="qc-legend-dot" style="background:#7a9a7a"></span> B</span>
+									<span class="qc-legend-item"><span class="qc-legend-dot" style="background:#a07060"></span> Результат</span>
+									<span class="qc-legend-item"><span class="qc-legend-dot" style="background:#a07070"></span> Переполнение</span>
+								</div>
+							</div>
+
+							<!-- Config panel (same as trade-off slide) -->
+							<div class="config-panel frac-section">
+								<div class="config-stats">
+									min: <strong id="qc-min">−2</strong> · max: <strong id="qc-max">1.75</strong><br>
+									шаг: <strong id="qc-step">0.25</strong> · значений: <strong id="qc-count">16</strong>
+								</div>
+								<div class="config-row">
+									<label>Всего бит <span class="value-display" id="qc-total-val">4</span></label>
+									<input type="range" id="qc-total" min="2" max="16" value="4">
+								</div>
+								<div class="config-row">
+									<label>Целые биты (m) <span class="value-display" id="qc-m-val">2</span></label>
+									<input type="range" id="qc-m" min="0" max="4" value="2">
+								</div>
+								<div class="config-row">
+									<label>Дробные биты (n) <span class="value-display" id="qc-n-val">2</span></label>
+									<input type="range" id="qc-n" min="0" max="4" value="2">
+								</div>
+								<div class="config-row">
+									<label>Знак</label>
+									<div class="toggle-group">
+										<button class="toggle-btn" data-qc-val="unsigned">Без знака</button>
+										<button class="toggle-btn active" data-qc-val="signed">Со знаком</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<!-- SLIDE 13 — Задание: ассемблер -->
 			<section data-init="codemirror" data-header="Задание 1">
 				<div class="slide-two-col cols-equal">
@@ -654,27 +813,23 @@ start:
 						</p>
 						<p class="text-muted">
 							Реализуйте <span class="text-ink">сложение</span> и <span class="text-ink">вычитание</span>
-							двух Q4.4 чисел в регистрах без использования готового решения.
+							двух Q4.4 чисел в регистрах.
 						</p>
-						<p class="text-muted">
-							Проверка: <span class="text-ink">c = 3.75</span>, <span class="text-ink">d = 1.25</span>
-							после декодирования в десятичный вид.
-						</p>
-					</div>
+						</div>
 				</div>
 			</section>
 
-			<!-- SLIDE 14 — Задание: умножение Q4.4 -->
-			<section data-init="codemirror" data-header="Задание">
+			<!-- SLIDE 14 — Задание: умножение Q2.2 -->
+			<section data-init="codemirror" data-header="Задание 2">
 				<div class="slide-two-col cols-equal">
 					<div class="col-left">
-						<textarea data-lang="asm8">; Q4.4: a = 1.5 (0x18), b = 2.0 (0x20)
+						<textarea data-lang="asm8">; Q2.2: a = 1.5 (0x06), b = 2.0 (0x08)
 JMP start
 
 a_val:
-	DB 0x18
+	DB 0x06
 b_val:
-	DB 0x20
+	DB 0x08
 res:
 	DB 0x00
 
@@ -683,8 +838,8 @@ start:
 	MOV B, [b_val]
 
 	; ваш код здесь
-	; 1) вычислить a * b в Q4.4
-	; 2) учесть масштаб (сдвиг вправо на 4)
+	; 1) вычислить a * b в Q2.2
+	; 2) учесть масштаб (сдвиг вправо на 2)
 	; 3) сохранить результат в [res]
 
 	HLT</textarea>
@@ -692,49 +847,25 @@ start:
 					<div class="col-left col-prose">
 						<p class="col-prose-heading">Умножение в фиксированной точке</p>
 						<p class="text-muted">
-							Формат: <span class="text-ink">Q4.4</span>.
+							Формат: <span class="text-ink">Q2.2</span>.
 						</p>
 						<p class="text-muted">
-							Реализуйте умножение двух чисел и выполните нормализацию результата.
+							Реализуйте умножение двух чисел.
 						</p>
 						<p class="text-muted">
-							Проверка: после декодирования ожидается <span class="text-ink">3.0</span>.
+							А как сделать деление?
 						</p>
 					</div>
 				</div>
 			</section>
 
 			<!-- SLIDE 15 — Задание: расширение симулятора -->
-			<section data-header="Задание">
-				<div class="slide-two-col cols-equal">
-					<div class="col-left">
-						<table style="font-size: 11px; width: 100%;">
-							<thead>
-								<tr>
-									<th>Компонент</th>
-									<th>Что добавить</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr><td>Формат числа</td><td>Знак, экспонента, мантисса</td></tr>
-								<tr><td>Интерфейс</td><td>Переключатель int / fixed / float</td></tr>
-								<tr><td>Операции</td><td>Сложение и вычитание float</td></tr>
-								<tr><td>Отладка</td><td>Показ промежуточных шагов</td></tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="col-left col-prose">
-						<p class="col-prose-heading">Расширение симулятора под float</p>
-						<p class="text-muted">
-							Предложите архитектуру расширения симулятора для поддержки чисел с плавающей точкой.
-						</p>
-						<p class="text-muted">
-							Опишите: формат данных, минимальный набор операций и изменения UI.
-						</p>
-						<p class="text-muted">
-							Результат: короткий план реализации (3–5 шагов).
-						</p>
-					</div>
+			<section data-header="Задание 3">
+				<div class="slide-single align-center col-prose">
+					<p class="col-prose-heading">Расширение симулятора под float</p>
+					<p class="text-muted">
+						Предложите архитектуру расширения симулятора для поддержки чисел с плавающей точкой. Опишите формат данных (знак, экспонента, мантисса) и минимальный набор операций.
+					</p>
 				</div>
 			</section>
 
@@ -1302,20 +1433,277 @@ start:
 		// Extend nvState for qmn axis clicks
 		nvState.qmn = qmnState;
 
+		// ── Qm.n Calculator ─────────────────────────────────────
+		const qcState = { total: 4, m: 2, n: 2, signed: true, op: '+' };
+
+		const COL_A = COL_INT;    // #6a8fa5
+		const COL_B = COL_FBITS;  // #7a9a7a
+		const COL_R = COL_FRAC;   // #a07060
+		const COL_OVF = COL_SIGN; // #a07070
+
+		function toHexStr(val, totalBits, signed, fracBits) {
+			let iv = Math.round(val * (fracBits > 0 ? (1 << fracBits) : 1));
+			if (signed && iv < 0) iv = (1 << totalBits) + iv;
+			iv = iv & ((1 << totalBits) - 1);
+			const nibbles = Math.ceil(totalBits / 4);
+			return iv.toString(16).toUpperCase().padStart(nibbles, '0');
+		}
+
+		function colorBinHtml(bin, signed, totalBits, fracBits) {
+			let html = '';
+			for (let i = 0; i < bin.length; i++) {
+				let cls;
+				if (signed && i === 0) cls = 'sign-bit';
+				else if (i < totalBits - fracBits) cls = 'int-bit';
+				else cls = 'frac-bit';
+				html += `<span class="${cls}">${bin[i]}</span>`;
+			}
+			return html;
+		}
+
+		function qcRenderRepr(el, val, overflow) {
+			const r = fracRange(qcState.m, qcState.n, qcState.signed);
+			const totalBits = qcState.m + qcState.n;
+			const snapped = snapToGrid(val, r);
+			const bin = toBinary(snapped, totalBits, qcState.signed, qcState.n);
+			const hex = toHexStr(snapped, totalBits, qcState.signed, qcState.n);
+			el.innerHTML =
+				`<div class="repr-row"><span class="repr-label">DEC</span><span class="repr-val">${fmtVal(snapped, r.step)}</span></div>` +
+				`<div class="repr-row"><span class="repr-label">BIN</span><span class="repr-val">0b${colorBinHtml(bin, qcState.signed, totalBits, qcState.n)}</span></div>` +
+				`<div class="repr-row"><span class="repr-label">HEX</span><span class="repr-val">0x${hex}</span></div>` +
+				(overflow ? '<div class="overflow-tag">overflow</div>' : '');
+		}
+
+		function drawCalcAxis(a, b, res, range) {
+			const canvas = document.getElementById('qc-axis-canvas');
+			if (!canvas) return;
+			const container = canvas.parentElement;
+			const W = container.offsetWidth;
+			if (W === 0) return;
+
+			const H = 100;
+			canvas.width = W * DPR; canvas.height = H * DPR;
+			canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+			const ctx = canvas.getContext('2d');
+			ctx.scale(DPR, DPR);
+			const pad = 24, axisY = 64;
+			ctx.clearRect(0, 0, W, H);
+
+			if (!range || range.count === 0) return;
+			const { min, max, step, count } = range;
+			const span = max - min;
+			const axisLen = W - pad * 2;
+			const xFor = v => span === 0 ? pad + axisLen / 2 : pad + ((v - min) / span) * axisLen;
+
+			// Axis line
+			ctx.strokeStyle = COL_AXIS; ctx.lineWidth = 1;
+			ctx.beginPath(); ctx.moveTo(pad, axisY); ctx.lineTo(W - pad, axisY); ctx.stroke();
+
+			// Ticks
+			const maxT = Math.min(count, Math.floor(axisLen / 2));
+			const ts = Math.max(1, Math.floor(count / maxT));
+			ctx.strokeStyle = COL_FRAC + '55'; ctx.lineWidth = 1;
+			for (let i = 0; i < count; i += ts) {
+				const x = xFor(min + i * step);
+				ctx.beginPath(); ctx.moveTo(x, axisY - 4); ctx.lineTo(x, axisY + 4); ctx.stroke();
+			}
+
+			// Min/Max
+			ctx.fillStyle = COL_FRAC; ctx.font = 'bold 11px "IBM Plex Mono", monospace'; ctx.textAlign = 'center';
+			ctx.strokeStyle = COL_FRAC; ctx.lineWidth = 2;
+			[min, max].forEach(v => {
+				const x = xFor(v);
+				ctx.beginPath(); ctx.moveTo(x, axisY - 8); ctx.lineTo(x, axisY + 8); ctx.stroke();
+				ctx.fillText(fmtVal(v, step), x, axisY + 20);
+			});
+
+			// Zero
+			if (min < 0 && max > 0) {
+				const zx = xFor(0);
+				ctx.strokeStyle = COL_ZERO; ctx.lineWidth = 1.5;
+				ctx.beginPath(); ctx.moveTo(zx, axisY - 10); ctx.lineTo(zx, axisY + 10); ctx.stroke();
+				ctx.fillStyle = COL_ZERO; ctx.font = 'bold 11px "IBM Plex Mono", monospace';
+				ctx.fillText('0', zx, axisY + 20);
+			}
+
+			// Marker helper
+			function marker(val, color, label, yOff, overflow) {
+				if (val === null || val === undefined) return;
+				const x = xFor(val);
+				const clamp = Math.max(pad, Math.min(W - pad, x));
+
+				if (overflow) {
+					ctx.fillStyle = COL_OVF + '30';
+					ctx.beginPath(); ctx.arc(clamp, axisY, 6, 0, Math.PI * 2); ctx.fill();
+					ctx.strokeStyle = COL_OVF; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+					ctx.beginPath(); ctx.moveTo(clamp, axisY - 12 + yOff); ctx.lineTo(clamp, axisY); ctx.stroke();
+					ctx.setLineDash([]);
+					ctx.fillStyle = COL_OVF; ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+					const ovfTxt = `${label} OVF`;
+					const ovfW = ctx.measureText(ovfTxt).width;
+					const ovfX = Math.max(ovfW / 2 + 2, Math.min(W - ovfW / 2 - 2, clamp));
+					ctx.textAlign = 'center';
+					ctx.fillText(ovfTxt, ovfX, axisY - 16 + yOff);
+					return;
+				}
+
+				ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+				ctx.beginPath(); ctx.moveTo(clamp, axisY - 12 + yOff); ctx.lineTo(clamp, axisY); ctx.stroke();
+				ctx.setLineDash([]);
+				ctx.fillStyle = color;
+				ctx.beginPath(); ctx.arc(clamp, axisY, 4, 0, Math.PI * 2); ctx.fill();
+				ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+				const txt = `${label}=${fmtVal(val, step)}`;
+				const tw = ctx.measureText(txt).width;
+				const tx = Math.max(tw / 2 + 2, Math.min(W - tw / 2 - 2, clamp));
+				ctx.textAlign = 'center';
+				ctx.fillText(txt, tx, axisY - 16 + yOff);
+			}
+
+			if (a !== null) marker(a.val, COL_A, 'A', 0, a.overflow);
+			if (b !== null) marker(b.val, COL_B, 'B', -14, b.overflow);
+			if (res !== null) marker(res.val, res.overflow ? COL_OVF : COL_R, 'R', -28, res.overflow);
+		}
+
+		function qcCompute() {
+			const r = fracRange(qcState.m, qcState.n, qcState.signed);
+			const rawA = parseFloat(document.getElementById('qc-input-a').value);
+			const rawB = parseFloat(document.getElementById('qc-input-b').value);
+			const inA = document.getElementById('qc-input-a');
+			const inB = document.getElementById('qc-input-b');
+
+			const validA = !isNaN(rawA);
+			const validB = !isNaN(rawB);
+			inA.classList.toggle('err', !validA && inA.value.length > 0);
+			inB.classList.toggle('err', !validB && inB.value.length > 0);
+
+			let aObj = null, bObj = null;
+
+			if (validA && r.count > 0) {
+				const a = snapToGrid(rawA, r);
+				const ovA = rawA < r.min || rawA > r.max;
+				qcRenderRepr(document.getElementById('qc-repr-a'), a, ovA);
+				document.getElementById('qc-box-a').classList.toggle('overflow', ovA);
+				aObj = { val: a, overflow: ovA };
+			} else {
+				document.getElementById('qc-repr-a').innerHTML = '';
+				document.getElementById('qc-box-a').classList.remove('overflow');
+			}
+
+			if (validB && r.count > 0) {
+				const b = snapToGrid(rawB, r);
+				const ovB = rawB < r.min || rawB > r.max;
+				qcRenderRepr(document.getElementById('qc-repr-b'), b, ovB);
+				document.getElementById('qc-box-b').classList.toggle('overflow', ovB);
+				bObj = { val: b, overflow: ovB };
+			} else {
+				document.getElementById('qc-repr-b').innerHTML = '';
+				document.getElementById('qc-box-b').classList.remove('overflow');
+			}
+
+			let resObj = null;
+			if (validA && validB && r.count > 0) {
+				const a = aObj.val, b = bObj.val;
+				let rawResult;
+				if (qcState.op === '+') rawResult = a + b;
+				else if (qcState.op === '−') rawResult = a - b;
+				else if (qcState.op === '×') rawResult = a * b;
+				else rawResult = b !== 0 ? a / b : (a >= 0 ? Infinity : -Infinity);
+
+				const d = Math.max(0, Math.ceil(-Math.log10(r.step + 1e-15)));
+				if (isFinite(rawResult)) rawResult = parseFloat(rawResult.toFixed(d + 4));
+
+				const ovR = !isFinite(rawResult) || rawResult < r.min || rawResult > r.max;
+				const result = isFinite(rawResult) ? snapToGrid(rawResult, r) : (rawResult > 0 ? r.max : r.min);
+
+				document.getElementById('qc-result-dec').textContent = fmtVal(result, r.step) + (ovR ? '  ⚠' : '');
+				qcRenderRepr(document.getElementById('qc-repr-r'), result, ovR);
+				document.getElementById('qc-box-r').classList.toggle('overflow', ovR);
+				resObj = { val: result, overflow: ovR };
+			} else {
+				document.getElementById('qc-result-dec').textContent = '—';
+				document.getElementById('qc-repr-r').innerHTML = '';
+				document.getElementById('qc-box-r').classList.remove('overflow');
+			}
+
+			drawCalcAxis(aObj, bObj, resObj, r);
+		}
+
+		function syncQcSliders() {
+			const ms = document.getElementById('qc-m'), ns = document.getElementById('qc-n');
+			ms.max = qcState.total; ns.max = qcState.total;
+			if (qcState.m > qcState.total) qcState.m = qcState.total;
+			qcState.n = qcState.total - qcState.m;
+			ms.value = qcState.m; ns.value = qcState.n;
+		}
+
+		function qcUpdate() {
+			const r = fracRange(qcState.m, qcState.n, qcState.signed);
+			document.getElementById('qc-total-val').textContent = qcState.total;
+			document.getElementById('qc-m-val').textContent = qcState.m;
+			document.getElementById('qc-n-val').textContent = qcState.n;
+			document.getElementById('qc-ax-fmt').textContent = `${qcState.m}.${qcState.n}`;
+			document.getElementById('qc-ax-sign').textContent = qcState.signed ? 'со знаком' : 'без знака';
+			document.getElementById('qc-min').textContent = fmtVal(r.min, r.step);
+			document.getElementById('qc-max').textContent = fmtVal(r.max, r.step);
+			document.getElementById('qc-step').textContent = r.step > 0 ? fmtVal(r.step, r.step) : '0';
+			document.getElementById('qc-count').textContent = r.count;
+			qcCompute();
+		}
+
+		// Qm.n Calc controls
+		document.getElementById('qc-total').addEventListener('input', e => {
+			qcState.total = +e.target.value; syncQcSliders(); qcUpdate();
+		});
+		document.getElementById('qc-m').addEventListener('input', e => {
+			qcState.m = Math.min(+e.target.value, qcState.total);
+			qcState.n = qcState.total - qcState.m;
+			document.getElementById('qc-n').value = qcState.n;
+			qcUpdate();
+		});
+		document.getElementById('qc-n').addEventListener('input', e => {
+			qcState.n = Math.min(+e.target.value, qcState.total);
+			qcState.m = qcState.total - qcState.n;
+			document.getElementById('qc-m').value = qcState.m;
+			qcUpdate();
+		});
+		document.querySelectorAll('[data-qc-val]').forEach(btn => {
+			btn.addEventListener('click', () => {
+				btn.parentElement.querySelectorAll('[data-qc-val]').forEach(b => b.classList.remove('active'));
+				btn.classList.add('active');
+				qcState.signed = btn.dataset.qcVal === 'signed';
+				qcUpdate();
+			});
+		});
+		document.querySelectorAll('#qc-op-selector .qc-op-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				document.querySelectorAll('#qc-op-selector .qc-op-btn').forEach(b => b.classList.remove('active'));
+				btn.classList.add('active');
+				qcState.op = btn.dataset.qcOp;
+				qcUpdate();
+			});
+		});
+		document.getElementById('qc-input-a').addEventListener('input', () => qcUpdate());
+		document.getElementById('qc-input-b').addEventListener('input', () => qcUpdate());
+
 		// Reveal.js lifecycle — rAF ensures layout is settled before canvas sizing
 		const axisSlide = document.getElementById('num-axis-slide');
 		const tradeoffSlide = document.getElementById('qmn-tradeoff-slide');
+		const calcSlide = document.getElementById('qmn-calc-slide');
 		const nvShow = () => requestAnimationFrame(nvUpdate);
 		const qmnShow = () => requestAnimationFrame(qmnUpdate);
+		const qcShow = () => requestAnimationFrame(qcUpdate);
 		Reveal.on('ready', e => {
 			if (e.currentSlide === axisSlide) nvShow();
 			if (e.currentSlide === tradeoffSlide) qmnShow();
+			if (e.currentSlide === calcSlide) qcShow();
 		});
 		Reveal.on('slidechanged', e => {
 			if (e.currentSlide === axisSlide) nvShow();
 			if (e.currentSlide === tradeoffSlide) qmnShow();
+			if (e.currentSlide === calcSlide) qcShow();
 		});
-		window.addEventListener('resize', () => { nvShow(); qmnShow(); });
+		window.addEventListener('resize', () => { nvShow(); qmnShow(); qcShow(); });
 	})();
 	</script>
 
