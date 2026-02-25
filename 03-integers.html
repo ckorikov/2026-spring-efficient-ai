@@ -115,6 +115,80 @@
 		.reveal .slides section.slide-method-cards .carry-cross::after {
 			transform: rotate(-35deg);
 		}
+
+		/* ── num-axis-viz ───────────────────────────────────────── */
+		.num-axis-viz {
+			width: 100%; font-size: 12px;
+			display: flex; flex-direction: column; gap: 6px;
+		}
+		.num-axis-viz .nv-row {
+			display: flex; gap: 24px; align-items: center; width: 100%;
+		}
+		.num-axis-viz .nv-row .format-section {
+			flex: 1 1 0; min-width: 0;
+		}
+		.num-axis-viz .nv-row .config-panel {
+			flex: 0 0 180px;
+		}
+		.num-axis-viz .axis-container {
+			width: 100%; height: 80px;
+		}
+		.num-axis-viz .axis-canvas {
+			display: block; width: 100%; height: 80px; cursor: crosshair;
+		}
+		.num-axis-viz .config-panel {
+			width: 100%; box-sizing: border-box;
+			background: rgba(45,42,38,0.04);
+			border: 1px solid #d5d0c8; border-radius: 4px; padding: 10px;
+		}
+		.num-axis-viz .config-stats {
+			text-align: center; font-size: 9px; color: #8a857d;
+			line-height: 1.6; margin-bottom: 8px;
+			padding-bottom: 7px; border-bottom: 1px solid #e0ddd8;
+		}
+		.num-axis-viz .config-stats strong { color: #2d2a26; font-weight: 500; }
+		.num-axis-viz .config-row { margin-bottom: 6px; }
+		.num-axis-viz .config-row:last-child { margin-bottom: 0; }
+		.num-axis-viz .config-row label {
+			display: flex; justify-content: space-between;
+			font-size: 9px; color: #8a857d; margin-bottom: 2px;
+		}
+		.num-axis-viz .config-row .value-display {
+			font-size: 11px; color: #2d2a26;
+		}
+		.num-axis-viz input[type="range"] {
+			width: 100%; height: 3px;
+			-webkit-appearance: none; appearance: none;
+			background: #d5d0c8; border-radius: 2px; outline: none;
+		}
+		.num-axis-viz input[type="range"]::-webkit-slider-thumb {
+			-webkit-appearance: none; width: 10px; height: 10px;
+			border-radius: 50%; cursor: pointer;
+		}
+		.num-axis-viz .int-section input[type="range"]::-webkit-slider-thumb { background: #6a8fa5; }
+		.num-axis-viz .frac-section input[type="range"]::-webkit-slider-thumb { background: #a07060; }
+
+		.num-axis-viz .toggle-group {
+			display: flex; border: 1px solid #d5d0c8;
+			border-radius: 3px; overflow: hidden;
+		}
+		.num-axis-viz .toggle-btn {
+			flex: 1; padding: 4px 0; text-align: center;
+			font-size: 9px; font-family: 'IBM Plex Mono', monospace;
+			background: transparent; color: #8a857d; border: none; cursor: pointer;
+			transition: all 0.15s;
+		}
+		.num-axis-viz .int-section  .toggle-btn.active { background: rgba(106,143,165,0.1);  color: #6a8fa5; }
+		.num-axis-viz .frac-section .toggle-btn.active { background: rgba(160,112,96,0.1); color: #a07060; }
+
+		.num-axis-viz .toggle-btn.active { font-weight: 500; }
+		.num-axis-viz .section-label {
+			font-size: 9px; color: #8a857d;
+			letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 25px;
+		}
+		.num-axis-viz .separator {
+			width: 100%; height: 1px; background: #e0ddd8; margin: 2px 0;
+		}
 	</style>
 
 </head>
@@ -194,7 +268,14 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 6 — Бит и знак -->
+			<!-- SLIDE 6 — Умножитель -->
+			<section data-init="multiplier" data-header="Умножитель">
+				<div class="slide-single align-center">
+					<svg id="multiplier-svg" viewBox="0 0 600 420" style="width: 100%; max-width: 600px; font-family: 'IBM Plex Mono', monospace;"></svg>
+				</div>
+			</section>
+
+			<!-- SLIDE 7 — Бит и знак -->
 			<section data-header="Отрицательные числа">
 				<div class="slide-two-col cols-equal">
 					<div class="col-left" style="display: flex; align-items: center; justify-content: center;">

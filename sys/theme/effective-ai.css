@@ -892,3 +892,10 @@
     display: none;
   }
 }
+
+/* Circuit diagrams — node label vertical centering */
+#multiplier-svg text[id^="mNt"],
+#adder-svg text[id^="fL"] {
+  dominant-baseline: central;
+  transform: translateY(-4px);
+}
