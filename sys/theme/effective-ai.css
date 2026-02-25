@@ -537,6 +537,16 @@
   color: var(--r-muted);
 }
 
+.toc-item a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.15s ease;
+}
+
+.toc-item a:hover {
+  color: var(--r-accent);
+}
+
 /*********************************************
  * COMPONENT — slide header (in-section element)
  *********************************************/
