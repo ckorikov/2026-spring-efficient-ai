@@ -1,0 +1,269 @@
+/* ================================================================
+ * numfmt.css — число-форматный визуализатор, warm-paper theme
+ * ================================================================ */
+
+.numfmt-viz {
+  --nf-bg:       #f0ede8;
+  --nf-bg2:      #e8e4dc;
+  --nf-border:   #d5d0c8;
+  --nf-ink:      #2d2a26;
+  --nf-muted:    #8a857d;
+  --nf-subtle:   #b5b0a8;
+  --nf-accent-x: #6a8fa5;
+  --nf-accent-y: #a07060;
+  --nf-accent-ok:#5a8a5a;
+  --nf-font:     'IBM Plex Mono', monospace;
+
+  font-family: var(--nf-font);
+  font-size: 11px;
+  color: var(--nf-ink);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ── View bar (above chart) ──────────────────────────────────── */
+.numfmt-viz .nf-view-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-bottom: 4px;
+}
+
+.numfmt-viz .nf-view-divider {
+  color: var(--nf-subtle);
+  font-size: 11px;
+  padding: 0 2px;
+  user-select: none;
+}
+
+.numfmt-viz .nf-view-axis {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.numfmt-viz .nf-view-lbl {
+  font-size: 9px;
+  font-weight: 600;
+  width: 14px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.numfmt-viz .nf-view-x .nf-view-lbl { color: var(--nf-accent-x); }
+.numfmt-viz .nf-view-y .nf-view-lbl { color: var(--nf-accent-y); }
+
+.numfmt-viz .nf-view-input {
+  width: 68px;
+  background: var(--nf-bg2);
+  border: 1px solid var(--nf-border);
+  border-radius: 3px;
+  color: var(--nf-ink);
+  font-family: var(--nf-font);
+  font-size: 9px;
+  padding: 2px 5px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.12s;
+}
+.numfmt-viz .nf-view-input:focus { border-color: var(--nf-accent-x); }
+.numfmt-viz .nf-view-y .nf-view-input:focus { border-color: var(--nf-accent-y); }
+
+.numfmt-viz .nf-view-sep {
+  color: var(--nf-subtle);
+  font-size: 10px;
+  user-select: none;
+  padding: 0 1px;
+}
+
+/* ── Main area: y-buttons | chart+x-buttons ──────────────────── */
+.numfmt-viz .nf-main-area {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: stretch;
+}
+
+.numfmt-viz .nf-y-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* centred on Y axis */
+  gap: 2px;
+  padding-right: 6px;
+}
+
+.numfmt-viz .nf-chart-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;  /* prevent grid blowout */
+}
+
+.numfmt-viz .nf-chart-wrap {
+  position: relative;
+  flex: 1;
+}
+.numfmt-viz .nf-chart-canvas {
+  display: block;
+  max-width: 100%;
+  cursor: crosshair;
+}
+
+.numfmt-viz .nf-x-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;  /* centred on X axis */
+  padding: 4px 0 0;
+}
+
+/* ── Shared button style ─────────────────────────────────────── */
+.numfmt-viz .nf-tb-btn {
+  padding: 2px 6px;
+  background: transparent;
+  border: 1px solid var(--nf-border);
+  border-radius: 3px;
+  color: var(--nf-muted);
+  font-family: var(--nf-font);
+  font-size: 9px;
+  cursor: pointer;
+  transition: all 0.12s;
+  white-space: nowrap;
+}
+.numfmt-viz .nf-tb-btn:hover {
+  color: var(--nf-ink);
+  border-color: var(--nf-accent-x);
+}
+.numfmt-viz .nf-tb-btn.active {
+  color: var(--nf-accent-x);
+  border-color: rgba(106,143,165,0.4);
+  background: rgba(106,143,165,0.08);
+}
+
+/* ── Format buttons ──────────────────────────────────────────── */
+.numfmt-viz .nf-fmt-btn {
+  padding: 3px 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--nf-muted);
+  font-family: var(--nf-font);
+  font-size: 9px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.12s;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.numfmt-viz .nf-fmt-btn:hover {
+  border-color: var(--nf-border);
+  color: var(--nf-ink);
+}
+.numfmt-viz .nf-fmt-btn.active-y {
+  background: rgba(160,112,96,0.1);
+  border-color: rgba(160,112,96,0.45);
+  color: var(--nf-accent-y);
+}
+.numfmt-viz .nf-fmt-btn.active-x {
+  background: rgba(106,143,165,0.1);
+  border-color: rgba(106,143,165,0.45);
+  color: var(--nf-accent-x);
+}
+
+/* Qm.n inline params */
+.numfmt-viz .nf-q-inline {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  color: var(--nf-muted);
+  padding: 1px 3px;
+}
+.numfmt-viz .nf-q-inline.visible { display: flex; }
+.numfmt-viz .nf-q-inline label { font-weight: 500; }
+.numfmt-viz .nf-q-inline input {
+  width: 28px;
+  background: var(--nf-bg2);
+  border: 1px solid var(--nf-border);
+  border-radius: 3px;
+  color: var(--nf-ink);
+  font-family: var(--nf-font);
+  font-size: 9px;
+  padding: 1px 3px;
+  text-align: center;
+}
+
+/* ── Layer toggles ───────────────────────────────────────────── */
+.numfmt-viz .nf-layers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+}
+.numfmt-viz .nf-layers .nf-sep {
+  color: var(--nf-subtle);
+  font-size: 9px;
+  user-select: none;
+}
+
+/* ── Tooltip ─────────────────────────────────────────────────── */
+.numfmt-viz .nf-tooltip {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+  background: rgba(247,245,242,0.96);
+  border: 1px solid var(--nf-border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-family: var(--nf-font);
+  font-size: 9px;
+  line-height: 1.7;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  min-width: 160px;
+  box-shadow: 0 2px 8px rgba(45,42,38,0.08);
+}
+.numfmt-viz .nf-tooltip .tl { color: var(--nf-muted); }
+.numfmt-viz .nf-tooltip .tv  { color: var(--nf-accent-x); font-weight: 500; }
+.numfmt-viz .nf-tooltip .tv2 { color: var(--nf-accent-y); font-weight: 500; }
+.numfmt-viz .nf-tooltip .te  { color: var(--nf-accent-ok); }
+
+/* ── Legend ──────────────────────────────────────────────────── */
+.numfmt-viz .nf-legend {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--nf-muted);
+  flex-wrap: wrap;
+  padding: 2px 0;
+}
+.numfmt-viz .nf-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.numfmt-viz .nf-legend-line {
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+}
+.numfmt-viz .nf-legend-line.curve  { background: var(--nf-accent-x); }
+.numfmt-viz .nf-legend-line.ideal  { background: var(--nf-accent-y); opacity: 0.4; }
+.numfmt-viz .nf-legend-line.step-y { background: var(--nf-accent-ok); opacity: 0.5; }
+.numfmt-viz .nf-legend-line.step-x { background: var(--nf-accent-x); opacity: 0.4; }
+.numfmt-viz .nf-legend-line.range-x { height: 0; border-top: 2px dashed var(--nf-accent-x); opacity: 0.6; }
+.numfmt-viz .nf-legend-line.range-y { height: 0; border-top: 2px dashed var(--nf-accent-y); opacity: 0.6; }
+
+/* ── Hint ────────────────────────────────────────────────────── */
+.numfmt-viz .nf-hint {
+  text-align: center;
+  font-size: 8px;
+  color: var(--nf-subtle);
+  padding: 1px 0;
+}
