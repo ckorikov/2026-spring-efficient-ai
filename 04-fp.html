@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Числа с плавающей точкой — Effective AI 2026</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap"
+		rel="stylesheet">
+
+	<!-- Reveal.js core -->
+	<link rel="stylesheet" href="sys/reset.css">
+	<link rel="stylesheet" href="sys/reveal.css">
+	<link rel="stylesheet" href="sys/theme/effective-ai.css" id="theme">
+	<!-- CodeMirror -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+
+	<style>
+		.sim8-table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 11.5px;
+			font-family: 'IBM Plex Mono', monospace;
+		}
+		.sim8-table th, .sim8-table td {
+			padding: 7px 10px;
+			border-bottom: 1px solid #e0ddd8;
+			text-align: left;
+			vertical-align: top;
+		}
+		.sim8-table th {
+			font-size: 9px;
+			letter-spacing: 0.8px;
+			text-transform: uppercase;
+			color: #8a857d;
+			font-weight: 400;
+		}
+		.sim8-table .hl { color: #9d4a30; font-weight: 500; }
+		.sim8-table .th-exp { color: #6a8fa5; }
+		.sim8-table .th-mant { color: #5a8a5a; }
+	</style>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<div class="slide-margins">
+				<div class="slide-corner-tl"></div>
+				<div class="slide-corner-tr"></div>
+				<div class="slide-corner-bl"></div>
+				<div class="slide-corner-br"></div>
+			</div>
+
+			<!-- SLIDE 1 — Title -->
+			<section data-tl="Занятие 04 · 15" data-bl="4 марта 2026">
+				<div class="slide-single align-left">
+					<h1 class="slide-title">Числа с плавающей точкой</h1>
+					<p class="slide-subtitle text-muted">
+						Эффективные методы реализации моделей ИИ
+					</p>
+					<div class="author">
+						<div class="author-photo has-image">
+							<img src="assets/ck.jpeg" alt="Constantine Korikov"
+								onerror="this.parentElement.classList.remove('has-image')">
+						</div>
+						<div>
+							<div class="author-name">Константин Кориков</div>
+							<div class="author-role">PhD, AI Research Engineer</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 2 — TOC -->
+			<section data-header="План">
+				<div class="slide-single align-center">
+					<div class="toc">
+						<div class="toc-item">
+							<span class="toc-title">sim8 v2 — обзор</span>
+							<span class="toc-page">10 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Домашнее задание</span>
+							<span class="toc-page">15 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Ассемблерная эстафета</span>
+							<span class="toc-page">25 мин</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 1: sim8 v2 ─────────────────────────────────── -->
+
+			<!-- SLIDE 3 — Divider -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>sim8 v2</h2>
+					<p class="divider-sub">FPU-расширение поверх целочисленного ядра</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 4 — sim8 v2 -->
+			<section data-header="sim8 v2">
+				<div class="slide-single align-center">
+					<a href="https://ckorikov.github.io/sim8/" target="_blank">
+						<img src="assets/sim8-screenshot.png"
+							alt="sim8 v2"
+							style="max-width: 100%; max-height: 460px; border-radius: 6px; border: 1px solid #d5d0c8;">
+					</a>
+					<p class="text-muted" style="font-size: 11px; margin-top: 8px;">
+						<a href="https://ckorikov.github.io/sim8/" target="_blank">ckorikov.github.io/sim8</a>
+					</p>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 2: Домашнее задание ───────────────────────── -->
+
+			<!-- SLIDE 5 — Divider -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Домашнее задание</h2>
+					<p class="divider-sub"><a href="03-integers.html#/15">Занятие 03</a></p>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 3: Эстафета ────────────────────────────────── -->
+
+			<!-- SLIDE 9 — Divider -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Ассемблерная эстафета</h2>
+					<p class="divider-sub">3 раунда</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 10 — Раунд 1: dot product -->
+			<section data-init="codemirror" data-header="Раунд 1 · Скалярное произведение">
+				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+					<div class="col-left">
+						<textarea data-lang="asm8">JMP start
+vec_a: DB 2.0_o3, 3.0_o3, 1.5_o3   ; OFP8 E4M3
+vec_b: DB 1.75_o3, 1.0_o3, 2.5_o3
+zero:  DB 0.0_h                      ; float16
+
+start:
+
+    HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Dot product</p>
+						<p class="text-muted">OFP8 E4M3 входы, float16 аккумулятор.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 11 — Раунд 2: matvec -->
+			<section data-init="codemirror" data-header="Раунд 2 · Матрица × вектор">
+				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+					<div class="col-left">
+						<textarea data-lang="asm8">JMP start
+; Матрица 2×3 (row-major), OFP8 E4M3
+; | 1.0  2.0  0.5 |
+; | 1.5  1.0  2.0 |
+mat: DB 1.0_o3, 2.0_o3, 0.5_o3
+     DB 1.5_o3, 1.0_o3, 2.0_o3
+vec: DB 2.0_o3, 1.0_o3, 1.5_o3
+res: DB 0, 0, 0, 0     ; 2 × float16
+
+start:
+
+    HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">y = Wx</p>
+						<p class="text-muted">Matmul = набор dot product'ов. Двойной цикл, row-major.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 12 — Раунд 3: exp(x) -->
+			<section data-init="codemirror" data-header="Раунд 3 · exp(x)">
+				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+					<div class="col-left">
+						<textarea data-lang="asm8">JMP start
+x_val: DB 1.0_h     ; float16
+one:   DB 1.0_h
+half:  DB 0.5_h
+sixth: DB 0.16667_h
+
+start:
+
+    HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">exp(x) без инструкции</p>
+						<p class="text-muted">ISA не поддерживает exp.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 11 — Final -->
+			<section data-header="" data-tr="" data-bl="">
+				<div class="slide-single align-center">
+					<p class="text-muted" style="font-size: 13px;">
+						<a href="mailto:constantine.korikov@gmail.com">constantine.korikov@gmail.com</a>
+					</p>
+				</div>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="sys/reveal.js"></script>
+	<script src="sys/plugin/notes/notes.js"></script>
+	<script src="sys/slide-kit.js"></script>
+	<script src="sys/codemirror-kit.js"></script>
+
+	<script>
+		SlideKit.configure({
+			tr: 'Effective AI 2026',
+			trUrl: 'https://korikov.cc/teaching/2026-mipt-effective-ai-2026/',
+			bl: 'Константин Кориков',
+			blUrl: 'https://korikov.cc/about/',
+			sub: 'Занятие 04'
+		});
+
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			center: false,
+			hash: true,
+			transition: 'fade',
+			plugins: [RevealNotes]
+		});
+	</script>
+</body>
+</html>
