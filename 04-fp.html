@@ -20,31 +20,48 @@
 	<!-- CodeMirror -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
 
 	<style>
-		.sim8-table {
-			width: 100%;
-			border-collapse: collapse;
-			font-size: 11.5px;
-			font-family: 'IBM Plex Mono', monospace;
+		/* ── num-axis-viz (точная копия из 03-integers) ─────────── */
+		.num-axis-viz { width: 100%; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
+		.num-axis-viz .nv-row { display: flex; gap: 24px; align-items: center; width: 100%; }
+		.num-axis-viz .nv-row .format-section { flex: 1 1 0; min-width: 0; }
+		.num-axis-viz .nv-row .config-panel   { flex: 0 0 180px; }
+		.num-axis-viz .axis-container { width: 100%; height: 80px; }
+		.num-axis-viz .axis-canvas { display: block; width: 100%; height: 80px; cursor: crosshair; }
+		.num-axis-viz .config-panel {
+			width: 100%; box-sizing: border-box;
+			background: rgba(45,42,38,0.04);
+			border: 1px solid #d5d0c8; border-radius: 4px; padding: 10px;
 		}
-		.sim8-table th, .sim8-table td {
-			padding: 7px 10px;
-			border-bottom: 1px solid #e0ddd8;
-			text-align: left;
-			vertical-align: top;
+		.num-axis-viz .config-stats {
+			text-align: center; font-size: 9px; color: #8a857d;
+			line-height: 1.6; margin-bottom: 8px;
+			padding-bottom: 7px; border-bottom: 1px solid #e0ddd8;
 		}
-		.sim8-table th {
-			font-size: 9px;
-			letter-spacing: 0.8px;
-			text-transform: uppercase;
-			color: #8a857d;
-			font-weight: 400;
+		.num-axis-viz .config-stats strong { color: #2d2a26; font-weight: 500; }
+		.num-axis-viz .config-row { margin-bottom: 6px; }
+		.num-axis-viz .config-row:last-child { margin-bottom: 0; }
+		.num-axis-viz .config-row label {
+			display: flex; justify-content: space-between;
+			font-size: 9px; color: #8a857d; margin-bottom: 2px;
 		}
-		.sim8-table .hl { color: #9d4a30; font-weight: 500; }
-		.sim8-table .th-exp { color: #6a8fa5; }
-		.sim8-table .th-mant { color: #5a8a5a; }
+		.num-axis-viz .config-row .value-display { font-size: 11px; color: #2d2a26; }
+		.num-axis-viz input[type="range"] {
+			width: 100%; height: 3px;
+			-webkit-appearance: none; appearance: none;
+			background: #d5d0c8; border-radius: 2px; outline: none;
+		}
+		.num-axis-viz input[type="range"]::-webkit-slider-thumb {
+			-webkit-appearance: none; width: 10px; height: 10px;
+			border-radius: 50%; cursor: pointer;
+		}
+		.num-axis-viz .int-section  input[type="range"]::-webkit-slider-thumb { background: #6a8fa5; }
+		.num-axis-viz .frac-section input[type="range"]::-webkit-slider-thumb { background: #a07060; }
+.num-axis-viz .section-label {
+			font-size: 9px; color: #8a857d;
+			letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 25px;
+		}
 	</style>
 </head>
 
@@ -129,7 +146,56 @@
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>Домашнее задание</h2>
-					<p class="divider-sub"><a href="03-integers.html#/15">Занятие 03</a></p>
+					<p class="divider-sub"><a href="03-integers.html#/16">Занятие 03</a></p>
+				</div>
+			</section>
+
+			<!-- SLIDE 6 — Диапазоны чисел -->
+			<section data-header="Диапазоны чисел">
+				<div class="slide-single align-center">
+					<div class="num-axis-viz">
+
+						<!-- Ряд 1: фиксированная точка -->
+						<div class="nv-row">
+							<div class="format-section frac-section">
+								<div class="section-label">Фиксированная точка · Q<span id="cmp-frac-fmt">2.5</span> · со знаком · 8 бит</div>
+								<div class="axis-container">
+									<canvas class="axis-canvas" id="cmp-frac-canvas"></canvas>
+								</div>
+							</div>
+							<div class="config-panel frac-section">
+								<div class="config-stats">
+									min: <strong id="cmp-frac-min">−2</strong> · max: <strong id="cmp-frac-max">1.96875</strong><br>
+									шаг: <strong id="cmp-frac-step">0.03125</strong> · значений: <strong id="cmp-frac-count">128</strong>
+								</div>
+								<div class="config-row">
+									<label>Дробные биты (n) <span class="value-display" id="cmp-frac-n-val">5</span></label>
+									<input type="range" id="cmp-frac-n" min="0" max="7" value="5">
+								</div>
+								</div>
+						</div>
+
+						<!-- Ряд 2: плавающая точка -->
+						<div class="nv-row">
+							<div class="format-section int-section">
+								<div class="section-label">Плавающая точка · E<span id="cmp-fp-e-lbl">5</span>M<span id="cmp-fp-m-lbl">2</span> · со знаком · 8 бит</div>
+								<div class="axis-container">
+									<canvas class="axis-canvas" id="cmp-fp-canvas"></canvas>
+								</div>
+							</div>
+							<div class="config-panel int-section">
+								<div class="config-stats">
+									min: <strong id="cmp-fp-min">−57344</strong> · max: <strong id="cmp-fp-max">57344</strong><br>
+									значений: <strong id="cmp-fp-count">248</strong>
+								</div>
+								<div class="config-row">
+									<label>Экспонента E <span class="value-display" id="cmp-fp-e-val">5</span></label>
+									<input type="range" id="cmp-fp-e" min="1" max="14" value="5">
+								</div>
+							</div>
+						</div>
+
+					</div>
 				</div>
 			</section>
 
@@ -139,71 +205,82 @@
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>Ассемблерная эстафета</h2>
-					<p class="divider-sub">3 раунда</p>
+					<p class="divider-sub">3 задания</p>
 				</div>
 			</section>
 
-			<!-- SLIDE 10 — Раунд 1: dot product -->
-			<section data-init="codemirror" data-header="Раунд 1 · Скалярное произведение">
+			<!-- SLIDE 10 — Задание 1: dot product -->
+			<section data-init="codemirror" data-header="Задание 1">
 				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
 					<div class="col-left">
 						<textarea data-lang="asm8">JMP start
-vec_a: DB 2.0_o3, 3.0_o3, 1.5_o3   ; OFP8 E4M3
+vec_a: DB 2.0_o3, 3.0_o3, 1.5_o3
 vec_b: DB 1.75_o3, 1.0_o3, 2.5_o3
-zero:  DB 0.0_h                      ; float16
+acc:   DB 0.0_h
 
 start:
+    MOV A, vec_a
+    MOV B, vec_b
+    MOV C, 3
+    MOV D, acc
+    ; Решение
 
     HLT</textarea>
 					</div>
 					<div class="col-left col-prose">
-						<p class="col-prose-heading">Dot product</p>
-						<p class="text-muted">OFP8 E4M3 входы, float16 аккумулятор.</p>
+						<p class="col-prose-heading">Скалярное произведение</p>
+						<p>\(\mathbf{a} \cdot \mathbf{b} = \sum_{i} a_i b_i\)</p>
+						<p class="text-muted">Два вектора по три элемента хранятся в памяти в формате OFP8 E4M3. Пройдитесь по парам элементов, перемножьте и накопите сумму в <code>acc</code> как float16.</p>
 					</div>
 				</div>
 			</section>
 
-			<!-- SLIDE 11 — Раунд 2: matvec -->
-			<section data-init="codemirror" data-header="Раунд 2 · Матрица × вектор">
+			<!-- SLIDE 11 — Задание 2: matvec -->
+			<section data-init="codemirror" data-header="Задание 2">
 				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
 					<div class="col-left">
 						<textarea data-lang="asm8">JMP start
-; Матрица 2×3 (row-major), OFP8 E4M3
-; | 1.0  2.0  0.5 |
-; | 1.5  1.0  2.0 |
 mat: DB 1.0_o3, 2.0_o3, 0.5_o3
      DB 1.5_o3, 1.0_o3, 2.0_o3
 vec: DB 2.0_o3, 1.0_o3, 1.5_o3
-res: DB 0, 0, 0, 0     ; 2 × float16
+res: DB 0.0_h, 0.0_h
 
 start:
+    MOV A, mat
+    MOV B, vec
+    MOV C, 2
+    MOV D, res
+    ; Решение
 
     HLT</textarea>
 					</div>
 					<div class="col-left col-prose">
-						<p class="col-prose-heading">y = Wx</p>
-						<p class="text-muted">Matmul = набор dot product'ов. Двойной цикл, row-major.</p>
+						<p class="col-prose-heading">Матрица × вектор</p>
+						<p>\(\mathbf{y} = W\mathbf{x}\)</p>
+						<p class="text-muted">Матрица W (2×3) и вектор x (3×1) хранятся в памяти построчно в формате OFP8 E4M3. Для каждой строки W посчитайте скалярное произведение с x и запишите результат (float16) в <code>res</code>.</p>
 					</div>
 				</div>
 			</section>
 
-			<!-- SLIDE 12 — Раунд 3: exp(x) -->
-			<section data-init="codemirror" data-header="Раунд 3 · exp(x)">
+			<!-- SLIDE 12 — Задание 3: экспонента -->
+			<section data-init="codemirror" data-header="Задание 3">
 				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
 					<div class="col-left">
 						<textarea data-lang="asm8">JMP start
-x_val: DB 1.0_h     ; float16
-one:   DB 1.0_h
-half:  DB 0.5_h
-sixth: DB 0.16667_h
+x:   DB 1.0_h
+res: DB 0.0_h
 
 start:
+    MOV A, x
+    MOV B, res
+    FMOV.H FHA, [A]
+    ; Решение
 
     HLT</textarea>
 					</div>
 					<div class="col-left col-prose">
-						<p class="col-prose-heading">exp(x) без инструкции</p>
-						<p class="text-muted">ISA не поддерживает exp.</p>
+						<p class="col-prose-heading">Экспонента</p>
+						<p class="text-muted">Входное значение x = 1.0 хранится в памяти как float16. Аппаратной инструкции для экспоненты нет — придумайте, как её посчитать. Результат запишите в <code>res</code>.</p>
 					</div>
 				</div>
 			</section>
@@ -220,8 +297,401 @@ start:
 		</div>
 	</div>
 
+	<script>
+	(function () {
+		const BG        = '#f7f5f2';
+		const COL_INT   = '#6a8fa5';
+		const COL_FRAC  = '#a07060';
+		const COL_SIGN  = '#a07070';
+		const COL_FBITS = '#7a9a7a';
+		const COL_AXIS  = '#c8c3bb';
+		const COL_ZERO  = '#2d2a26';
+		const COL_MUTED = '#a09a92';
+		const DPR  = window.devicePixelRatio || 1;
+		const FONT = '"IBM Plex Mono", monospace';
+
+		// ── State ──────────────────────────────────────────────────
+		const fracState = { total: 8, m: 2, n: 5, signed: true, clicked: null, hovered: null };
+		const fpState   = { total: 8, expBits: 5, clicked: null, hovered: null };
+
+		// ── Fixed-point helpers (точная копия из 03-integers) ──────
+		function fracRange(m, n, signed) {
+			const totalBits = m + n;
+			if (totalBits === 0) return { min: 0, max: 0, step: 0, count: 0 };
+			const count = 1 << totalBits;
+			const step = n > 0 ? 1 / (1 << n) : 1;
+			if (signed) {
+				const half = count / 2;
+				return { min: -half * step, max: (half - 1) * step, step, count };
+			}
+			return { min: 0, max: (count - 1) * step, step, count };
+		}
+
+		function toBinary(val, totalBits, signed, fracBits) {
+			let intVal = Math.round(val * (fracBits > 0 ? (1 << fracBits) : 1));
+			if (signed && intVal < 0) intVal = (1 << totalBits) + intVal;
+			let s = intVal.toString(2).padStart(totalBits, '0');
+			if (s.length > totalBits) s = s.slice(-totalBits);
+			return s;
+		}
+
+		function fmtVal(v) { return v.toString(); }
+
+		function drawAxis(canvasId, range, color, clickedVal, hoveredVal, totalBits, signed, fracBits) {
+			const canvas = document.getElementById(canvasId);
+			if (!canvas) return;
+			const W = canvas.parentElement.offsetWidth;
+			if (W === 0) return;
+			canvas.width = W * DPR; canvas.height = 80 * DPR;
+			canvas.style.width = W + 'px'; canvas.style.height = '80px';
+			const ctx = canvas.getContext('2d');
+			ctx.scale(DPR, DPR);
+			const pad = 24, axisY = 46, axisLen = W - pad * 2;
+			ctx.clearRect(0, 0, W, 80);
+
+			if (range.count === 0) {
+				ctx.fillStyle = COL_MUTED; ctx.font = '11px ' + FONT; ctx.textAlign = 'center';
+				ctx.fillText('Нет значений (0 бит)', W / 2, axisY); return;
+			}
+			const { min, max, step, count } = range;
+			const span = max - min;
+			const xFor = v => span === 0 ? pad + axisLen / 2 : pad + ((v - min) / span) * axisLen;
+
+			ctx.strokeStyle = COL_AXIS; ctx.lineWidth = 1;
+			ctx.beginPath(); ctx.moveTo(pad, axisY); ctx.lineTo(W - pad, axisY); ctx.stroke();
+
+			const maxTicks = Math.min(count, Math.floor(axisLen / 2));
+			const tickStep = Math.max(1, Math.floor(count / maxTicks));
+			ctx.strokeStyle = color + '55'; ctx.lineWidth = 1;
+			for (let i = 0; i < count; i += tickStep) {
+				const x = xFor(min + i * step);
+				ctx.beginPath(); ctx.moveTo(x, axisY - 4); ctx.lineTo(x, axisY + 4); ctx.stroke();
+			}
+
+			ctx.fillStyle = color; ctx.font = 'bold 11px ' + FONT;
+			ctx.textAlign = 'center'; ctx.strokeStyle = color; ctx.lineWidth = 2;
+			[min, max].forEach(v => {
+				const x = xFor(v);
+				ctx.beginPath(); ctx.moveTo(x, axisY - 8); ctx.lineTo(x, axisY + 8); ctx.stroke();
+				ctx.fillText(fmtVal(v), x, axisY + 20);
+			});
+
+			if (min < 0 && max > 0) {
+				const zx = xFor(0);
+				ctx.strokeStyle = COL_ZERO; ctx.lineWidth = 1.5;
+				ctx.beginPath(); ctx.moveTo(zx, axisY - 10); ctx.lineTo(zx, axisY + 10); ctx.stroke();
+				ctx.fillStyle = COL_ZERO; ctx.font = 'bold 11px ' + FONT; ctx.textAlign = 'center';
+				ctx.fillText('0', zx, axisY + 20);
+			}
+
+			// hover takes priority over click; show label for both
+			const displayVal = hoveredVal !== null ? hoveredVal : clickedVal;
+			if (displayVal !== null) {
+				const cx = xFor(displayVal);
+				ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+				ctx.beginPath(); ctx.moveTo(cx, axisY - 26); ctx.lineTo(cx, axisY); ctx.stroke();
+				ctx.setLineDash([]);
+				ctx.fillStyle = color;
+				ctx.beginPath(); ctx.arc(cx, axisY, 4, 0, Math.PI * 2); ctx.fill();
+
+				const bin = toBinary(displayVal, totalBits, signed, fracBits);
+				const decStr = fmtVal(displayVal);
+				ctx.font = 'bold 11px ' + FONT;
+				const charW = ctx.measureText('0').width;
+				const prefix = decStr + '  ';
+				const prefixW = ctx.measureText(prefix).width;
+				const obW = ctx.measureText('0b').width;
+				const brkW = ctx.measureText('[').width;
+				const totalW = prefixW + brkW + obW + charW * totalBits + brkW;
+				const lx = Math.max(totalW / 2 + 5, Math.min(cx, W - totalW / 2 - 5));
+				const labelY = axisY - 30;
+				ctx.fillStyle = BG;
+				ctx.fillRect(lx - totalW / 2 - 2, labelY - 11, totalW + 4, 15);
+				ctx.textAlign = 'left'; let curX = lx - totalW / 2;
+				ctx.fillStyle = color; ctx.fillText(prefix, curX, labelY); curX += prefixW;
+				ctx.fillStyle = COL_MUTED; ctx.fillText('[', curX, labelY); curX += brkW;
+				ctx.fillText('0b', curX, labelY); curX += obW;
+				for (let i = 0; i < totalBits; i++) {
+					ctx.fillStyle = (signed && i === 0) ? COL_SIGN : (i < totalBits - fracBits ? COL_INT : COL_FBITS);
+					ctx.fillText(bin[i], curX, labelY); curX += charW;
+				}
+				ctx.fillStyle = COL_MUTED; ctx.fillText(']', curX, labelY);
+			}
+		}
+
+		// ── FP helpers ──────────────────────────────────────────────
+		function fpMaxVal(totalBits, expBits) {
+			const M = totalBits - 1 - expBits;
+			if (M < 0 || expBits < 1) return 0;
+			const bias = (1 << (expBits - 1)) - 1;
+			const eMax = (1 << expBits) - 2;
+			const mMax = (1 << M) - 1;
+			return (1 + mMax / (1 << M)) * Math.pow(2, eMax - bias);
+		}
+
+		function fpEnumerate(totalBits, expBits) {
+			const M = totalBits - 1 - expBits;
+			if (M < 0) return [];
+			const bias   = (1 << (expBits - 1)) - 1;
+			const eMax   = (1 << expBits) - 1;
+			const maxM   = 1 << M;
+			const vals   = [0];
+			for (let e = 0; e < eMax; e++) {
+				for (let m = 0; m < maxM; m++) {
+					if (e === 0 && m === 0) continue;
+					const abs = e === 0
+						? (m / maxM) * Math.pow(2, 1 - bias)
+						: (1 + m / maxM) * Math.pow(2, e - bias);
+					if (isFinite(abs) && abs > 0) { vals.push(abs); vals.push(-abs); }
+				}
+			}
+			return vals.sort((a, b) => a - b);
+		}
+
+		function fpToBits(v, totalBits, expBits) {
+			const M = totalBits - 1 - expBits;
+			if (M < 0) return '0'.repeat(totalBits);
+			const bias    = (1 << (expBits - 1)) - 1;
+			const eAllOne = (1 << expBits) - 1;
+			const maxM    = 1 << M;
+			const sign    = v < 0 ? 1 : 0;
+			const abs     = Math.abs(v);
+			let eBits, mBits;
+			if (abs === 0) {
+				eBits = 0; mBits = 0;
+			} else {
+				const floorExp = Math.floor(Math.log2(abs));
+				const biasedE  = floorExp + bias;
+				if (biasedE >= 1 && biasedE <= eAllOne - 1) {
+					eBits = biasedE;
+					mBits = Math.max(0, Math.min(maxM - 1, Math.round((abs / Math.pow(2, floorExp) - 1) * maxM)));
+				} else if (biasedE < 1) {
+					eBits = 0;
+					mBits = Math.max(0, Math.min(maxM - 1, Math.round(abs * maxM * Math.pow(2, bias - 1))));
+				} else {
+					eBits = eAllOne - 1; mBits = maxM - 1;
+				}
+			}
+			return sign.toString()
+				+ eBits.toString(2).padStart(expBits, '0')
+				+ mBits.toString(2).padStart(M, '0');
+		}
+
+		function drawFPAxis(canvasId, totalBits, expBits, clickedVal, hoveredVal) {
+			const canvas = document.getElementById(canvasId);
+			if (!canvas) return;
+			const W = canvas.parentElement.offsetWidth;
+			if (W === 0) return;
+			canvas.width = W * DPR; canvas.height = 80 * DPR;
+			canvas.style.width = W + 'px'; canvas.style.height = '80px';
+			const ctx = canvas.getContext('2d');
+			ctx.scale(DPR, DPR);
+			const pad = 24, axisY = 46, axisLen = W - pad * 2;
+			ctx.clearRect(0, 0, W, 80);
+
+			const M = totalBits - 1 - expBits;
+			if (M < 0) {
+				ctx.fillStyle = COL_MUTED; ctx.font = '11px ' + FONT; ctx.textAlign = 'center';
+				ctx.fillText('Недостаточно бит', W / 2, axisY); return;
+			}
+			const maxV = fpMaxVal(totalBits, expBits);
+			if (!isFinite(maxV) || maxV === 0) return;
+			const xFor = v => pad + ((v + maxV) / (2 * maxV)) * axisLen;
+
+			ctx.strokeStyle = COL_AXIS; ctx.lineWidth = 1;
+			ctx.beginPath(); ctx.moveTo(pad, axisY); ctx.lineTo(W - pad, axisY); ctx.stroke();
+
+			const vals = fpEnumerate(totalBits, expBits);
+			ctx.strokeStyle = COL_INT + '55'; ctx.lineWidth = 1;
+			let lastX = -9999;
+			for (const v of vals) {
+				const x = xFor(v);
+				if (x >= pad - 1 && x <= W - pad + 1 && Math.abs(x - lastX) >= 0.5) {
+					ctx.beginPath(); ctx.moveTo(x, axisY - 4); ctx.lineTo(x, axisY + 4); ctx.stroke();
+					lastX = x;
+				}
+			}
+
+			ctx.fillStyle = COL_INT; ctx.font = 'bold 11px ' + FONT;
+			ctx.strokeStyle = COL_INT; ctx.lineWidth = 2; ctx.textAlign = 'center';
+			[-maxV, maxV].forEach(v => {
+				const x = xFor(v);
+				ctx.beginPath(); ctx.moveTo(x, axisY - 8); ctx.lineTo(x, axisY + 8); ctx.stroke();
+				const s = Math.abs(v) >= 1000 ? v.toFixed(0) : v.toPrecision(4);
+				ctx.fillText(s, x, axisY + 20);
+			});
+
+			const zx = xFor(0);
+			ctx.strokeStyle = COL_ZERO; ctx.lineWidth = 1.5;
+			ctx.beginPath(); ctx.moveTo(zx, axisY - 10); ctx.lineTo(zx, axisY + 10); ctx.stroke();
+			ctx.fillStyle = COL_ZERO; ctx.font = 'bold 11px ' + FONT;
+			ctx.textAlign = 'center'; ctx.fillText('0', zx, axisY + 20);
+
+			// hover takes priority over click; show label for both
+			const displayVal = hoveredVal !== null ? hoveredVal : clickedVal;
+			if (displayVal !== null) {
+				const cx = xFor(displayVal);
+				ctx.strokeStyle = COL_INT; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+				ctx.beginPath(); ctx.moveTo(cx, axisY - 26); ctx.lineTo(cx, axisY); ctx.stroke();
+				ctx.setLineDash([]);
+				ctx.fillStyle = COL_INT;
+				ctx.beginPath(); ctx.arc(cx, axisY, 4, 0, Math.PI * 2); ctx.fill();
+
+				const bin = fpToBits(displayVal, totalBits, expBits);
+				const decStr = displayVal === 0 ? '0'
+					: Math.abs(displayVal) < 0.001 ? displayVal.toExponential(2)
+					: Math.abs(displayVal) >= 1000  ? displayVal.toFixed(0)
+					: displayVal.toPrecision(4);
+				ctx.font = 'bold 11px ' + FONT;
+				const charW = ctx.measureText('0').width;
+				const sepW  = ctx.measureText('|').width;
+				const prefix = decStr + '  ';
+				const prefixW = ctx.measureText(prefix).width;
+				const obW = ctx.measureText('0b').width;
+				const brkW = ctx.measureText('[').width;
+				const totalW = prefixW + brkW + obW + charW + sepW + charW * expBits + sepW + charW * M + brkW;
+				const lx = Math.max(totalW / 2 + 5, Math.min(cx, W - totalW / 2 - 5));
+				const labelY = axisY - 30;
+				ctx.fillStyle = BG;
+				ctx.fillRect(lx - totalW / 2 - 2, labelY - 11, totalW + 4, 15);
+				ctx.textAlign = 'left'; let curX = lx - totalW / 2;
+				ctx.fillStyle = COL_INT;   ctx.fillText(prefix, curX, labelY); curX += prefixW;
+				ctx.fillStyle = COL_MUTED; ctx.fillText('[',  curX, labelY); curX += brkW;
+				ctx.fillStyle = COL_MUTED; ctx.fillText('0b', curX, labelY); curX += obW;
+				// sign
+				ctx.fillStyle = COL_SIGN;  ctx.fillText(bin[0], curX, labelY); curX += charW;
+				ctx.fillStyle = COL_MUTED; ctx.fillText('|',    curX, labelY); curX += sepW;
+				// exponent
+				for (let i = 0; i < expBits; i++) {
+					ctx.fillStyle = COL_INT; ctx.fillText(bin[1 + i], curX, labelY); curX += charW;
+				}
+				ctx.fillStyle = COL_MUTED; ctx.fillText('|', curX, labelY); curX += sepW;
+				// mantissa
+				for (let i = 0; i < M; i++) {
+					ctx.fillStyle = COL_FBITS; ctx.fillText(bin[1 + expBits + i], curX, labelY); curX += charW;
+				}
+				ctx.fillStyle = COL_MUTED; ctx.fillText(']', curX, labelY);
+			}
+		}
+
+		// ── Update ──────────────────────────────────────────────────
+		function updateFrac() {
+			const { total, n, signed } = fracState;
+			const dataBits = signed ? total - 1 : total;
+			const nSl = document.getElementById('cmp-frac-n');
+			nSl.max = dataBits;
+			fracState.n = Math.min(n, dataBits);
+			fracState.m = dataBits - fracState.n;
+			nSl.value = fracState.n;
+
+			document.getElementById('cmp-frac-n-val').textContent      = fracState.n;
+			document.getElementById('cmp-frac-fmt').textContent        = fracState.m + '.' + fracState.n;
+			const r = fracRange(fracState.m, fracState.n, signed);
+			document.getElementById('cmp-frac-min').textContent   = fmtVal(r.min);
+			document.getElementById('cmp-frac-max').textContent   = fmtVal(r.max);
+			document.getElementById('cmp-frac-step').textContent  = fmtVal(r.step);
+			document.getElementById('cmp-frac-count').textContent = r.count;
+			drawAxis('cmp-frac-canvas', r, COL_FRAC, fracState.clicked, fracState.hovered, total, signed, fracState.n);
+		}
+
+		function updateFP() {
+			const { total } = fpState;
+			const eSl = document.getElementById('cmp-fp-e');
+			eSl.max = total - 2; // total fixed at 8 → max E = 6
+			fpState.expBits = Math.min(fpState.expBits, total - 2);
+			eSl.value = fpState.expBits;
+			const M    = Math.max(0, total - 1 - fpState.expBits);
+			const maxV = fpMaxVal(total, fpState.expBits);
+			const cnt  = (1 << total) - 2 * (1 << M);
+
+			const fmtFP = v => isFinite(v) ? (Math.abs(v) >= 1000 ? v.toFixed(0) : v.toPrecision(4)) : '∞';
+			document.getElementById('cmp-fp-e-val').textContent    = fpState.expBits;
+			document.getElementById('cmp-fp-e-lbl').textContent    = fpState.expBits;
+			document.getElementById('cmp-fp-m-lbl').textContent    = M;
+			document.getElementById('cmp-fp-min').textContent      = isFinite(maxV) ? ('−' + fmtFP(maxV)) : '−∞';
+			document.getElementById('cmp-fp-max').textContent      = fmtFP(maxV);
+			document.getElementById('cmp-fp-count').textContent    = cnt > 0 ? cnt.toLocaleString('ru') : '—';
+			drawFPAxis('cmp-fp-canvas', total, fpState.expBits, fpState.clicked, fpState.hovered);
+		}
+
+		function redrawAll() { updateFrac(); updateFP(); }
+
+		// ── Snap helpers ────────────────────────────────────────────
+		function nearestFP(pixX, W) {
+			const maxV = fpMaxVal(fpState.total, fpState.expBits);
+			if (!isFinite(maxV) || maxV === 0) return null;
+			const target = -maxV + ((pixX - 24) / (W - 48)) * 2 * maxV;
+			const vals = fpEnumerate(fpState.total, fpState.expBits);
+			let best = vals[0], bestD = Infinity;
+			for (const v of vals) { const d = Math.abs(v - target); if (d < bestD) { bestD = d; best = v; } }
+			return best;
+		}
+
+		function snapFrac(pixX, W) {
+			const r = fracRange(fracState.m, fracState.n, fracState.signed);
+			if (r.count === 0) return;
+			const frac = (pixX - 24) / (W - 48);
+			const val  = r.min + frac * (r.max - r.min);
+			const idx  = Math.max(0, Math.min(r.count - 1, Math.round((val - r.min) / r.step)));
+			fracState.clicked = r.min + idx * r.step;
+		}
+
+		function snapFP(pixX, W) {
+			const best = nearestFP(pixX, W);
+			if (best !== null) fpState.clicked = best;
+		}
+
+		// ── Init ────────────────────────────────────────────────────
+		function init() {
+			if (!document.getElementById('cmp-frac-n')) return;
+
+			document.getElementById('cmp-frac-n').addEventListener('input', function () {
+				fracState.n = +this.value; fracState.clicked = null; updateFrac();
+			});
+			document.getElementById('cmp-frac-canvas').addEventListener('click', function (e) {
+				const r = this.getBoundingClientRect();
+				snapFrac(e.clientX - r.left, r.width); updateFrac();
+			});
+			document.getElementById('cmp-frac-canvas').addEventListener('mousemove', function (e) {
+				const r = this.getBoundingClientRect();
+				const range = fracRange(fracState.m, fracState.n, fracState.signed);
+				if (range.count === 0) return;
+				const frac = (e.clientX - r.left - 24) / (r.width - 48);
+				const val  = range.min + frac * (range.max - range.min);
+				const idx  = Math.max(0, Math.min(range.count - 1, Math.round((val - range.min) / range.step)));
+				const best = range.min + idx * range.step;
+				if (fracState.hovered !== best) { fracState.hovered = best; updateFrac(); }
+			});
+			document.getElementById('cmp-frac-canvas').addEventListener('mouseleave', function () {
+				fracState.hovered = null; updateFrac();
+			});
+
+			document.getElementById('cmp-fp-e').addEventListener('input', function () {
+				fpState.expBits = +this.value; fpState.clicked = null; updateFP();
+			});
+			document.getElementById('cmp-fp-canvas').addEventListener('click', function (e) {
+				const r = this.getBoundingClientRect();
+				snapFP(e.clientX - r.left, r.width); updateFP();
+			});
+			document.getElementById('cmp-fp-canvas').addEventListener('mousemove', function (e) {
+				const r = this.getBoundingClientRect();
+				const best = nearestFP(e.clientX - r.left, r.width);
+				if (best !== null && fpState.hovered !== best) { fpState.hovered = best; updateFP(); }
+			});
+			document.getElementById('cmp-fp-canvas').addEventListener('mouseleave', function () {
+				fpState.hovered = null; updateFP();
+			});
+		}
+
+		document.addEventListener('DOMContentLoaded', init);
+		window.addEventListener('load', redrawAll);
+		window._fpAxisRedraw = redrawAll;
+	})();
+	</script>
+
 	<script src="sys/reveal.js"></script>
 	<script src="sys/plugin/notes/notes.js"></script>
+	<script src="sys/plugin/math/math.js"></script>
 	<script src="sys/slide-kit.js"></script>
 	<script src="sys/codemirror-kit.js"></script>
 
@@ -240,7 +710,13 @@ start:
 			center: false,
 			hash: true,
 			transition: 'fade',
-			plugins: [RevealNotes]
+			plugins: [RevealNotes, RevealMath]
+		});
+
+		Reveal.on('slidechanged', function (e) {
+			if (e.currentSlide && e.currentSlide.querySelector('#cmp-frac-canvas')) {
+				setTimeout(function () { window._fpAxisRedraw && window._fpAxisRedraw(); }, 50);
+			}
 		});
 	</script>
 </body>
