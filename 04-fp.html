@@ -230,7 +230,7 @@ start:
 					<div class="col-left col-prose">
 						<p class="col-prose-heading">Скалярное произведение</p>
 						<p>\(\mathbf{a} \cdot \mathbf{b} = \sum_{i} a_i b_i\)</p>
-						<p class="text-muted">Два вектора по три элемента хранятся в памяти в формате OFP8 E4M3. Пройдитесь по парам элементов, перемножьте и накопите сумму в <code>acc</code> как float16.</p>
+						<p class="text-muted">Вектора хранятся в памяти в формате OFP8 E4M3. Пройдитесь по парам элементов, перемножьте и накопите сумму в <code>acc</code> как float16.</p>
 					</div>
 				</div>
 			</section>
@@ -240,6 +240,8 @@ start:
 				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
 					<div class="col-left">
 						<textarea data-lang="asm8">JMP start
+m:   DB 2
+n:   DB 3
 mat: DB 1.0_o3, 2.0_o3, 0.5_o3
      DB 1.5_o3, 1.0_o3, 2.0_o3
 vec: DB 2.0_o3, 1.0_o3, 1.5_o3
@@ -248,7 +250,7 @@ res: DB 0.0_h, 0.0_h
 start:
     MOV A, mat
     MOV B, vec
-    MOV C, 2
+    MOV C, m
     MOV D, res
     ; Решение
 
@@ -257,7 +259,7 @@ start:
 					<div class="col-left col-prose">
 						<p class="col-prose-heading">Матрица × вектор</p>
 						<p>\(\mathbf{y} = W\mathbf{x}\)</p>
-						<p class="text-muted">Матрица W (2×3) и вектор x (3×1) хранятся в памяти построчно в формате OFP8 E4M3. Для каждой строки W посчитайте скалярное произведение с x и запишите результат (float16) в <code>res</code>.</p>
+						<p class="text-muted">Матрица W [m,n] и вектор x [n,1] хранятся в памяти построчно в формате OFP8 E4M3. Реализуйте умножение матрицы на вектор. Результат (float16) запишите в <code>res</code>.</p>
 					</div>
 				</div>
 			</section>
@@ -280,7 +282,7 @@ start:
 					</div>
 					<div class="col-left col-prose">
 						<p class="col-prose-heading">Экспонента</p>
-						<p class="text-muted">Входное значение x = 1.0 хранится в памяти как float16. Аппаратной инструкции для экспоненты нет — придумайте, как её посчитать. Результат запишите в <code>res</code>.</p>
+						<p class="text-muted">Входное x хранится в памяти как float16. Аппаратной инструкции для экспоненты нет — придумайте, как её посчитать. Результат запишите в <code>res</code>.</p>
 					</div>
 				</div>
 			</section>
