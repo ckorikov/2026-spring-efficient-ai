@@ -62,6 +62,238 @@
 			font-size: 9px; color: #8a857d;
 			letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 25px;
 		}
+		/* ── IEEE 754 bit-field visualization ───────────────────── */
+		.ieee754-wrap { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+		.ieee754-row  { display: flex; align-items: flex-start; gap: 10px; }
+		.ieee754-name {
+			width: 50px; flex-shrink: 0; text-align: right;
+			font-size: 10px; color: #8a857d; padding-top: 7px; font-weight: 500;
+		}
+		.ieee754-bits { flex: 1; display: flex; gap: 2px; }
+		.ieee754-f    { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+		.ieee754-bar  {
+			width: 100%; padding: 5px 3px; border-radius: 3px; box-sizing: border-box;
+			text-align: center; font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.9);
+			white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+		}
+		.ieee754-f.sign .ieee754-bar { background: #a07070; }
+		.ieee754-f.exp  .ieee754-bar { background: #6a8fa5; }
+		.ieee754-f.mant .ieee754-bar { background: #7a9a7a; }
+		.ieee754-lbl { font-size: 8px; color: #a09a92; }
+		.ieee754-table {
+			width: 100%; border-collapse: collapse;
+			font-size: 11px; color: #2d2a26; margin-top: 4px;
+		}
+		.ieee754-table th {
+			font-size: 9px; font-weight: 600; color: #8a857d; text-align: left;
+			text-transform: uppercase; letter-spacing: 0.5px;
+			padding: 4px 8px; border-bottom: 1px solid #d5d0c8;
+		}
+		.ieee754-table td { padding: 5px 8px; border-bottom: 1px solid #e8e4dc; }
+		.ieee754-table tr:last-child td { border-bottom: none; }
+		.ieee754-table .ieee754-col-e { color: #6a8fa5; }
+		.ieee754-table .ieee754-col-m { color: #7a9a7a; }
+		.ieee754-table .ieee754-col-t { color: #a07060; }
+		.ieee754-table .mono { font-family: 'IBM Plex Mono', monospace; font-size: 10px; }
+		.ieee754-note {
+			text-align: center; font-size: 9px; color: #a09a92; letter-spacing: 0.4px; margin-top: 2px;
+		}
+		.ieee754-table .ieee754-section-header td {
+			padding: 8px 8px 3px; font-size: 9px; font-weight: 600; color: #8a857d;
+			letter-spacing: 0.4px; border-bottom: 1px solid #d5d0c8; border-top: 1px solid #e8e4dc;
+		}
+		.ieee754-table tbody tr:first-child td { border-top: none; }
+		/* ── Goldberg general FP format slide ───────────────────── */
+		.fpfmt-wrap {
+			width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;
+		}
+		.fpfmt-formula { font-size: 0.85em; padding: 0; }
+		.fpfmt-symbols {
+			display: grid;
+			grid-template-columns: max-content max-content;
+			column-gap: 16px;
+			row-gap: 4px;
+			font-size: 11px;
+			line-height: 1.5;
+			width: fit-content;
+			margin: 0 auto;
+		}
+		.fpfmt-symbols .fsym { font-weight: 500; color: #2d2a26; text-align: right; }
+		.fpfmt-symbols .fdef { color: #8a857d; text-align: left; }
+		.ieee754-table .fpfmt-approx { font-style: italic; }
+		.fp-val { font-size: 8px; color: #a09a92; white-space: nowrap; }
+		.fp-dots { font-size: 10px; color: #b5b0a8; }
+		/* ── Ошибка представления ────────────────────────────── */
+		.repr-err-viz {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+			font-family: 'IBM Plex Mono', monospace;
+			font-size: 12px;
+			color: #2d2a26;
+		}
+		.re-controls {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px 16px;
+			flex-wrap: wrap;
+			background: rgba(45,42,38,0.04);
+			border: 1px solid #e0ddd8;
+			border-radius: 6px;
+			padding: 8px 16px;
+		}
+		.re-ctrl-group { display: flex; align-items: center; gap: 5px; }
+		.re-lbl { font-size: 11px; color: #8a857d; }
+		.re-divider { color: #d5d0c8; font-size: 14px; }
+		.re-input-x {
+			width: 80px;
+			background: #f0ece6;
+			border: 1px solid #d5d0c8;
+			border-radius: 4px;
+			color: #2d2a26;
+			font-family: inherit;
+			font-size: 12px;
+			padding: 3px 8px;
+			text-align: center;
+			outline: none;
+			transition: border-color .15s;
+		}
+		.re-input-x:focus { border-color: #6a8fa5; }
+		.re-spin {
+			width: 44px;
+			background: #f0ece6;
+			border: 1px solid #d5d0c8;
+			border-radius: 4px;
+			color: #2d2a26;
+			font-family: inherit;
+			font-size: 12px;
+			padding: 3px 6px;
+			text-align: center;
+			outline: none;
+			transition: border-color .15s;
+		}
+		.re-spin:focus { border-color: #6a8fa5; }
+		.re-canvas-wrap { position: relative; width: 100%; }
+		.re-canvas { display: block; width: 100%; cursor: default; }
+		.re-canvas.re-hover-x { cursor: grab; }
+		.re-canvas.dragging { cursor: grabbing; }
+		.re-stats { display: flex; justify-content: center; }
+		.re-table {
+			border-collapse: collapse;
+			font-size: 11px;
+		}
+		.re-table th {
+			color: #8a857d;
+			font-weight: 500;
+			padding: 3px 12px;
+			text-align: right;
+			border-bottom: 1px solid #d5d0c8;
+		}
+		.re-table th:first-child { text-align: left; }
+		.re-st-lbl { color: #8a857d; padding: 3px 6px; text-align: left; }
+		.re-st-val { color: #2d2a26; font-weight: 500; padding: 3px 12px; text-align: right; }
+		.re-st-eps { color: #6a8fa5; padding: 3px 12px; text-align: right; }
+		.re-defs {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: baseline;
+			gap: 2px 20px;
+			font-size: 13px;
+			color: #8a857d;
+			padding-top: 6px;
+			border-top: 1px solid #e8e4dc;
+		}
+		.re-def { padding: 2px 0; }
+		.re-def-lbl { color: #2d2a26; font-weight: 600; }
+		.re-def-sep { color: #d5d0c8; }
+		.re-round-group { display: flex; align-items: center; gap: 0; }
+		.re-round-group .re-lbl { margin-right: 6px; }
+		.re-round-btn {
+			background: #f0ece6;
+			border: 1px solid #d5d0c8;
+			color: #8a857d;
+			font-family: 'IBM Plex Mono', monospace;
+			font-size: 11px;
+			padding: 3px 8px;
+			cursor: pointer;
+			transition: all .15s;
+			line-height: 1;
+		}
+		.re-round-btn:first-of-type { border-radius: 4px 0 0 4px; }
+		.re-round-btn:last-child  { border-radius: 0 4px 4px 0; }
+		.re-round-btn + .re-round-btn { border-left: 0; }
+		.re-round-btn.active {
+			background: #2d2a26;
+			color: #f7f5f2;
+			border-color: #2d2a26;
+		}
+
+		/* ── Операции (FP arithmetic) ──────────────────────────── */
+		.fp-ops-viz {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+			font-family: 'IBM Plex Mono', monospace;
+			font-size: 12px;
+			color: #2d2a26;
+		}
+		.fo-controls {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-wrap: wrap;
+			gap: 6px 16px;
+			background: rgba(45,42,38,0.04);
+			border-radius: 6px;
+			padding: 10px 18px;
+		}
+		.fo-controls .re-lbl { font-size: 11px; color: #8a857d; }
+		.fo-input {
+			width: 72px; text-align: center; font-family: inherit; font-size: 13px;
+			background: #f0ece6; border: 1px solid #d5d0c8; border-radius: 4px;
+			padding: 3px 6px; color: #2d2a26; outline: none;
+		}
+		.fo-input:focus { border-color: #6a8fa5; }
+		.fo-spin {
+			width: 52px; text-align: center; font-family: inherit; font-size: 13px;
+			background: #f0ece6; border: 1px solid #d5d0c8; border-radius: 4px;
+			padding: 3px 4px; color: #2d2a26; outline: none;
+		}
+		.fo-spin:focus { border-color: #6a8fa5; }
+		.fo-stats { display: flex; justify-content: center; }
+		.fo-table {
+			border-collapse: collapse; font-size: 14px;
+			font-family: 'IBM Plex Mono', monospace;
+		}
+		.fo-table th {
+			color: #8a857d; font-weight: 500; padding: 5px 14px;
+			text-align: right; border-bottom: 1px solid #d5d0c8;
+		}
+		.fo-table th:first-child { text-align: left; }
+		.fo-table td { padding: 5px 14px; text-align: right; }
+		.fo-table td:first-child { text-align: left; color: #8a857d; }
+		.fo-table .fo-val { color: #2d2a26; font-weight: 500; }
+		.fo-table .fo-fp { color: #6a8fa5; }
+		.fo-table .fo-err { color: #a07060; }
+		.fo-red { color: #c04030; font-weight: 600; }
+		.fo-table tbody tr { border-bottom: 1px solid #ece8e0; }
+		.fo-table tbody tr:last-child { border-bottom: none; }
+		.fo-presets {
+			display: flex; flex-wrap: wrap; justify-content: center;
+			gap: 6px; margin-top: 4px;
+		}
+		.fo-preset {
+			font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+			padding: 3px 8px; border-radius: 4px; cursor: pointer;
+			background: #f0ece6; border: 1px solid #d5d0c8; color: #8a857d;
+			transition: background 0.15s;
+		}
+		.fo-preset:hover { background: #e8e4dc; color: #2d2a26; }
+
 	</style>
 </head>
 
@@ -150,6 +382,179 @@
 				</div>
 			</section>
 
+			<!-- ─── БЛОК 2б: Числа с плавающей точкой ──────────────── -->
+
+			<!-- SLIDE 7 — Divider: Числа с плавающей точкой -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Числа с плавающей точкой</h2>
+					<p class="divider-sub">Общее представление</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 8 — Общий формат (Голдберг) -->
+			<section data-header="Общий формат">
+				<div class="slide-single align-center">
+					<div class="fpfmt-wrap">
+
+						<!-- notation → sum on one line -->
+						<div class="fpfmt-formula">
+							\[ x = {\color{#a07070}\pm}\; {\color{#7a9a7a}d_0}\mathbin{.}{\color{#7a9a7a}d_1}\,{\color{#7a9a7a}d_2}\, {\color{#7a9a7a}\cdots}\, {\color{#7a9a7a}d_{p-1}} \;\times\; {\color{#6a8fa5}\beta^{\,e}}\; {\color{#a09a92}\Longleftrightarrow}\; x = {\color{#a07070}\pm}\,{\color{#6a8fa5}\beta^{\,e}}\sum_{i=0}^{p-1} {\color{#7a9a7a}d_i}\,{\color{#6a8fa5}\beta^{-i}} \]
+						</div>
+
+						<!-- symbol descriptions -->
+						<div class="fpfmt-symbols">
+<span class="fsym" style="color:#7a9a7a">\(d_i\)</span>
+							<span class="fdef">цифры мантиссы, \(d_i \in \{0,\ldots,\beta{-}1\}\)</span>
+							<span class="fsym" style="color:#6a8fa5">\(\beta\)</span>
+							<span class="fdef">основание (radix)</span>
+							<span class="fsym" style="color:#6a8fa5">\(e\)</span>
+							<span class="fdef">показатель степени, \(e \in [e_{\min},\; e_{\max}]\)</span>
+							<span class="fsym">\(p\)</span>
+							<span class="fdef">точность — число значимых цифр</span>
+						</div>
+
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 9 — Примеры представлений -->
+			<section data-header="Примеры">
+				<div class="slide-single align-center">
+										<table class="ieee754-table" style="width:100%;">
+						<thead>
+							<tr>
+								<th style="width:5em">Число</th>
+								<th class="ieee754-col-m">\(\beta = 10,\ p = 3\)</th>
+								<th class="ieee754-col-e">\(\beta = 2,\ p = 24\)</th>
+								<th class="ieee754-col-t">\(\beta = 3,\ p = 3\)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0.5</td>
+								<td class="ieee754-col-m mono">
+									<span class="fp-repr" data-m="5.00" data-base="10" data-exp="-1">5.00 × 10<sup>−1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-repr" data-m="0.50" data-base="10" data-exp="0">0.50 × 10<sup>0</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+								<td class="ieee754-col-e mono">
+									<span class="fp-repr" data-m="1.00000000000000000000000" data-base="2" data-exp="-1">1.00000000000000000000000 × 2<sup>−1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-repr" data-m="0.10000000000000000000000" data-base="2" data-exp="0">0.10000000000000000000000 × 2<sup>0</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+								<td class="ieee754-col-t mono fpfmt-approx">
+									<span class="fp-repr" data-m="1.11" data-base="3" data-exp="-1">1.11 × 3<sup>−1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-repr" data-m="1.12" data-base="3" data-exp="-1">1.12 × 3<sup>−1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+							</tr>
+							<tr>
+								<td>0.1</td>
+								<td class="ieee754-col-m mono">
+									<span class="fp-repr" data-m="1.00" data-base="10" data-exp="-1">1.00 × 10<sup>−1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-repr" data-m="0.10" data-base="10" data-exp="0">0.10 × 10<sup>0</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+								<td class="ieee754-col-e mono fpfmt-approx">
+									<span class="fp-repr" data-m="1.10011001100110011001101" data-base="2" data-exp="-4">1.10011001100110011001101 × 2<sup>−4</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+								<td class="ieee754-col-t mono fpfmt-approx">
+									<span class="fp-repr" data-m="2.20" data-base="3" data-exp="-3">2.20 × 3<sup>−3</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+							</tr>
+							<tr>
+								<td>1/3</td>
+								<td class="ieee754-col-m mono fpfmt-approx">
+									<span class="fp-repr" data-m="3.33" data-base="10" data-exp="-1">3.33 × 10<sup>−1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+								<td class="ieee754-col-e mono fpfmt-approx">
+									<span class="fp-repr" data-m="1.01010101010101010101011" data-base="2" data-exp="-2">1.01010101010101010101011 × 2<sup>−2</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+								<td class="ieee754-col-t mono">
+									<span class="fp-repr" data-m="1.00" data-base="3" data-exp="-1">1.00 × 3<sup>−1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-repr" data-m="0.10" data-base="3" data-exp="0">0.10 × 3<sup>0</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+							</tr>
+							<tr>
+								<td>\(\pi\)</td>
+								<td class="ieee754-col-m mono fpfmt-approx">
+									<span class="fp-repr" data-m="3.14" data-base="10" data-exp="0">3.14 × 10<sup>0</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+								<td class="ieee754-col-e mono fpfmt-approx">
+									<span class="fp-repr" data-m="1.10010010000111111011011" data-base="2" data-exp="1">1.10010010000111111011011 × 2<sup>1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+								<td class="ieee754-col-t mono fpfmt-approx">
+									<span class="fp-repr" data-m="1.00" data-base="3" data-exp="1">1.00 × 3<sup>1</sup> <span class="fp-val"></span></span><br>
+									<span class="fp-dots">…</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</section>
+
+			<!-- SLIDE — Ошибка представления -->
+			<section data-header="Ошибка представления">
+				<div class="slide-single align-center">
+					<div class="repr-err-viz" id="repr-err-viz">
+
+						<!-- Controls -->
+						<div class="re-controls">
+							<div class="re-ctrl-group">
+								<span class="re-lbl">x =</span>
+								<input class="re-input-x" id="re-x" type="text" value="0.1" spellcheck="false">
+							</div>
+							<div class="re-divider">·</div>
+							<div class="re-ctrl-group">
+								<span class="re-lbl">β =</span>
+								<input class="re-spin" id="re-beta" type="number" value="2" min="2" max="16" step="1">
+							</div>
+							<div class="re-ctrl-group">
+								<span class="re-lbl">p =</span>
+								<input class="re-spin" id="re-p" type="number" value="3" min="1" max="8" step="1">
+							</div>
+							<div class="re-divider">·</div>
+							<div class="re-ctrl-group re-round-group" id="re-round" data-value="nearest">
+								<span class="re-lbl">округление</span>
+								<button class="re-round-btn active" data-val="nearest" title="roundTiesToEven">ближайшее</button>
+								<button class="re-round-btn" data-val="ceil" title="roundTowardPositive">к +∞</button>
+								<button class="re-round-btn" data-val="floor" title="roundTowardNegative">к −∞</button>
+								<button class="re-round-btn" data-val="trunc" title="roundTowardZero">к нулю</button>
+							</div>
+						</div>
+
+						<!-- Number axis -->
+						<div class="re-canvas-wrap">
+							<canvas id="re-canvas" class="re-canvas"></canvas>
+						</div>
+
+						<!-- Stats -->
+						<div class="re-stats" id="re-stats"></div>
+
+						<!-- Definitions — chain: ε → ulp → |err| → rel err -->
+						<div class="re-defs">
+							<span class="re-def"><span class="re-def-lbl">ε</span> $= \beta^{1-p}$<br><span style="font-size:10px">машинный эпсилон</span></span>
+							<span class="re-def-sep">→</span>
+							<span class="re-def"><span class="re-def-lbl">ulp</span> $\approx \varepsilon \!\cdot\! |x|$<br><span style="font-size:10px">шаг сетки</span></span>
+							<span class="re-def-sep">→</span>
+							<span class="re-def"><span class="re-def-lbl">|err|</span> $\leq \tfrac{1}{2}\,\mathrm{ulp}$<br><span style="font-size:10px">абсолютная ошибка</span></span>
+							<span class="re-def-sep">→</span>
+							<span class="re-def"><span class="re-def-lbl">|err|/|x|</span> $\leq \tfrac{1}{2}\varepsilon$<br><span style="font-size:10px">относительная ошибка</span></span>
+						</div>
+
+					</div>
+				</div>
+			</section>
+
 			<!-- SLIDE 6 — Диапазоны чисел -->
 			<section data-header="Диапазоны чисел">
 				<div class="slide-single align-center">
@@ -194,6 +599,266 @@
 								</div>
 							</div>
 						</div>
+
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE — Операции -->
+			<section data-header="Операции">
+				<div class="slide-single align-center">
+					<div class="fp-ops-viz" id="fp-ops-viz">
+						<div class="fo-controls">
+							<div class="re-ctrl-group">
+								<span class="re-lbl">x =</span>
+								<input class="fo-input" id="fo-x" type="text" value="1234">
+							</div>
+							<div class="re-ctrl-group">
+								<span class="re-lbl">y =</span>
+								<input class="fo-input" id="fo-y" type="text" value="1233">
+							</div>
+							<div class="re-divider">·</div>
+							<div class="re-ctrl-group">
+								<span class="re-lbl">&beta; =</span>
+								<input class="fo-spin" id="fo-beta" type="number" value="10" min="2" max="16">
+							</div>
+							<div class="re-ctrl-group">
+								<span class="re-lbl">p =</span>
+								<input class="fo-spin" id="fo-p" type="number" value="4" min="1" max="12">
+							</div>
+							<div class="re-divider">·</div>
+							<div class="re-ctrl-group">
+								<span class="re-lbl">n =</span>
+								<input class="fo-spin" id="fo-n" type="number" value="1" min="1" max="100000" style="width:64px">
+							</div>
+						</div>
+						<div class="fo-stats" id="fo-stats"></div>
+						<div class="fo-presets" id="fo-presets"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 7 — Divider: Числа с плавающей точкой -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Числа с плавающей точкой</h2>
+					<p class="divider-sub">Форматы</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 7 — IEEE 754 -->
+			<section data-header="IEEE 754">
+				<div class="slide-single align-center">
+					<div class="ieee754-wrap">
+
+						<!-- float32 -->
+						<div class="ieee754-row">
+							<div class="ieee754-name">float32</div>
+							<div class="ieee754-bits">
+								<div class="ieee754-f sign" style="flex:1">
+									<div class="ieee754-bar">S</div>
+									<div class="ieee754-lbl">1 бит</div>
+								</div>
+								<div class="ieee754-f exp" style="flex:8">
+									<div class="ieee754-bar">E × 8</div>
+									<div class="ieee754-lbl">bias 127</div>
+								</div>
+								<div class="ieee754-f mant" style="flex:23">
+									<div class="ieee754-bar">M × 23</div>
+									<div class="ieee754-lbl">мантисса</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- float16 -->
+						<div class="ieee754-row">
+							<div class="ieee754-name">float16</div>
+							<div class="ieee754-bits">
+								<div class="ieee754-f sign" style="flex:1">
+									<div class="ieee754-bar">S</div>
+									<div class="ieee754-lbl">1 бит</div>
+								</div>
+								<div class="ieee754-f exp" style="flex:5">
+									<div class="ieee754-bar">E × 5</div>
+									<div class="ieee754-lbl">bias 15</div>
+								</div>
+								<div class="ieee754-f mant" style="flex:10">
+									<div class="ieee754-bar">M × 10</div>
+									<div class="ieee754-lbl">мантисса</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- special cases -->
+						<table class="ieee754-table">
+							<thead>
+								<tr>
+									<th>Тип</th>
+									<th class="ieee754-col-e">E</th>
+									<th class="ieee754-col-m">M</th>
+									<th>Значение</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>±0</td>
+									<td class="ieee754-col-e mono">0…0</td>
+									<td class="ieee754-col-m mono">0…0</td>
+									<td>±0</td>
+								</tr>
+								<tr>
+									<td>Субнормальные</td>
+									<td class="ieee754-col-e mono">0…0</td>
+									<td class="ieee754-col-m mono">≠ 0</td>
+									<td>(−1)<sup>S</sup> · 2<sup>1−bias</sup> · 0.M</td>
+								</tr>
+								<tr>
+									<td>Нормальные</td>
+									<td class="ieee754-col-e mono">1…E<sub>max</sub></td>
+									<td class="ieee754-col-m mono">любое</td>
+									<td>(−1)<sup>S</sup> · 2<sup>E−bias</sup> · 1.M</td>
+								</tr>
+								<tr>
+									<td>±∞</td>
+									<td class="ieee754-col-e mono">1…1</td>
+									<td class="ieee754-col-m mono">0…0</td>
+									<td>±∞</td>
+								</tr>
+								<tr>
+									<td>NaN</td>
+									<td class="ieee754-col-e mono">1…1</td>
+									<td class="ieee754-col-m mono">≠ 0</td>
+									<td>NaN</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 8 — OCP FP8 -->
+			<section data-header="OCP FP8">
+				<div class="slide-single align-center">
+					<div class="ieee754-wrap">
+
+						<!-- E4M3 -->
+						<div class="ieee754-row">
+							<div class="ieee754-name">E4M3</div>
+							<div class="ieee754-bits">
+								<div class="ieee754-f sign" style="flex:1">
+									<div class="ieee754-bar">S</div>
+									<div class="ieee754-lbl">1 бит</div>
+								</div>
+								<div class="ieee754-f exp" style="flex:4">
+									<div class="ieee754-bar">E × 4</div>
+									<div class="ieee754-lbl">bias 7</div>
+								</div>
+								<div class="ieee754-f mant" style="flex:3">
+									<div class="ieee754-bar">M × 3</div>
+									<div class="ieee754-lbl">мантисса</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- E5M2 -->
+						<div class="ieee754-row">
+							<div class="ieee754-name">E5M2</div>
+							<div class="ieee754-bits">
+								<div class="ieee754-f sign" style="flex:1">
+									<div class="ieee754-bar">S</div>
+									<div class="ieee754-lbl">1 бит</div>
+								</div>
+								<div class="ieee754-f exp" style="flex:5">
+									<div class="ieee754-bar">E × 5</div>
+									<div class="ieee754-lbl">bias 15</div>
+								</div>
+								<div class="ieee754-f mant" style="flex:2">
+									<div class="ieee754-bar">M × 2</div>
+									<div class="ieee754-lbl">мантисса</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- special cases -->
+						<table class="ieee754-table">
+							<thead>
+								<tr>
+									<th>Тип</th>
+									<th class="ieee754-col-e">E</th>
+									<th class="ieee754-col-m">M</th>
+									<th>Значение</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="ieee754-section-header">
+									<td colspan="4">E4M3 &nbsp;·&nbsp; bias = 2<sup>e−1</sup>−1 &nbsp;·&nbsp; нет ∞ &nbsp;·&nbsp; NaN при E=1…1, M=1…1</td>
+								</tr>
+								<tr>
+									<td>±0</td>
+									<td class="ieee754-col-e mono">0000</td>
+									<td class="ieee754-col-m mono">000</td>
+									<td>±0</td>
+								</tr>
+								<tr>
+									<td>Субнормальные</td>
+									<td class="ieee754-col-e mono">0000</td>
+									<td class="ieee754-col-m mono">≠ 0</td>
+									<td>(−1)<sup>S</sup> · 2<sup>1−bias</sup> · 0.M</td>
+								</tr>
+								<tr>
+									<td>Нормальные</td>
+									<td class="ieee754-col-e mono">0001…1111</td>
+									<td class="ieee754-col-m mono">любое</td>
+									<td>(−1)<sup>S</sup> · 2<sup>E−bias</sup> · 1.M</td>
+								</tr>
+								<tr>
+									<td>±∞</td>
+									<td class="ieee754-col-e mono">—</td>
+									<td class="ieee754-col-m mono">—</td>
+									<td>нет</td>
+								</tr>
+								<tr>
+									<td>NaN</td>
+									<td class="ieee754-col-e mono">1111</td>
+									<td class="ieee754-col-m mono">111</td>
+									<td>NaN</td>
+								</tr>
+								<tr class="ieee754-section-header">
+									<td colspan="4">E5M2 &nbsp;·&nbsp; bias = 2<sup>e−1</sup>−1 &nbsp;·&nbsp; ±∞ как IEEE 754 &nbsp;·&nbsp; NaN при E=1…1, M≠0</td>
+								</tr>
+								<tr>
+									<td>±0</td>
+									<td class="ieee754-col-e mono">00000</td>
+									<td class="ieee754-col-m mono">00</td>
+									<td>±0</td>
+								</tr>
+								<tr>
+									<td>Субнормальные</td>
+									<td class="ieee754-col-e mono">00000</td>
+									<td class="ieee754-col-m mono">≠ 0</td>
+									<td>(−1)<sup>S</sup> · 2<sup>1−bias</sup> · 0.M</td>
+								</tr>
+								<tr>
+									<td>Нормальные</td>
+									<td class="ieee754-col-e mono">00001…11110</td>
+									<td class="ieee754-col-m mono">любое</td>
+									<td>(−1)<sup>S</sup> · 2<sup>E−bias</sup> · 1.M</td>
+								</tr>
+								<tr>
+									<td>±∞</td>
+									<td class="ieee754-col-e mono">11111</td>
+									<td class="ieee754-col-m mono">00</td>
+									<td>±∞</td>
+								</tr>
+								<tr>
+									<td>NaN</td>
+									<td class="ieee754-col-e mono">11111</td>
+									<td class="ieee754-col-m mono">≠ 0</td>
+									<td>NaN</td>
+								</tr>
+							</tbody>
+						</table>
 
 					</div>
 				</div>
@@ -696,6 +1361,611 @@ start:
 	<script src="sys/plugin/math/math.js"></script>
 	<script src="sys/slide-kit.js"></script>
 	<script src="sys/codemirror-kit.js"></script>
+
+	<script>
+	(function () {
+		function parseMantissa(str, base) {
+			var dot = str.indexOf('.');
+			var iStr = dot >= 0 ? str.slice(0, dot) : str;
+			var fStr = dot >= 0 ? str.slice(dot + 1) : '';
+			var val = iStr.length ? parseInt(iStr, base) : 0;
+			for (var i = 0; i < fStr.length; i++) {
+				val += parseInt(fStr[i], base) * Math.pow(base, -(i + 1));
+			}
+			return val;
+		}
+		function fmtDecoded(v) {
+			if (!isFinite(v)) return '?';
+			if (v === 0) return '0';
+			var s = v.toPrecision(4);
+			return parseFloat(s).toString();
+		}
+		function fillDecoded() {
+			document.querySelectorAll('.fp-repr').forEach(function (el) {
+				var m = el.getAttribute('data-m');
+				var base = parseInt(el.getAttribute('data-base'));
+				var exp = parseInt(el.getAttribute('data-exp'));
+				var val = parseMantissa(m, base) * Math.pow(base, exp);
+				var out = el.querySelector('.fp-val');
+				if (out) out.textContent = '(' + fmtDecoded(val) + ')';
+			});
+		}
+		document.addEventListener('DOMContentLoaded', fillDecoded);
+	})();
+	</script>
+
+	<script>
+	(function () {
+		// ── Layout constants ───────────────────────────────────
+		var PAD_L = 60, PAD_R = 60, PAD_T = 34, PAD_B = 48;
+		var CANVAS_H = 130;
+		var MARKER_R = 6, HIT_R = MARKER_R + 8;
+
+		var RE = {
+			COL_AXIS:    '#c8c3bb',
+			COL_GRID:    '#8a857d',
+			COL_NEAREST: '#6a8fa5',
+			COL_X:       '#2d2a26',
+			COL_ERR:     '#a07060',
+			COL_ULP:     '#5a8a5a',
+			COL_MUTED:   '#b5b0a8',
+			FONT:        'IBM Plex Mono, monospace',
+		};
+
+		// ── Helpers ────────────────────────────────────────────
+		function getCanvas() { return document.getElementById('re-canvas'); }
+
+		function cssScale(canvas) {
+			var r = canvas.getBoundingClientRect();
+			return r.width > 0 ? canvas.offsetWidth / r.width : 1;
+		}
+
+		function readParams() {
+			return {
+				x:     parseFloat(document.getElementById('re-x').value),
+				beta:  parseInt(document.getElementById('re-beta').value),
+				p:     parseInt(document.getElementById('re-p').value),
+				round: document.getElementById('re-round').dataset.value,
+			};
+		}
+
+		function computeFP(x, beta, p, round) {
+			if (!isFinite(x) || x === 0) return null;
+			round = round || 'nearest';
+			var ax = Math.abs(x);
+			var e = Math.floor(Math.log(ax) / Math.log(beta));
+			// Edge-case: floating log can be off by 1
+			if (Math.pow(beta, e + 1) <= ax) e++;
+			if (Math.pow(beta, e) > ax) e--;
+			var ulp = Math.pow(beta, e + 1 - p);
+			var fl_k = Math.floor(ax / ulp);
+			var fl_floor = fl_k * ulp;
+			var fl_ceil  = fl_floor + ulp;
+			// Rounding mode
+			var fl;
+			var dLo = Math.abs(ax - fl_floor), dHi = Math.abs(ax - fl_ceil);
+			switch (round) {
+				case 'nearest': // ties-to-even
+					if (dLo < dHi) fl = fl_floor;
+					else if (dHi < dLo) fl = fl_ceil;
+					else fl = (fl_k % 2 === 0) ? fl_floor : fl_ceil; // tie → even
+					break;
+				case 'away': // ties-away-from-zero
+					fl = (dLo < dHi) ? fl_floor : fl_ceil;
+					break;
+				case 'ceil':  fl = (ax === fl_floor) ? fl_floor : fl_ceil; break;
+				case 'floor': fl = fl_floor; break;
+				case 'trunc': fl = fl_floor; break;
+				default:      fl = (dLo <= dHi) ? fl_floor : fl_ceil;
+			}
+			var eps     = Math.pow(beta, 1 - p);
+			var abs_err = Math.abs(ax - fl);
+			var rel_err = abs_err / ax;
+			var err_ulp = abs_err / ulp;
+			var isDirected = (round === 'ceil' || round === 'floor' || round === 'trunc');
+			return {
+				x: ax, sign: x < 0 ? -1 : 1,
+				e: e, ulp: ulp, eps: eps,
+				fl_floor: fl_floor, fl_ceil: fl_ceil, fl: fl,
+				abs_err: abs_err, rel_err: rel_err, err_ulp: err_ulp,
+				grid: [fl_floor - ulp, fl_floor, fl_ceil, fl_ceil + ulp],
+				directed: isDirected,
+			};
+		}
+
+		function fmtN(v, prec) {
+			prec = prec || 4;
+			if (v === 0) return '0';
+			var a = Math.abs(v);
+			if (a >= 1e-4 && a < 1e5) return parseFloat(v.toPrecision(prec)).toString();
+			return v.toExponential(prec - 1);
+		}
+
+		function drawAxis(canvas, info) {
+			var dpr = window.devicePixelRatio || 1;
+			var W = canvas.offsetWidth;
+			canvas.width  = W * dpr;
+			canvas.height = CANVAS_H * dpr;
+			canvas.style.height = CANVAS_H + 'px';
+			var ctx = canvas.getContext('2d');
+			ctx.scale(dpr, dpr);
+
+			var axY = PAD_T + (CANVAS_H - PAD_T - PAD_B) / 2;
+			var pW  = W - PAD_L - PAD_R;
+
+			var lo = info.grid[0], hi = info.grid[3];
+			var span = hi - lo;
+			var vlo = lo - span * 0.15, vhi = hi + span * 0.15;
+			function px(v) { return PAD_L + (v - vlo) / (vhi - vlo) * pW; }
+
+			ctx.font = '10px ' + RE.FONT;
+
+			// Axis line
+			ctx.strokeStyle = RE.COL_AXIS;
+			ctx.lineWidth = 1.5;
+			ctx.beginPath(); ctx.moveTo(PAD_L - 10, axY); ctx.lineTo(W - PAD_R + 10, axY); ctx.stroke();
+
+			// Grid ticks & labels
+			info.grid.forEach(function (gv) {
+				var gx = px(gv);
+				var isNearest = (Math.abs(gv - info.fl) < info.ulp * 0.001);
+				ctx.strokeStyle = isNearest ? RE.COL_NEAREST : RE.COL_GRID;
+				ctx.lineWidth = isNearest ? 2.5 : 1;
+				ctx.beginPath(); ctx.moveTo(gx, axY - 8); ctx.lineTo(gx, axY + 8); ctx.stroke();
+				ctx.fillStyle = isNearest ? RE.COL_NEAREST : RE.COL_GRID;
+				ctx.font = (isNearest ? '600 ' : '') + '10px ' + RE.FONT;
+				ctx.textAlign = 'center';
+				ctx.fillText(fmtN(gv), gx, axY + 20);
+			});
+
+			// ULP bracket (between fl_floor and fl_ceil)
+			var ffx = px(info.fl_floor), fcx = px(info.fl_ceil);
+			var bracY = axY + 30;
+			ctx.strokeStyle = RE.COL_ULP; ctx.lineWidth = 1.2;
+			ctx.beginPath(); ctx.moveTo(ffx, bracY - 4); ctx.lineTo(ffx, bracY + 4); ctx.stroke();
+			ctx.beginPath(); ctx.moveTo(ffx, bracY); ctx.lineTo(fcx, bracY); ctx.stroke();
+			ctx.beginPath(); ctx.moveTo(fcx, bracY - 4); ctx.lineTo(fcx, bracY + 4); ctx.stroke();
+			ctx.fillStyle = RE.COL_ULP; ctx.font = '9px ' + RE.FONT; ctx.textAlign = 'center';
+			ctx.fillText('ulp = ' + fmtN(info.ulp), (ffx + fcx) / 2, bracY + 13);
+
+			// Real x marker — dashed drop line from x to axis, then circle
+			var rx = px(info.x);
+			var markerY = axY - 20;
+			ctx.strokeStyle = RE.COL_X; ctx.lineWidth = 1;
+			ctx.setLineDash([3, 3]);
+			ctx.beginPath(); ctx.moveTo(rx, markerY); ctx.lineTo(rx, axY); ctx.stroke();
+			ctx.setLineDash([]);
+			ctx.fillStyle = RE.COL_X;
+			ctx.beginPath(); ctx.arc(rx, markerY, MARKER_R, 0, 2 * Math.PI); ctx.fill();
+			ctx.fillStyle = '#fff'; ctx.font = '600 8px ' + RE.FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+			ctx.fillText('x', rx, markerY);
+			ctx.textBaseline = 'alphabetic';
+			_markerPos = { x: rx, y: markerY, r: HIT_R };
+
+			// Error line (x → fl)
+			var flx = px(info.fl);
+			if (info.abs_err > 0) {
+				var errY = axY - 5;
+				ctx.strokeStyle = RE.COL_ERR; ctx.lineWidth = 1.8;
+				ctx.setLineDash([4, 2]);
+				ctx.beginPath(); ctx.moveTo(rx, errY); ctx.lineTo(flx, errY); ctx.stroke();
+				ctx.setLineDash([]);
+				// Arrow heads (double-headed)
+				var aLen = 4;
+				var dir = flx > rx ? 1 : -1;
+				ctx.fillStyle = RE.COL_ERR;
+				// Arrow at fl(x) end
+				ctx.beginPath(); ctx.moveTo(flx, errY); ctx.lineTo(flx - dir*aLen, errY - aLen); ctx.lineTo(flx - dir*aLen, errY + aLen); ctx.fill();
+				// Arrow at x end
+				ctx.beginPath(); ctx.moveTo(rx, errY); ctx.lineTo(rx + dir*aLen, errY - aLen); ctx.lineTo(rx + dir*aLen, errY + aLen); ctx.fill();
+				var midX = (rx + flx) / 2;
+				ctx.fillStyle = RE.COL_ERR; ctx.font = '9px ' + RE.FONT; ctx.textAlign = 'center';
+				ctx.fillText('err', midX, errY - 6);
+			}
+		}
+
+		function updateStats(info) {
+			var el = document.getElementById('re-stats');
+			if (!el) return;
+			var eps = info.eps;
+			// Directed rounding (ceil/floor/trunc): bound is 1 ulp / ε
+			// Nearest rounding: bound is ½ ulp / ½ε
+			var bUlp = info.directed ? info.ulp : info.ulp / 2;
+			var bEps = info.directed ? eps : eps / 2;
+			function row(lbl, val, inEps, bound) {
+				return '<tr><td class="re-st-lbl">' + lbl + '</td>'
+					 + '<td class="re-st-val">' + val + '</td>'
+					 + '<td class="re-st-eps">' + inEps + '</td>'
+					 + '<td class="re-st-eps" style="color:#8a857d;font-style:italic">' + bound + '</td></tr>';
+			}
+			el.innerHTML =
+				'<table class="re-table"><thead><tr>'
+				+ '<th></th><th>значение</th><th>в ε</th><th>≤ граница</th>'
+				+ '</tr></thead><tbody>'
+				+ row('ε', fmtN(eps, 3), '1', '')
+				+ row('ulp(x)', fmtN(info.ulp, 3), fmtN(info.ulp / eps, 3), '')
+				+ row('|err|', fmtN(info.abs_err, 3),
+					   fmtN(info.abs_err / eps, 3),
+					   '≤ <span style="color:#b5b0a8">' + fmtN(bUlp, 3) + '</span>')
+				+ row('|err|/|x|', fmtN(info.rel_err, 3),
+					   fmtN(info.rel_err / eps, 3),
+					   '≤ <span style="color:#b5b0a8">' + fmtN(bEps, 3) + '</span>')
+				+ '</tbody></table>';
+		}
+
+		function reUpdate() {
+			var par = readParams();
+			if (!isFinite(par.x) || par.x === 0 || par.beta < 2 || par.p < 1) return;
+			var info = computeFP(par.x, par.beta, par.p, par.round);
+			if (!info) return;
+			var canvas = getCanvas();
+			if (!canvas || canvas.offsetWidth === 0) return;
+			drawAxis(canvas, info);
+			updateStats(info);
+		}
+
+		// ── Drag x on the canvas ────────────────────────────
+		var _drag = { active: false, grid: null, offsetPx: 0 };
+		var _markerPos = null; // {x, y, r} in CSS px, set by drawAxis
+
+		function isNearMarker(canvas, clientX, clientY) {
+			if (!_markerPos) return false;
+			var rect = canvas.getBoundingClientRect();
+			var scale = cssScale(canvas);
+			var mx = (clientX - rect.left) * scale;
+			var my = (clientY - rect.top) * scale;
+			var dx = mx - _markerPos.x;
+			var dy = my - _markerPos.y;
+			return dx * dx + dy * dy <= _markerPos.r * _markerPos.r;
+		}
+
+		function startDrag(e) {
+			var canvas = getCanvas();
+			if (!canvas) return;
+			var cx = e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX);
+			var cy = e.clientY != null ? e.clientY : (e.touches && e.touches[0].clientY);
+			if (!isNearMarker(canvas, cx, cy)) return;
+			var par = readParams();
+			var info = computeFP(par.x, par.beta, par.p, par.round);
+			_drag.active = true;
+			_drag.grid = info;
+			var rect = canvas.getBoundingClientRect();
+			var scale = cssScale(canvas);
+			_drag.offsetPx = _markerPos.x - (cx - rect.left) * scale;
+			canvas.classList.add('dragging');
+			e.preventDefault();
+		}
+		function moveDrag(e) {
+			var canvas = getCanvas();
+			if (!canvas) return;
+			var cx = e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX);
+			var cy = e.clientY != null ? e.clientY : (e.touches && e.touches[0].clientY);
+			if (!_drag.active) {
+				canvas.classList.toggle('re-hover-x', isNearMarker(canvas, cx, cy));
+				return;
+			}
+			var info = _drag.grid;
+			if (!info) return;
+			var rect = canvas.getBoundingClientRect();
+			var scale = cssScale(canvas);
+			var W = canvas.offsetWidth;
+			var pW = W - PAD_L - PAD_R;
+			var lo = info.grid[0], hi = info.grid[3];
+			var span = hi - lo;
+			var vlo = lo - span * 0.15, vhi = hi + span * 0.15;
+			var canvasX = (cx - rect.left) * scale + _drag.offsetPx;
+			var relX = (canvasX - PAD_L) / pW;
+			var val = vlo + relX * (vhi - vlo);
+			// Clamp to [fl_floor, fl_ceil] — keeps x inside one ULP interval
+			val = Math.max(info.grid[1], Math.min(info.grid[2], val));
+			if (val <= 0) return;
+			document.getElementById('re-x').value = parseFloat(val.toPrecision(4));
+			reUpdate();
+			e.preventDefault();
+		}
+		function endDrag() {
+			if (!_drag.active) return;
+			_drag.active = false;
+			var canvas = getCanvas();
+			if (canvas) canvas.classList.remove('dragging');
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+			['re-x','re-beta','re-p'].forEach(function (id) {
+				var el = document.getElementById(id);
+				if (el) el.addEventListener('input', reUpdate);
+			});
+			document.querySelectorAll('.re-round-btn').forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					document.querySelectorAll('.re-round-btn').forEach(function (b) { b.classList.remove('active'); });
+					btn.classList.add('active');
+					document.getElementById('re-round').dataset.value = btn.dataset.val;
+					reUpdate();
+				});
+			});
+			var canvas = getCanvas();
+			if (canvas) {
+				canvas.addEventListener('mousedown', startDrag);
+				canvas.addEventListener('touchstart', startDrag, { passive: false });
+				document.addEventListener('mousemove', moveDrag);
+				document.addEventListener('touchmove', moveDrag, { passive: false });
+				document.addEventListener('mouseup', endDrag);
+				document.addEventListener('touchend', endDrag);
+			}
+			setTimeout(reUpdate, 150);
+		});
+
+		if (typeof Reveal !== 'undefined') {
+			Reveal.on('slidechanged', function (e) {
+				if (e.currentSlide && e.currentSlide.querySelector('#re-canvas'))
+					setTimeout(reUpdate, 50);
+			});
+		}
+	})();
+	</script>
+
+	<!-- ── Операции (FP arithmetic interactive) ─────────────── -->
+	<script>
+	(function () {
+		function flRound(v, beta, p) {
+			if (!isFinite(v) || v === 0) return v;
+			var av = Math.abs(v), sgn = v < 0 ? -1 : 1;
+			var e = Math.floor(Math.log(av) / Math.log(beta));
+			if (Math.pow(beta, e + 1) <= av) e++;
+			if (Math.pow(beta, e) > av) e--;
+			var ulp = Math.pow(beta, e + 1 - p);
+			var k = Math.floor(av / ulp);
+			var lo = k * ulp, hi = lo + ulp;
+			var dLo = Math.abs(av - lo), dHi = Math.abs(av - hi);
+			var fl;
+			if (dLo < dHi) fl = lo;
+			else if (dHi < dLo) fl = hi;
+			else fl = (k % 2 === 0) ? lo : hi;
+			return sgn * fl;
+		}
+
+		function fpOp(a, b, beta, p, op) {
+			var fa = flRound(a, beta, p), fb = flRound(b, beta, p);
+			var raw;
+			switch (op) {
+				case '+': raw = fa + fb; break;
+				case '-': raw = fa - fb; break;
+				case '*': raw = fa * fb; break;
+				case '/': raw = fb !== 0 ? fa / fb : Infinity; break;
+				default:  raw = NaN;
+			}
+			return flRound(raw, beta, p);
+		}
+
+		function fpSum(x, n, beta, p) {
+			var s = flRound(0, beta, p);
+			var fx = flRound(x, beta, p);
+			for (var i = 0; i < n; i++) {
+				s = flRound(s + fx, beta, p);
+			}
+			return s;
+		}
+
+		function fpNaiveSqDiff(x, y, beta, p) {
+			var fx = flRound(x, beta, p), fy = flRound(y, beta, p);
+			var x2 = flRound(fx * fx, beta, p);
+			var y2 = flRound(fy * fy, beta, p);
+			return flRound(x2 - y2, beta, p);
+		}
+
+		function fpFactoredDiff(x, y, beta, p) {
+			var fx = flRound(x, beta, p), fy = flRound(y, beta, p);
+			var diff = flRound(fx - fy, beta, p);
+			var sum  = flRound(fx + fy, beta, p);
+			return flRound(diff * sum, beta, p);
+		}
+
+		function fpAddSubX(x, y, beta, p) {
+			var fx = flRound(x, beta, p), fy = flRound(y, beta, p);
+			var s = flRound(fx + fy, beta, p);
+			return flRound(s - fx, beta, p);
+		}
+
+		// ── Exact rational arithmetic (BigInt) ────────────────
+		function Frac(n, d) { this.n = BigInt(n); this.d = d ? BigInt(d) : 1n; }
+		Frac.from = function (s) {
+			s = String(s).trim();
+			var neg = s[0] === '-'; if (neg || s[0] === '+') s = s.slice(1);
+			var dot = s.indexOf('.');
+			if (dot === -1) { var nn = BigInt(s); return new Frac(neg ? -nn : nn); }
+			var dec = s.length - dot - 1;
+			var num = BigInt(s.replace('.', ''));
+			var den = 10n ** BigInt(dec);
+			return new Frac(neg ? -num : num, den);
+		};
+		Frac.prototype.add = function (b) { return new Frac(this.n * b.d + b.n * this.d, this.d * b.d); };
+		Frac.prototype.sub = function (b) { return new Frac(this.n * b.d - b.n * this.d, this.d * b.d); };
+		Frac.prototype.mul = function (b) { return new Frac(this.n * b.n, this.d * b.d); };
+		Frac.prototype.div = function (b) { return new Frac(this.n * b.d, this.d * b.n); };
+		Frac.prototype.toFloat = function () { return Number(this.n) / Number(this.d); };
+		Frac.prototype.toStr = function (maxDigits) {
+			maxDigits = maxDigits || 12;
+			var neg = this.n < 0n; var n = neg ? -this.n : this.n; var d = this.d < 0n ? -this.d : this.d;
+			if (neg !== (this.d < 0n)) neg = true; else neg = false;
+			var intPart = n / d, rem = n % d;
+			if (rem === 0n) return (neg ? '−' : '') + intPart.toString();
+			var s = (neg ? '−' : '') + intPart.toString() + '.';
+			var count = 0;
+			while (rem !== 0n && count < maxDigits) {
+				rem *= 10n; s += (rem / d).toString(); rem = rem % d; count++;
+			}
+			if (rem !== 0n) s += '…';
+			return s;
+		};
+
+		// ── Formatting ────────────────────────────────────────
+		function fmtN(v, prec) {
+			prec = prec || 4;
+			if (v === 0) return '0';
+			if (!isFinite(v)) return v > 0 ? '+∞' : '−∞';
+			var a = Math.abs(v);
+			if (a >= 1e-4 && a < 1e6) return parseFloat(v.toPrecision(prec)).toString();
+			return v.toExponential(prec - 1);
+		}
+
+		function baseDigits(v, beta, p) {
+			if (!isFinite(v) || v === 0) return { digits: [], e: 0 };
+			var av = Math.abs(v);
+			var e = Math.floor(Math.log(av) / Math.log(beta));
+			if (Math.pow(beta, e + 1) <= av) e++;
+			if (Math.pow(beta, e) > av) e--;
+			var digits = [], rem = av / Math.pow(beta, e);
+			for (var i = 0; i < p; i++) {
+				var d = Math.floor(rem + 1e-12);
+				d = Math.max(0, Math.min(beta - 1, d));
+				digits.push(d);
+				rem = (rem - d) * beta;
+			}
+			return { digits: digits, e: e };
+		}
+
+		function contamCount(exact, fp, beta, p) {
+			if (exact === fp) return 0;
+			if (!isFinite(exact) || exact === 0) return fp === 0 ? 0 : p;
+			var ed = baseDigits(exact, beta, p);
+			var fd = baseDigits(fp, beta, p);
+			if (ed.e !== fd.e) return p;
+			for (var i = 0; i < p; i++) {
+				if (ed.digits[i] !== fd.digits[i]) return p - i;
+			}
+			return 0;
+		}
+
+		function digitChar(d) { return d < 10 ? String(d) : String.fromCharCode(87 + d); }
+
+		function fmtFP(v, beta, p, contam) {
+			if (!isFinite(v)) return v > 0 ? '+∞' : '−∞';
+			if (v === 0) return '0.' + Array(p).join('0') + '×' + beta + '<sup>0</sup>';
+			var sgn = v < 0 ? '−' : '';
+			var bd = baseDigits(v, beta, p);
+			var clean = p - (contam || 0);
+			var s = sgn;
+			for (var i = 0; i < p; i++) {
+				if (i === 1) s += '.';
+				if (i === clean && contam > 0) s += '<span class="fo-red">';
+				s += digitChar(bd.digits[i]);
+			}
+			if (contam > 0) s += '</span>';
+			return s + '×' + beta + '<sup>' + bd.e + '</sup>';
+		}
+
+		function foUpdate() {
+			var xs = document.getElementById('fo-x').value;
+			var ys = document.getElementById('fo-y').value;
+			var x = parseFloat(xs), y = parseFloat(ys);
+			var beta = parseInt(document.getElementById('fo-beta').value);
+			var p    = parseInt(document.getElementById('fo-p').value);
+			var n    = parseInt(document.getElementById('fo-n').value);
+			if (!isFinite(x) || !isFinite(y) || beta < 2 || p < 1 || n < 1) return;
+
+			// Exact via rational arithmetic
+			var fx = Frac.from(xs), fy = Frac.from(ys), fn = new Frac(n);
+			var eAdd  = fx.add(fy);
+			var eSub  = fx.sub(fy);
+			var eMul  = fx.mul(fy);
+			var eDiv  = y !== 0 ? fx.div(fy) : null;
+			var eSum  = fx.mul(fn);
+			var eSqD  = fx.mul(fx).sub(fy.mul(fy)); // x²−y² = (x−y)(x+y)
+
+			var ops = [
+				{ lbl: 'x + y',     ef: eAdd,  fp: fpOp(x, y, beta, p, '+') },
+				{ lbl: 'x − y',     ef: eSub,  fp: fpOp(x, y, beta, p, '-') },
+				{ lbl: 'x × y',     ef: eMul,  fp: fpOp(x, y, beta, p, '*') },
+				{ lbl: 'x / y',     ef: eDiv,  fp: fpOp(x, y, beta, p, '/') },
+				{ lbl: 'x + y − x', ef: fy,    fp: fpAddSubX(x, y, beta, p) },
+				{ lbl: '\\(\\sum_{i=1}^{' + n + '} x\\)', ef: eSum, fp: fpSum(x, n, beta, p) },
+				{ lbl: 'x² − y²',   ef: eSqD,  fp: fpNaiveSqDiff(x, y, beta, p) },
+				{ lbl: '(x−y)(x+y)', ef: eSqD, fp: fpFactoredDiff(x, y, beta, p) },
+			];
+
+			var html = '<table class="fo-table"><thead><tr>'
+				+ '<th>операция</th><th>точное</th><th>fl</th><th>fl (β=' + beta + ')</th>'
+				+ '<th>|err|</th><th>|err|/|res|</th>'
+				+ '</tr></thead><tbody>';
+
+			for (var i = 0; i < ops.length; i++) {
+				var o = ops[i];
+				var exact = o.ef ? o.ef.toFloat() : Infinity;
+				var exactStr = o.ef ? o.ef.toStr(p + 2) : '−';
+				var absErr = Math.abs(exact - o.fp);
+				var relErr = exact !== 0 ? absErr / Math.abs(exact) : (o.fp === 0 ? 0 : 1);
+				var c = contamCount(exact, o.fp, beta, p);
+				html += '<tr>'
+					+ '<td>' + o.lbl + '</td>'
+					+ '<td class="fo-val">' + exactStr + '</td>'
+					+ '<td class="fo-fp">' + fmtN(o.fp) + '</td>'
+					+ '<td style="font-size:0.85em">' + fmtFP(o.fp, beta, p, c) + '</td>'
+					+ '<td class="fo-err">' + fmtN(absErr) + '</td>'
+					+ '<td class="fo-err">' + fmtN(relErr) + '</td>'
+					+ '</tr>';
+			}
+			html += '</tbody></table>';
+			var el = document.getElementById('fo-stats');
+			el.innerHTML = html;
+			if (window.MathJax) {
+				if (MathJax.Hub) MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
+				else if (MathJax.typeset) MathJax.typeset([el]);
+			}
+		}
+
+		var PRESETS = [
+			{ label: 'x²−y²',           x: '1234',  y: '1233',  beta: 10, p: 4, n: 1,
+			  desc: 'x²−y² теряет 2 из 4 цифр, (x−y)(x+y) точна' },
+			{ label: 'большое + малое',  x: '1000',  y: '0.001', beta: 10, p: 4, n: 1,
+			  desc: 'x+y−x ≠ y: малое y поглощается большим x' },
+			{ label: 'сумма в β=2',      x: '0.1',   y: '1',     beta: 2,  p: 4, n: 100,
+			  desc: '0.1 неточна в β=2 — ошибка растёт с n' },
+			{ label: 'сумма в β=10',     x: '0.1',   y: '1',     beta: 10, p: 4, n: 10000,
+			  desc: '0.1 точна в β=10 — накопления нет' },
+			{ label: 'деление 1/3',      x: '1',     y: '3',     beta: 10, p: 4, n: 1,
+			  desc: '1/3 = 0.3333… — бесконечная дробь в β=10' },
+		];
+
+		function setPreset(pr) {
+			document.getElementById('fo-x').value    = pr.x;
+			document.getElementById('fo-y').value    = pr.y;
+			document.getElementById('fo-beta').value = pr.beta;
+			document.getElementById('fo-p').value    = pr.p;
+			document.getElementById('fo-n').value    = pr.n;
+			foUpdate();
+		}
+
+		function renderPresets() {
+			var el = document.getElementById('fo-presets');
+			if (!el) return;
+			var html = '';
+			for (var i = 0; i < PRESETS.length; i++) {
+				html += '<button class="fo-preset" data-idx="' + i + '" title="' + PRESETS[i].desc + '">'
+					+ PRESETS[i].label + '</button>';
+			}
+			el.innerHTML = html;
+			el.querySelectorAll('.fo-preset').forEach(function (btn) {
+				btn.addEventListener('click', function () { setPreset(PRESETS[parseInt(btn.dataset.idx)]); });
+			});
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+			['fo-x','fo-y','fo-beta','fo-p','fo-n'].forEach(function (id) {
+				var el = document.getElementById(id);
+				if (el) el.addEventListener('input', foUpdate);
+			});
+			renderPresets();
+			setTimeout(foUpdate, 150);
+		});
+
+		if (typeof Reveal !== 'undefined') {
+			Reveal.on('slidechanged', function (e) {
+				if (e.currentSlide && e.currentSlide.querySelector('#fo-stats'))
+					setTimeout(foUpdate, 50);
+			});
+		}
+	})();
+	</script>
 
 	<script>
 		SlideKit.configure({
