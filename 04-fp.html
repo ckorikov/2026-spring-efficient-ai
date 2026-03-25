@@ -35,7 +35,7 @@
 				<div class="slide-corner-br"></div>
 			</div>
 
-			<!-- SLIDE 1 — Title -->
+			<!-- SLIDE 01 — Title -->
 			<section data-tl="Занятие 04 · 15" data-bl="4 марта 2026">
 				<div class="slide-single align-left">
 					<h1 class="slide-title">Числа с плавающей точкой</h1>
@@ -55,7 +55,7 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 2 — TOC -->
+			<!-- SLIDE 02 — TOC -->
 			<section data-header="План">
 				<div class="slide-single align-center">
 					<div class="toc">
@@ -83,17 +83,13 @@
 							<span class="toc-title">Ассемблерная эстафета</span>
 							<span class="toc-page">20 мин</span>
 						</div>
-						<div class="toc-item">
-							<span class="toc-title">Преобразования чисел</span>
-							<span class="toc-page">5 мин</span>
-						</div>
 					</div>
 				</div>
 			</section>
 
 			<!-- ─── БЛОК 1: sim8 v2 ─────────────────────────────────── -->
 
-			<!-- SLIDE 3 — Divider -->
+			<!-- SLIDE 03 — Divider: sim8 v2 -->
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>sim8 v2</h2>
@@ -101,7 +97,7 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 4 — sim8 v2 -->
+			<!-- SLIDE 04 — sim8 v2 -->
 			<section data-header="sim8 v2">
 				<div class="slide-single align-center">
 					<a href="https://ckorikov.github.io/sim8/" target="_blank">
@@ -117,7 +113,7 @@
 
 			<!-- ─── БЛОК 2: Домашнее задание ───────────────────────── -->
 
-			<!-- SLIDE 5 — Divider -->
+			<!-- SLIDE 05 — Divider: Домашнее задание -->
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>Домашнее задание</h2>
@@ -125,9 +121,9 @@
 				</div>
 			</section>
 
-			<!-- ─── БЛОК 2б: Числа с плавающей точкой ──────────────── -->
+			<!-- ─── БЛОК 3: Кодирование FP ─────────────────────────── -->
 
-			<!-- SLIDE 7 — Divider: Числа с плавающей точкой -->
+			<!-- SLIDE 06 — Divider: Кодирование FP -->
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>Числа с плавающей точкой</h2>
@@ -135,7 +131,7 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 8 — Общий формат (Голдберг) -->
+			<!-- SLIDE 07 — Общий формат (Голдберг) -->
 			<section data-header="Общий формат">
 				<div class="slide-single align-center">
 					<div class="fpfmt-wrap">
@@ -147,12 +143,12 @@
 
 						<!-- symbol descriptions -->
 						<div class="fpfmt-symbols">
-<span class="fsym" style="color:#7a9a7a">\(d_i\)</span>
+							<span class="fsym" style="color:#7a9a7a">\(d_i\)</span>
 							<span class="fdef">цифры мантиссы, \(d_i \in \{0,\ldots,\beta{-}1\}\)</span>
 							<span class="fsym" style="color:#6a8fa5">\(\beta\)</span>
 							<span class="fdef">основание (radix)</span>
 							<span class="fsym" style="color:#6a8fa5">\(e\)</span>
-							<span class="fdef">показатель степени, \(e \in [e_{\min},\; e_{\max}]\)</span>
+							<span class="fdef">порядок, \(e \in [e_\text{min},\; e_\text{max}]\); обычно симметрично: \(e_\text{min} = 1 - e_\text{max}\)</span>
 							<span class="fsym">\(p\)</span>
 							<span class="fdef">точность — число значимых цифр</span>
 						</div>
@@ -161,91 +157,61 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 9 — Примеры представлений -->
+			<!-- SLIDE 08 — Примеры представлений -->
 			<section data-header="Примеры">
 				<div class="slide-single align-center">
-										<table class="ieee754-table" style="width:100%;">
-						<thead>
-							<tr>
-								<th style="width:5em">Число</th>
-								<th class="ieee754-col-m">\(\beta = 10,\ p = 3\)</th>
-								<th class="ieee754-col-e">\(\beta = 2,\ p = 24\)</th>
-								<th class="ieee754-col-t">\(\beta = 3,\ p = 3\)</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>0.5</td>
-								<td class="ieee754-col-m mono">
-									<span class="fp-repr" data-m="5.00" data-base="10" data-exp="-1">5.00 × 10<sup>−1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-repr" data-m="0.50" data-base="10" data-exp="0">0.50 × 10<sup>0</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-								<td class="ieee754-col-e mono">
-									<span class="fp-repr" data-m="1.00000000000000000000000" data-base="2" data-exp="-1">1.00000000000000000000000 × 2<sup>−1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-repr" data-m="0.10000000000000000000000" data-base="2" data-exp="0">0.10000000000000000000000 × 2<sup>0</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-								<td class="ieee754-col-t mono fpfmt-approx">
-									<span class="fp-repr" data-m="1.11" data-base="3" data-exp="-1">1.11 × 3<sup>−1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-repr" data-m="1.12" data-base="3" data-exp="-1">1.12 × 3<sup>−1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-							</tr>
-							<tr>
-								<td>0.1</td>
-								<td class="ieee754-col-m mono">
-									<span class="fp-repr" data-m="1.00" data-base="10" data-exp="-1">1.00 × 10<sup>−1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-repr" data-m="0.10" data-base="10" data-exp="0">0.10 × 10<sup>0</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-								<td class="ieee754-col-e mono fpfmt-approx">
-									<span class="fp-repr" data-m="1.10011001100110011001101" data-base="2" data-exp="-4">1.10011001100110011001101 × 2<sup>−4</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-								<td class="ieee754-col-t mono fpfmt-approx">
-									<span class="fp-repr" data-m="2.20" data-base="3" data-exp="-3">2.20 × 3<sup>−3</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-							</tr>
-							<tr>
-								<td>1/3</td>
-								<td class="ieee754-col-m mono fpfmt-approx">
-									<span class="fp-repr" data-m="3.33" data-base="10" data-exp="-1">3.33 × 10<sup>−1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-								<td class="ieee754-col-e mono fpfmt-approx">
-									<span class="fp-repr" data-m="1.01010101010101010101011" data-base="2" data-exp="-2">1.01010101010101010101011 × 2<sup>−2</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-								<td class="ieee754-col-t mono">
-									<span class="fp-repr" data-m="1.00" data-base="3" data-exp="-1">1.00 × 3<sup>−1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-repr" data-m="0.10" data-base="3" data-exp="0">0.10 × 3<sup>0</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-							</tr>
-							<tr>
-								<td>\(\pi\)</td>
-								<td class="ieee754-col-m mono fpfmt-approx">
-									<span class="fp-repr" data-m="3.14" data-base="10" data-exp="0">3.14 × 10<sup>0</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-								<td class="ieee754-col-e mono fpfmt-approx">
-									<span class="fp-repr" data-m="1.10010010000111111011011" data-base="2" data-exp="1">1.10010010000111111011011 × 2<sup>1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-								<td class="ieee754-col-t mono fpfmt-approx">
-									<span class="fp-repr" data-m="1.00" data-base="3" data-exp="1">1.00 × 3<sup>1</sup> <span class="fp-val"></span></span><br>
-									<span class="fp-dots">…</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+						<div id="fp-examples-table"></div>
 
 				</div>
 			</section>
 
-			<!-- SLIDE — Ошибка представления -->
+			<!-- SLIDE 09 — Нормализованный формат -->
+			<section data-header="Нормализованный формат">
+				<div class="slide-single align-center">
+					<div class="fpfmt-wrap">
+
+						<!-- notation → sum on one line -->
+						<div class="fpfmt-formula">
+							\[ x = {\color{#a07070}\pm}\; {\color{#7a9a7a}d_0}\mathbin{.}{\color{#7a9a7a}d_1}\,{\color{#7a9a7a}d_2}\, {\color{#7a9a7a}\cdots}\, {\color{#7a9a7a}d_{p-1}} \;\times\; {\color{#6a8fa5}\beta^{\,e}}\; {\color{#a09a92}\Longleftrightarrow}\; x = {\color{#a07070}\pm}\,{\color{#6a8fa5}\beta^{\,e}}\sum_{i=0}^{p-1} {\color{#7a9a7a}d_i}\,{\color{#6a8fa5}\beta^{-i}} \]
+						</div>
+
+						<!-- symbol descriptions -->
+						<div class="fpfmt-symbols">
+							<span class="fsym" style="color:#5a8a5a">\(d_0 \neq 0\)</span>
+							<span class="fdef">единственность представления, максимальная точность при данном \(p\)</span>
+							<span class="fsym" style="color:#6a8fa5">\(e_{\min}\)</span>
+							<span class="fdef">наименьшее нормальное: \(\beta^{e_{\min}}\) — провал \((0,\;\beta^{e_{\min}})\) без чисел (gradual underflow)</span>
+						</div>
+
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 10 — Субнормальные числа -->
+			<section data-header="Субнормальные числа">
+				<div class="slide-single align-center">
+					<div class="fpfmt-wrap">
+
+						<div class="fpfmt-formula">
+							\[ x = {\color{#a07070}\pm}\; {\color{#a07060}0}\mathbin{.}{\color{#7a9a7a}d_1}\,{\color{#7a9a7a}d_2}\, {\color{#7a9a7a}\cdots}\, {\color{#7a9a7a}d_{p-1}} \;\times\; {\color{#6a8fa5}\beta^{\,e_{\min}}} \]
+						</div>
+
+						<div class="fpfmt-symbols">
+							<span class="fsym" style="color:#a07060">\(d_0 = 0\)</span>
+							<span class="fdef">ненормализованная мантисса</span>
+							<span class="fsym" style="color:#6a8fa5">\(e = e_{\min}\)</span>
+							<span class="fdef">порядок зафиксирован</span>
+						</div>
+
+						<div class="fpfmt-symbols" style="margin-top:8px">
+							<span class="fdef" style="grid-column:1/-1">Диапазон \((0,\;\beta^{e_{\min}})\) используется для кодирования очень маленьких значений ценой потери точности (gradual underflow)</span>
+						</div>
+
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 11 — Ошибка представления -->
 			<section data-header="Ошибка представления">
 				<div class="slide-single align-center">
 					<div class="repr-err-viz" id="repr-err-viz">
@@ -265,6 +231,14 @@
 								<span class="re-lbl">p =</span>
 								<input class="re-spin" id="re-p" type="number" value="3" min="1" max="8" step="1">
 							</div>
+							<div class="re-ctrl-group">
+								<span class="re-lbl">e<sub>max</sub> =</span>
+								<input class="re-spin" id="re-emax" type="number" value="2" min="1" max="15" step="1">
+							</div>
+							<label class="re-ctrl-group fo-guard-label">
+								<input type="checkbox" id="re-subnorm" checked>
+								<span class="re-lbl">Субнормальные</span>
+							</label>
 							<div class="re-divider">·</div>
 							<div class="re-ctrl-group re-round-group" id="re-round" data-value="nearest">
 								<span class="re-lbl">округление</span>
@@ -275,6 +249,9 @@
 							</div>
 						</div>
 
+						<!-- β-format -->
+						<div class="re-repr" id="re-repr"></div>
+
 						<!-- Number axis -->
 						<div class="re-canvas-wrap">
 							<canvas id="re-canvas" class="re-canvas"></canvas>
@@ -283,22 +260,22 @@
 						<!-- Stats -->
 						<div class="re-stats" id="re-stats"></div>
 
-						<!-- Definitions — chain: ε → ulp → |err| → rel err -->
+						<!-- Definitions — chain: ε → ulp → bounds (nearest) -->
 						<div class="re-defs">
-							<span class="re-def"><span class="re-def-lbl">ε</span> $= \beta^{1-p}$<br><span style="font-size:10px">машинный эпсилон</span></span>
+							<span class="re-def"><span class="re-def-lbl">ε</span> \(= \tfrac{\beta}{2}\,\beta^{-p}\)<br><span style="font-size:10px">машинный эпсилон</span></span>
 							<span class="re-def-sep">→</span>
-							<span class="re-def"><span class="re-def-lbl">ulp</span> $\approx \varepsilon \!\cdot\! |x|$<br><span style="font-size:10px">шаг сетки</span></span>
+							<span class="re-def"><span class="re-def-lbl">ulp</span> \(\approx 2\varepsilon\,|x|\)<br><span style="font-size:10px">шаг сетки<br>(<b>u</b>nit in the <b>l</b>ast <b>p</b>lace)</span></span>
 							<span class="re-def-sep">→</span>
-							<span class="re-def"><span class="re-def-lbl">|err|</span> $\leq \tfrac{1}{2}\,\mathrm{ulp}$<br><span style="font-size:10px">абсолютная ошибка</span></span>
+							<span class="re-def"><span class="re-def-lbl">|err|</span> \(\leq \tfrac{1}{2}\,\mathrm{ulp}\)<br><span style="font-size:10px">абсолютная ошибка<br>при округлении до ближайшего</span></span>
 							<span class="re-def-sep">→</span>
-							<span class="re-def"><span class="re-def-lbl">|err|/|x|</span> $\leq \tfrac{1}{2}\varepsilon$<br><span style="font-size:10px">относительная ошибка</span></span>
+							<span class="re-def"><span class="re-def-lbl">|err|/|x|</span> \(\leq \varepsilon\)<br><span style="font-size:10px">относительная ошибка<br>при округлении до ближайшего</span></span>
 						</div>
 
 					</div>
 				</div>
 			</section>
 
-			<!-- SLIDE 6 — Диапазоны чисел -->
+			<!-- SLIDE 12 — Диапазоны чисел -->
 			<section data-header="Диапазоны чисел">
 				<div class="slide-single align-center">
 					<div class="num-axis-viz">
@@ -326,7 +303,7 @@
 						<!-- Ряд 2: плавающая точка -->
 						<div class="nv-row">
 							<div class="format-section int-section">
-								<div class="section-label">Плавающая точка · E<span id="cmp-fp-e-lbl">5</span>M<span id="cmp-fp-m-lbl">2</span> · со знаком · 8 бит</div>
+								<div class="section-label">Плавающая точка · E<span id="cmp-fp-e-lbl">5</span>M<span id="cmp-fp-m-lbl">2</span> · <span id="cmp-fp-norm-lbl">нормализованный</span> · 8 бит</div>
 								<div class="axis-container">
 									<canvas class="axis-canvas" id="cmp-fp-canvas"></canvas>
 								</div>
@@ -334,12 +311,16 @@
 							<div class="config-panel int-section">
 								<div class="config-stats">
 									min: <strong id="cmp-fp-min">−57344</strong> · max: <strong id="cmp-fp-max">57344</strong><br>
-									значений: <strong id="cmp-fp-count">248</strong>
+									E<sub>max</sub>: <strong id="cmp-fp-emax">15</strong> · значений: <strong id="cmp-fp-count">248</strong>
 								</div>
 								<div class="config-row">
-									<label>Экспонента E <span class="value-display" id="cmp-fp-e-val">5</span></label>
+									<label>порядок E (биты) <span class="value-display" id="cmp-fp-e-val">5</span></label>
 									<input type="range" id="cmp-fp-e" min="1" max="14" value="5">
 								</div>
+								<label class="fo-guard-label" style="margin-top:4px">
+									<input type="checkbox" id="cmp-fp-subnorm">
+									<span>Субнормальные</span>
+								</label>
 							</div>
 						</div>
 
@@ -347,6 +328,9 @@
 				</div>
 			</section>
 
+			<!-- ─── БЛОК 4: FP операции ─────────────────────────────── -->
+
+			<!-- SLIDE 13 — Divider: FP операции -->
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>Числа с плавающей точкой</h2>
@@ -354,42 +338,129 @@
 				</div>
 			</section>
 
-			<!-- SLIDE — Операции -->
-			<section data-header="Операции">
+			<!-- SLIDE 14 — Базовые операции -->
+			<section data-header="Базовые операции">
 				<div class="slide-single align-center">
-					<div class="fp-ops-viz" id="fp-ops-viz">
+					<div class="fp-ops-viz">
 						<div class="fo-controls">
-							<div class="re-ctrl-group">
-								<span class="re-lbl">x =</span>
-								<input class="fo-input" id="fo-x" type="text" value="1234">
-							</div>
-							<div class="re-ctrl-group">
-								<span class="re-lbl">y =</span>
-								<input class="fo-input" id="fo-y" type="text" value="1233">
-							</div>
+							<div class="re-ctrl-group"><span class="re-lbl">x =</span><input class="fo-input" id="fob-x" type="text" value="1.5"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">y =</span><input class="fo-input" id="fob-y" type="text" value="0.5"></div>
 							<div class="re-divider">·</div>
-							<div class="re-ctrl-group">
-								<span class="re-lbl">&beta; =</span>
-								<input class="fo-spin" id="fo-beta" type="number" value="10" min="2" max="16">
-							</div>
-							<div class="re-ctrl-group">
-								<span class="re-lbl">p =</span>
-								<input class="fo-spin" id="fo-p" type="number" value="4" min="1" max="12">
-							</div>
-							<div class="re-divider">·</div>
-							<div class="re-ctrl-group">
-								<span class="re-lbl">n =</span>
-								<input class="fo-spin" id="fo-n" type="number" value="1" min="1" max="100000" style="width:64px">
-							</div>
+							<div class="re-ctrl-group"><span class="re-lbl">&beta; =</span><input class="fo-spin" id="fob-beta" type="number" value="10" min="2" max="16"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">p =</span><input class="fo-spin" id="fob-p" type="number" value="4" min="1" max="12"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">e<sub>max</sub> =</span><input class="fo-spin" id="fob-emax" type="number" value="2" min="1" max="15"></div>
+							<label class="re-ctrl-group fo-guard-label"><input type="checkbox" id="fob-guard"><span class="re-lbl">guard digit</span></label>
 						</div>
-						<div class="fo-stats" id="fo-stats"></div>
-						<div class="fo-presets" id="fo-presets"></div>
-						<div class="fo-desc" id="fo-desc"></div>
+						<div class="fo-desc">Каждая операция округляет точный результат до ближайшего FP-числа. Погрешность ≤ ½ ulp.</div>
+						<div class="fo-stats" id="fob-stats"></div>
 					</div>
 				</div>
 			</section>
 
-			<!-- SLIDE 7 — Divider: Числа с плавающей точкой -->
+			<!-- SLIDE 15 — Большое + малое -->
+			<section data-header="Большое + малое">
+				<div class="slide-single align-center">
+					<div class="fp-ops-viz">
+						<div class="fo-controls">
+							<div class="re-ctrl-group"><span class="re-lbl">x =</span><input class="fo-input" id="foa-x" type="text" value="1000"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">y =</span><input class="fo-input" id="foa-y" type="text" value="0.001"></div>
+							<div class="re-divider">·</div>
+							<div class="re-ctrl-group"><span class="re-lbl">&beta; =</span><input class="fo-spin" id="foa-beta" type="number" value="10" min="2" max="16"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">p =</span><input class="fo-spin" id="foa-p" type="number" value="4" min="1" max="12"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">e<sub>max</sub> =</span><input class="fo-spin" id="foa-emax" type="number" value="4" min="1" max="15"></div>
+							<label class="re-ctrl-group fo-guard-label"><input type="checkbox" id="foa-guard"><span class="re-lbl">guard digit</span></label>
+						</div>
+						<div class="fo-desc">Поглощение: fl(x + y) = x когда |y| ≪ |x|. Малое слагаемое исчезает — x+y−x = 0, а не y.</div>
+						<div class="fo-stats" id="foa-stats"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 16 — Вычитание близких -->
+			<section data-header="Вычитание близких">
+				<div class="slide-single align-center">
+					<div class="fp-ops-viz">
+						<div class="fo-controls">
+							<div class="re-ctrl-group"><span class="re-lbl">x =</span><input class="fo-input" id="foc-x" type="text" value="1001"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">y =</span><input class="fo-input" id="foc-y" type="text" value="999"></div>
+							<div class="re-divider">·</div>
+							<div class="re-ctrl-group"><span class="re-lbl">&beta; =</span><input class="fo-spin" id="foc-beta" type="number" value="10" min="2" max="16"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">p =</span><input class="fo-spin" id="foc-p" type="number" value="3" min="1" max="12"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">e<sub>max</sub> =</span><input class="fo-spin" id="foc-emax" type="number" value="4" min="1" max="15"></div>
+							<label class="re-ctrl-group fo-guard-label">
+								<input type="checkbox" id="foc-guard">
+								<span class="re-lbl">guard digit</span>
+							</label>
+						</div>
+						<div class="fo-desc">Катастрофическое вычитание: значащие цифры теряются. Guard digit сохраняет ещё одну цифру при выравнивании.</div>
+						<div class="fo-stats" id="foc-stats"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 17 — x²−y² -->
+			<section data-header="x²−y²">
+				<div class="slide-single align-center">
+					<div class="fp-ops-viz">
+						<div class="fo-controls">
+							<div class="re-ctrl-group"><span class="re-lbl">x =</span><input class="fo-input" id="foq-x" type="text" value="1234"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">y =</span><input class="fo-input" id="foq-y" type="text" value="1233"></div>
+							<div class="re-divider">·</div>
+							<div class="re-ctrl-group"><span class="re-lbl">&beta; =</span><input class="fo-spin" id="foq-beta" type="number" value="10" min="2" max="16"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">p =</span><input class="fo-spin" id="foq-p" type="number" value="4" min="1" max="12"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">e<sub>max</sub> =</span><input class="fo-spin" id="foq-emax" type="number" value="7" min="1" max="15"></div>
+							<label class="re-ctrl-group fo-guard-label"><input type="checkbox" id="foq-guard"><span class="re-lbl">guard digit</span></label>
+						</div>
+						<div class="fo-desc">x²−y² теряет все значащие цифры при x ≈ y. Факторизация (x−y)(x+y) избегает катастрофического вычитания.</div>
+						<div class="fo-stats" id="foq-stats"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 18 — Суммирование: наивное vs Кэхэна -->
+			<section data-header="Суммирование">
+				<div class="slide-single align-center">
+					<div class="fp-ops-viz">
+						<div class="fo-controls">
+							<div class="re-ctrl-group"><span class="re-lbl">x =</span><input class="fo-input" id="fo2-x" type="text" value="0.01"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">n =</span><input class="fo-spin" id="fo2-n" type="number" value="100" min="1" max="100000" style="width:64px"></div>
+							<div class="re-divider">·</div>
+							<div class="re-ctrl-group"><span class="re-lbl">&beta; =</span><input class="fo-spin" id="fo2-beta" type="number" value="2" min="2" max="16"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">p =</span><input class="fo-spin" id="fo2-p" type="number" value="4" min="1" max="12"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">e<sub>max</sub> =</span><input class="fo-spin" id="fo2-emax" type="number" value="8" min="1" max="15"></div>
+							<label class="re-ctrl-group fo-guard-label"><input type="checkbox" id="fo2-guard"><span class="re-lbl">guard digit</span></label>
+						</div>
+						<div class="fo-desc">Наивное суммирование накапливает ошибку O(n·ε). Алгоритм Кэхэна удерживает ошибку O(ε) независимо от n.</div>
+						<div class="fo-stats" id="fo-sum-combined"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 19 — Площадь треугольника: Герон vs Кэхэн -->
+			<section data-header="Площадь треугольника">
+				<div class="slide-two-col" id="heron-viz" style="grid-template-columns:3fr 2fr; color:#2d2a26;">
+					<div class="heron-canvas-wrap">
+						<svg id="heron-svg" class="heron-svg" aria-label="triangle visualization"></svg>
+					</div>
+					<div style="display:flex; flex-direction:column; gap:12px;">
+						<div class="fo-controls" style="justify-content:flex-start;">
+							<div class="re-ctrl-group"><span class="re-lbl">&beta; =</span><input class="fo-spin" id="heron-beta" type="number" value="10" min="2" max="16"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">p =</span><input class="fo-spin" id="heron-p" type="number" value="3" min="1" max="8"></div>
+							<div class="re-ctrl-group"><span class="re-lbl">e<sub>max</sub> =</span><input class="fo-spin" id="heron-emax" type="number" value="4" min="1" max="15"></div>
+							<label class="re-ctrl-group fo-guard-label"><input type="checkbox" id="heron-subnorm" checked><span class="re-lbl">Субнормальные</span></label>
+						</div>
+						<div class="heron-stats" id="heron-stats"></div>
+					</div>
+					<div class="heron-formulas heron-formulas-bottom">
+						<div class="heron-formula-line">\[A_H = \sqrt{s(s-a)(s-b)(s-c)},\quad s = \frac{a+b+c}{2}\]</div>
+						<div class="heron-formula-line">\[A_K = \frac{1}{4}\sqrt{(a+(b+c))(c-(a-b))(c+(a-b))(a+(b-c))}\]</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 5: FP стандарты ─────────────────────────────── -->
+
+			<!-- SLIDE 20 — Divider: FP стандарты -->
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>Числа с плавающей точкой</h2>
@@ -397,11 +468,29 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 7 — IEEE 754 -->
+			<!-- SLIDE 21 — IEEE 754 -->
 			<section data-header="IEEE 754">
 				<div class="slide-single align-center">
 					<div class="ieee754-wrap">
 
+						<!-- float64 -->
+						<div class="ieee754-row">
+							<div class="ieee754-name">float64</div>
+							<div class="ieee754-bits">
+								<div class="ieee754-f sign" style="flex:1">
+									<div class="ieee754-bar">S</div>
+									<div class="ieee754-lbl">1 бит</div>
+								</div>
+								<div class="ieee754-f exp" style="flex:11">
+									<div class="ieee754-bar">E</div>
+									<div class="ieee754-lbl">11 бит · bias 1023</div>
+								</div>
+								<div class="ieee754-f mant" style="flex:52">
+									<div class="ieee754-bar">M</div>
+									<div class="ieee754-lbl">52 бит</div>
+								</div>
+							</div>
+						</div>
 						<!-- float32 -->
 						<div class="ieee754-row">
 							<div class="ieee754-name">float32</div>
@@ -411,12 +500,12 @@
 									<div class="ieee754-lbl">1 бит</div>
 								</div>
 								<div class="ieee754-f exp" style="flex:8">
-									<div class="ieee754-bar">E × 8</div>
-									<div class="ieee754-lbl">bias 127</div>
+									<div class="ieee754-bar">E</div>
+									<div class="ieee754-lbl">8 бит · bias 127</div>
 								</div>
 								<div class="ieee754-f mant" style="flex:23">
-									<div class="ieee754-bar">M × 23</div>
-									<div class="ieee754-lbl">мантисса</div>
+									<div class="ieee754-bar">M</div>
+									<div class="ieee754-lbl">23 бит</div>
 								</div>
 							</div>
 						</div>
@@ -430,12 +519,12 @@
 									<div class="ieee754-lbl">1 бит</div>
 								</div>
 								<div class="ieee754-f exp" style="flex:5">
-									<div class="ieee754-bar">E × 5</div>
-									<div class="ieee754-lbl">bias 15</div>
+									<div class="ieee754-bar">E</div>
+									<div class="ieee754-lbl">5 бит · bias 15</div>
 								</div>
 								<div class="ieee754-f mant" style="flex:10">
-									<div class="ieee754-bar">M × 10</div>
-									<div class="ieee754-lbl">мантисса</div>
+									<div class="ieee754-bar">M</div>
+									<div class="ieee754-lbl">10 бит</div>
 								</div>
 							</div>
 						</div>
@@ -488,7 +577,7 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 8 — OCP FP8 -->
+			<!-- SLIDE 22 — OCP FP8 -->
 			<section data-header="OCP FP8">
 				<div class="slide-single align-center">
 					<div class="ieee754-wrap">
@@ -502,12 +591,12 @@
 									<div class="ieee754-lbl">1 бит</div>
 								</div>
 								<div class="ieee754-f exp" style="flex:4">
-									<div class="ieee754-bar">E × 4</div>
-									<div class="ieee754-lbl">bias 7</div>
+									<div class="ieee754-bar">E</div>
+									<div class="ieee754-lbl">4 бит · bias 7</div>
 								</div>
 								<div class="ieee754-f mant" style="flex:3">
-									<div class="ieee754-bar">M × 3</div>
-									<div class="ieee754-lbl">мантисса</div>
+									<div class="ieee754-bar">M</div>
+									<div class="ieee754-lbl">3 бит</div>
 								</div>
 							</div>
 						</div>
@@ -521,12 +610,12 @@
 									<div class="ieee754-lbl">1 бит</div>
 								</div>
 								<div class="ieee754-f exp" style="flex:5">
-									<div class="ieee754-bar">E × 5</div>
-									<div class="ieee754-lbl">bias 15</div>
+									<div class="ieee754-bar">E</div>
+									<div class="ieee754-lbl">5 бит · bias 15</div>
 								</div>
 								<div class="ieee754-f mant" style="flex:2">
-									<div class="ieee754-bar">M × 2</div>
-									<div class="ieee754-lbl">мантисса</div>
+									<div class="ieee754-bar">M</div>
+									<div class="ieee754-lbl">2 бит</div>
 								</div>
 							</div>
 						</div>
@@ -615,9 +704,9 @@
 				</div>
 			</section>
 
-			<!-- ─── БЛОК 3: Эстафета ────────────────────────────────── -->
+			<!-- ─── БЛОК 6: Ассемблерная эстафета ──────────────────── -->
 
-			<!-- SLIDE 9 — Divider -->
+			<!-- SLIDE 23 — Divider: Ассемблерная эстафета -->
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>Ассемблерная эстафета</h2>
@@ -625,7 +714,7 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 10 — Задание 1: dot product -->
+			<!-- SLIDE 24 — Задание 1: dot product -->
 			<section data-init="codemirror" data-header="Задание 1">
 				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
 					<div class="col-left">
@@ -651,7 +740,7 @@ start:
 				</div>
 			</section>
 
-			<!-- SLIDE 11 — Задание 2: matvec -->
+			<!-- SLIDE 25 — Задание 2: matvec -->
 			<section data-init="codemirror" data-header="Задание 2">
 				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
 					<div class="col-left">
@@ -680,7 +769,7 @@ start:
 				</div>
 			</section>
 
-			<!-- SLIDE 12 — Задание 3: экспонента -->
+			<!-- SLIDE 26 — Задание 3: экспонента -->
 			<section data-init="codemirror" data-header="Задание 3">
 				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
 					<div class="col-left">
@@ -698,19 +787,14 @@ start:
 					</div>
 					<div class="col-left col-prose">
 						<p class="col-prose-heading">Экспонента</p>
-						<p class="text-muted">Входное x хранится в памяти как float16. Аппаратной инструкции для экспоненты нет — придумайте, как её посчитать. Результат запишите в <code>res</code>.</p>
+						<p class="text-muted">Входное x хранится в памяти как float16. Нет инструкции FEXP — вычислите через ряд Тейлора или тождество e<sup>x</sup> = 2<sup>x/ln 2</sup>. Результат запишите в <code>res</code>.</p>
 					</div>
 				</div>
 			</section>
 
 
-			<section data-tr="" data-bl="">
-				<div class="slide-divider">
-					<h2>Преобразования чисел</h2>
-				</div>
-			</section>
 
-			<!-- SLIDE 11 — Final -->
+			<!-- SLIDE 27 — Final -->
 			<section data-header="" data-tr="" data-bl="">
 				<div class="slide-single align-center">
 					<p class="text-muted" style="font-size: 13px;">
@@ -729,10 +813,20 @@ start:
 	<script src="sys/slide-kit.js"></script>
 	<script src="sys/codemirror-kit.js"></script>
 
+	<script src="sys/plugins/fp-fmt.js"></script>
+	<script src="sys/plugins/fp-rounding.js"></script>
+	<script src="sys/plugins/fp-ieee754.js"></script>
+	<script src="sys/plugins/fp-fixed.js"></script>
+	<script src="sys/plugins/fp-fp8.js"></script>
+	<script src="sys/plugins/fp-rational.js"></script>
+	<script src="assets/04-fp/04-fp-fl.js"></script>
 	<script src="assets/04-fp/04-fp-axis.js"></script>
-	<script src="assets/04-fp/04-fp-decode.js"></script>
+	<script src="sys/plugins/fp-repr.js"></script>
+	<script src="assets/04-fp/04-fp-examples.js"></script>
 	<script src="assets/04-fp/04-fp-repr-err.js"></script>
 	<script src="assets/04-fp/04-fp-ops.js"></script>
+	<script src="sys/plugins/fp-heron.js"></script>
+	<script src="assets/04-fp/04-fp-heron.js"></script>
 	<script>
 		SlideKit.configure({
 			tr: 'Effective AI 2026',
@@ -748,13 +842,19 @@ start:
 			center: false,
 			hash: true,
 			transition: 'fade',
-			plugins: [RevealNotes, RevealMath]
+			plugins: [RevealNotes, RevealMath.KaTeX]
 		});
 
 		Reveal.on('slidechanged', function (e) {
 			if (e.currentSlide && e.currentSlide.querySelector('#cmp-frac-canvas')) {
 				setTimeout(function () { window._fpAxisRedraw && window._fpAxisRedraw(); }, 50);
 			}
+		});
+
+		window.addEventListener('load', function () {
+			setTimeout(function () {
+				if (window.Reveal && Reveal.layout) Reveal.layout();
+			}, 200);
 		});
 	</script>
 </body>

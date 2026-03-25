@@ -65,6 +65,7 @@
 	text-transform: uppercase; letter-spacing: 0.5px;
 	padding: 4px 8px; border-bottom: 1px solid #d5d0c8;
 }
+.ieee754-table th .katex { text-transform: none; }
 .ieee754-table td { padding: 5px 8px; border-bottom: 1px solid #e8e4dc; }
 .ieee754-table tr:last-child td { border-bottom: none; }
 .ieee754-table .ieee754-col-e { color: #6a8fa5; }
@@ -113,12 +114,12 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 6px 16px;
+	gap: 10px 16px;
 	flex-wrap: wrap;
 	background: rgba(45,42,38,0.04);
 	border: 1px solid #e0ddd8;
 	border-radius: 6px;
-	padding: 8px 16px;
+	padding: 10px 16px;
 }
 .re-ctrl-group { display: flex; align-items: center; gap: 5px; }
 .re-lbl { font-size: 11px; color: #8a857d; }
@@ -151,6 +152,17 @@
 	transition: border-color .15s;
 }
 .re-spin:focus { border-color: #6a8fa5; }
+.re-repr {
+	text-align: center; font-size: 16px; font-weight: 500;
+	font-family: 'IBM Plex Mono', monospace;
+	color: #2d2a26; min-height: 22px;
+}
+.re-repr .re-repr-d0 { font-weight: 700; }
+.re-repr .re-repr-norm { color: #5a8a5a; }
+.re-repr .re-repr-sub  { color: #a07060; }
+.re-repr .re-repr-zero { color: #8a857d; }
+.re-repr .re-repr-exp  { color: #6a8fa5; }
+.re-repr .re-repr-mul  { color: #8a857d; font-size: 0.8em; }
 .re-canvas-wrap { position: relative; width: 100%; }
 .re-canvas { display: block; width: 100%; cursor: default; }
 .re-canvas.re-hover-x { cursor: grab; }
@@ -255,6 +267,9 @@
 .fo-table .fo-val { color: #2d2a26; font-weight: 500; }
 .fo-table .fo-fp { color: #6a8fa5; }
 .fo-table .fo-err { color: #a07060; }
+.fo-table .fo-method { color: #8a857d; font-weight: 500; text-align: left; white-space: nowrap; }
+.fo-table-combined th { padding: 4px 10px; font-size: 12px; }
+.fo-table-combined td { padding: 4px 10px; }
 .fo-red { color: #c04030; font-weight: 600; }
 .fo-table tbody tr { border-bottom: 1px solid #ece8e0; }
 .fo-table tbody tr:last-child { border-bottom: none; }
@@ -274,4 +289,189 @@
 	text-align: center; font-size: 11px; color: #8a857d;
 	font-family: 'IBM Plex Mono', monospace;
 	min-height: 1.4em;
+}
+.fo-guard-label { cursor: pointer; gap: 4px; }
+.fo-guard-label input[type="checkbox"] { accent-color: #6a8fa5; cursor: pointer; }
+.fo-kahan-code {
+	margin-top: 8px;
+	text-align: center;
+}
+.fo-kahan-code pre {
+	display: inline-block;
+	text-align: left;
+	font-family: 'IBM Plex Mono', monospace;
+	font-size: 13px;
+	color: #2d2a26;
+	background: rgba(45,42,38,0.04);
+	border: 1px solid #e0ddd8;
+	border-radius: 6px;
+	padding: 10px 18px;
+	line-height: 1.6;
+	margin: 0;
+}
+
+/* ── Площадь треугольника (Герон vs Кэхэн) ───────────── */
+.heron-viz {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	font-family: 'IBM Plex Mono', monospace;
+	color: #2d2a26;
+}
+.heron-controls {
+	padding: 10px 12px;
+	gap: 8px 14px;
+}
+.heron-val {
+	min-width: 42px;
+	text-align: center;
+	font-size: 11px;
+	color: #2d2a26;
+	font-weight: 600;
+	padding: 2px 6px;
+	border-radius: 4px;
+	background: #f0ece6;
+	border: 1px solid #d5d0c8;
+}
+.heron-flatness {
+	font-size: 12px;
+	font-weight: 600;
+	color: #a07060;
+}
+.heron-drag-hint {
+	font-size: 10px;
+	color: #8a857d;
+	letter-spacing: 0.2px;
+}
+.heron-canvas-wrap {
+	border: 1px solid #e0ddd8;
+	border-radius: 6px;
+	background: linear-gradient(180deg, #f6f2ec 0%, #f1ede6 100%);
+	padding: 8px;
+}
+.heron-svg {
+	display: block;
+	width: 100%;
+	height: 340px;
+	touch-action: none;
+}
+.heron-tri-fill {
+	fill: rgba(106, 143, 165, 0.14);
+	stroke: #6a8fa5;
+	stroke-width: 1;
+}
+.heron-edge-a,
+.heron-edge-b,
+.heron-edge-c {
+	stroke-width: 2.2;
+	fill: none;
+}
+.heron-edge-a { stroke: #a07060; }
+.heron-edge-b { stroke: #7a9a7a; }
+.heron-edge-c { stroke: #6a8fa5; }
+.heron-handle {
+	cursor: grab;
+	stroke: #2d2a26;
+	stroke-width: 1;
+}
+.heron-handle.is-drag {
+	cursor: grabbing;
+}
+.heron-handle-a { fill: #a07060; }
+.heron-handle-b { fill: #7a9a7a; }
+.heron-handle-c { fill: #6a8fa5; }
+.heron-label {
+	font-family: 'IBM Plex Mono', monospace;
+	font-size: 18px;
+	font-weight: 600;
+	fill: #2d2a26;
+	text-anchor: middle;
+}
+.heron-stats { display: flex; justify-content: center; }
+.heron-table {
+	border-collapse: collapse;
+	font-size: 12px;
+}
+.heron-table th {
+	color: #8a857d;
+	font-weight: 500;
+	padding: 4px 10px;
+	text-align: right;
+	border-bottom: 1px solid #d5d0c8;
+}
+.heron-table th:first-child,
+.heron-table td:first-child {
+	text-align: left;
+}
+.heron-table td {
+	padding: 4px 10px;
+	text-align: right;
+	border-bottom: 1px solid #ece8e0;
+}
+.heron-table tbody tr:last-child td {
+	border-bottom: none;
+}
+.heron-good {
+	color: #2d2a26;
+	font-weight: 600;
+}
+.heron-note {
+	margin-top: 6px;
+	text-align: center;
+	font-size: 11px;
+	color: #8a857d;
+}
+.heron-formulas {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 8px 18px;
+	padding-top: 4px;
+	border-top: 1px solid #e8e4dc;
+	font-size: 15px;
+	color: #4c4742;
+}
+.heron-formulas-bottom {
+	grid-column: 1 / -1;
+	margin-top: 6px;
+}
+.heron-formula-line {
+	width: 100%;
+	text-align: center;
+	line-height: normal;
+	overflow: visible;
+}
+.heron-formula-line .katex-display {
+	margin: 0.18em 0;
+	overflow: visible;
+}
+.heron-formula-line .katex {
+	line-height: 1.15;
+}
+.heron-formula-arrow {
+	color: #8a857d;
+	font-size: 12px;
+}
+.heron-source {
+	width: 100%;
+	text-align: center;
+	font-size: 10px;
+	color: #8a857d;
+}
+@media (max-width: 900px) {
+	.heron-controls {
+		justify-content: flex-start;
+	}
+	.heron-svg {
+		height: 180px;
+	}
+	.heron-table {
+		font-size: 10px;
+	}
+	.heron-table th,
+	.heron-table td {
+		padding: 3px 6px;
+	}
 }
