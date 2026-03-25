@@ -65,8 +65,12 @@
 							<span class="toc-page">10 мин</span>
 						</div>
 						<div class="toc-item">
-							<span class="toc-title">MLP: многослойный перцептрон</span>
-							<span class="toc-page">60 мин</span>
+							<span class="toc-title">MLP: структура</span>
+							<span class="toc-page">40 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">MLP: производительность</span>
+							<span class="toc-page">20 мин</span>
 						</div>
 					</div>
 				</div>
@@ -113,13 +117,13 @@
 				</div>
 			</section>
 
-			<!-- ─── БЛОК 2: MLP ────────────────────────────────────── -->
+			<!-- ─── БЛОК 2: MLP — структура ───────────────────────── -->
 
 			<!-- SLIDE 05 — Divider -->
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>MLP</h2>
-					<p class="divider-sub">Многослойный перцептрон</p>
+					<p class="divider-sub">Структура</p>
 				</div>
 			</section>
 
@@ -357,7 +361,135 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 11 — Вопрос: стоимость -->
+			<!-- ─── БЛОК 3: MLP — производительность ──────────────── -->
+
+			<!-- SLIDE 11 — Divider -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>MLP</h2>
+					<p class="divider-sub">Производительность</p>
+				</div>
+			</section>
+
+			<!-- SLIDE — Реализация: dot_bias -->
+			<section data-init="codemirror" data-header="Реализация: dot_bias">
+				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+					<div class="col-left">
+						<textarea data-lang="asm8">; dot_bias: скалярное произведение + bias
+;   A -> веса [C], B -> входы [C]
+;   FHA = bias (вход), FHA = result (выход)
+
+dot_bias:
+.step:
+    FMOV.H FHC, [A]
+    FMADD.H FHA, FHC, [B]
+    ADD A, 2
+    ADD B, 2
+    DEC C
+    JNZ .step
+    RET</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Скалярное произведение</p>
+						<p class="text-muted">
+							\(\texttt{FHA} \leftarrow b_j + \displaystyle\sum_{i=0}^{C-1} w_{ji} \cdot x_i\)
+						</p>
+						<p class="text-muted nn-mt-16">
+							<code>FMADD</code> — fused multiply-add:<br>
+							одна инструкция вместо MUL + ADD
+						</p>
+						<p class="text-muted nn-mt-16">
+							После вызова <code>A</code> указывает на следующую строку матрицы — удобно для цикла по нейронам
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE — Реализация: ReLU -->
+			<section data-init="codemirror" data-header="Реализация: ReLU">
+				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+					<div class="col-left">
+						<textarea data-lang="asm8">; relu: max(FHA, 0)
+
+relu:
+    FCMP.H FHA, [fp_zero]
+    JNC .done            ; C=0 => FHA >= 0
+    FMOV.H FHA, [fp_zero]
+.done:
+    RET
+
+@page 1
+fp_zero: DB 0.0_h</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Функция активации</p>
+						<p class="text-muted">
+							\(h_j = \text{ReLU}(z_j) = \max(0, z_j)\)
+						</p>
+						<p class="text-muted nn-mt-16">
+							Всего 4 инструкции:<br>
+							сравнение, условный переход, обнуление, возврат
+						</p>
+						<p class="text-muted nn-mt-16">
+							Самая популярная активация в глубоких сетях — именно из-за простоты
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE — Реализация: main -->
+			<section data-init="codemirror" data-header="Реализация: main">
+				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+					<div class="col-left">
+						<textarea data-lang="asm8">main:
+    MOV DP, 1
+
+    ; --- Скрытый слой ---
+    MOV D, b_hidden
+    ; нейрон 0
+    FMOV.H FHA, [D]
+    MOV A, w_hidden
+    MOV B, input
+    MOV C, 2
+    CALL dot_bias
+    CALL relu
+    FMOV.H [hidden0], FHA
+    ; нейрон 1
+    ADD D, 2
+    FMOV.H FHA, [D]
+    MOV B, input
+    MOV C, 2
+    CALL dot_bias
+    CALL relu
+    FMOV.H [hidden1], FHA
+
+    ; --- Выходной слой ---
+    FMOV.H FHA, [bias_out]
+    MOV A, w_out
+    MOV B, hidden0
+    MOV C, 2
+    CALL dot_bias
+    FMOV.H [output], FHA
+    HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Прямой проход</p>
+						<p class="text-muted">
+							\(h_j = \text{ReLU}\!\bigl(\sum_{i} w^{(h)}_{ji} x_i + b^{(h)}_j\bigr)\)<br>
+							\(y_k = \sum_{j} w^{(o)}_{kj} h_j + b^{(o)}_k\)
+						</p>
+						<p class="text-muted nn-mt-16">
+							Каждый нейрон — один вызов dot_bias.<br>
+							A автоматически переходит к следующей строке W
+						</p>
+						<p class="text-muted nn-mt-16">
+							hidden0 и hidden1 расположены подряд в памяти — выходной слой читает их как вектор h[2]
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 12 — Вопрос: стоимость -->
 			<section data-header="Стоимость MLP">
 				<div class="slide-single align-center">
 					<div class="nn-question">
