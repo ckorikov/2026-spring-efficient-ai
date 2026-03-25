@@ -1,0 +1,292 @@
+/* ── 05-nn: Нейронные сети ─────────────────────────────── */
+
+/* ── Таблицы ──────────────────────────────────────────── */
+.nn-table {
+	width: 100%;
+	font-size: 24px;
+	line-height: 1.5;
+}
+
+.nn-table th,
+.nn-table td {
+	padding: 10px 16px;
+	text-align: left;
+	border-bottom: 1px solid var(--r-subtle);
+}
+
+.nn-table th {
+	font-weight: 500;
+	color: var(--r-muted);
+	font-size: 18px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.nn-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.nn-table .row-total td {
+	font-weight: 600;
+	border-top: 2px solid var(--r-main-color);
+	border-bottom: none;
+}
+
+.nn-table .col-num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+.nn-table .col-accent {
+	color: var(--r-accent);
+	font-weight: 500;
+}
+
+.nn-table-narrow {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.nn-table-mid {
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+/* ── Формулы с подписями ──────────────────────────────── */
+.nn-formula-block {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+}
+
+.nn-formula-note {
+	font-size: 20px;
+	color: var(--r-muted);
+	text-align: center;
+	max-width: 800px;
+}
+
+.nn-formula-note-lead {
+	font-size: 24px;
+	color: var(--r-main-color);
+	text-align: center;
+	max-width: 1000px;
+}
+
+.nn-mt-16 { margin-top: 16px; }
+.nn-mt-20 { margin-top: 20px; }
+.nn-mt-24 { margin-top: 24px; }
+.nn-mb-24 { margin-bottom: 24px; }
+
+/* ── Задание: dot product (slide 17) ──────────────────── */
+.nn-task-desc {
+	font-size: 20px;
+	margin-bottom: 16px;
+}
+
+.nn-task-variants {
+	font-size: 20px;
+}
+
+/* ── Обсуждение: вопрос после таблицы ─────────────────── */
+.nn-question-inline {
+	font-size: 28px;
+	font-weight: 500;
+	text-align: center;
+	margin-top: 32px;
+}
+
+/* ── Вопрос-слайд ─────────────────────────────────────── */
+.nn-question {
+	font-size: 36px;
+	font-weight: 500;
+	text-align: center;
+	line-height: 1.4;
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+.nn-question-sub {
+	font-size: 22px;
+	color: var(--r-muted);
+	text-align: center;
+	margin-top: 24px;
+}
+
+/* ── Mixed precision: подсветка строк ─────────────────── */
+.nn-table .fmt-best {
+	background: rgba(122, 154, 122, 0.1);
+}
+
+.nn-table .fmt-warn {
+	background: rgba(160, 112, 112, 0.12);
+}
+
+/* ── Задание на паре ──────────────────────────────────── */
+.nn-task-label {
+	display: inline-block;
+	font-size: 14px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--r-accent);
+	margin-bottom: 8px;
+}
+
+.nn-task-code {
+	font-size: 18px;
+	line-height: 1.55;
+	background: rgba(0, 0, 0, 0.03);
+	border: 1px solid var(--r-subtle);
+	border-radius: 6px;
+	padding: 16px 20px;
+	white-space: pre;
+	font-family: 'IBM Plex Mono', monospace;
+	overflow-x: auto;
+}
+
+/* ── Регрессия / Классификация ────────────────────────── */
+.nn-task-type {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	padding: 24px;
+	border: 1px solid var(--r-subtle);
+	border-radius: 8px;
+}
+
+.nn-task-type-title {
+	font-size: 26px;
+	font-weight: 600;
+}
+
+.nn-task-type-desc {
+	font-size: 20px;
+	color: var(--r-muted);
+	text-align: center;
+}
+
+.nn-task-type-loss {
+	font-size: 18px;
+	margin-top: 8px;
+}
+
+/* ── ДЗ: шаги алгоритма ──────────────────────────────── */
+/* ── Визуализация слоя ─────────────────────────────────── */
+.nn-layer-viz {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+}
+
+.nn-layer-col {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: center;
+}
+
+.nn-node {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	border: 2px solid var(--r-main-color);
+	background: var(--r-background-color);
+}
+
+.nn-node-out {
+	border-color: var(--r-accent);
+}
+
+.nn-layer-label {
+	font-size: 14px;
+	color: var(--r-muted);
+	margin-top: 2px;
+}
+
+.nn-layer-matrix {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+}
+
+.nn-layer-matrix-grid {
+	display: grid;
+	gap: 2px;
+}
+
+.nn-layer-matrix-cell {
+	width: 7px;
+	height: 7px;
+	border-radius: 1px;
+	background: var(--r-subtle);
+}
+
+.nn-layer-matrix-label {
+	font-size: 12px;
+	color: var(--r-muted);
+}
+
+.nn-layer-arrow {
+	font-size: 18px;
+	color: var(--r-subtle);
+}
+
+.nn-layer-sigma {
+	font-size: 22px;
+	color: var(--r-accent);
+	font-style: italic;
+}
+
+.nn-formula-block-left {
+	align-items: flex-start;
+}
+
+.nn-steps {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	font-size: 22px;
+}
+
+.nn-step {
+	display: flex;
+	gap: 12px;
+	align-items: baseline;
+}
+
+.nn-step-num {
+	flex-shrink: 0;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: var(--r-accent);
+	color: var(--r-background-color);
+	font-size: 16px;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ── Тест-пример (safe softmax) ──────────────────────── */
+.nn-test-block {
+	background: rgba(0, 0, 0, 0.03);
+	border: 1px solid var(--r-subtle);
+	border-radius: 6px;
+	padding: 16px 20px;
+	font-size: 20px;
+	line-height: 1.6;
+}
+
+.nn-test-bad {
+	color: var(--r-accent);
+}
+
+.nn-test-good {
+	color: #5a8a5a;
+}
