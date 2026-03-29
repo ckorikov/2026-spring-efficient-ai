@@ -137,12 +137,12 @@
 .nn-task-code {
 	font-size: 18px;
 	line-height: 1.55;
-	background: rgba(0, 0, 0, 0.03);
+	background: var(--r-overlay-light);
 	border: 1px solid var(--r-subtle);
 	border-radius: 6px;
 	padding: 16px 20px;
 	white-space: pre;
-	font-family: 'IBM Plex Mono', monospace;
+	font-family: var(--r-code-font);
 	overflow-x: auto;
 }
 
@@ -275,7 +275,7 @@
 
 /* ── Тест-пример (safe softmax) ──────────────────────── */
 .nn-test-block {
-	background: rgba(0, 0, 0, 0.03);
+	background: var(--r-overlay-light);
 	border: 1px solid var(--r-subtle);
 	border-radius: 6px;
 	padding: 16px 20px;

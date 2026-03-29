@@ -40,6 +40,17 @@
   --r-muted: #8a857d;
   --r-subtle: #b5b0a8;
   --r-accent: #9d4a30;
+  --r-overlay-light: rgba(0, 0, 0, 0.03);
+
+  /* syntax highlighting palette (shared by CodeMirror + highlight.js) */
+  --syn-def: #2d6a4f;
+  --syn-string: #4a7a5a;
+  --syn-number: #a05a5a;
+  --syn-builtin: #4a6a8a;
+  --syn-variable2: #5a4a78;
+  --syn-operator: #7a5a3a;
+  --syn-attr: #5a5a7a;
+  --syn-atom: #8a4a6a;
 
   /* 8-point grid on 960×700 canvas */
   --grid-unit: 8px;
@@ -169,7 +180,7 @@
   margin: var(--r-block-margin) auto;
   padding: 5px;
   font-style: italic;
-  background: rgba(0, 0, 0, 0.03);
+  background: var(--r-overlay-light);
   border-left: 3px solid var(--r-accent);
 }
 
@@ -205,7 +216,7 @@
   overflow: auto;
   max-height: 400px;
   word-wrap: normal;
-  background: rgba(0, 0, 0, 0.03);
+  background: var(--r-overlay-light);
   border-radius: 3px;
 }
 
@@ -644,19 +655,19 @@
 }
 
 /* CodeMirror syntax — warm paper palette */
-.reveal .cm-s-default .cm-keyword   { color: #9d4a30; font-weight: 500; }
-.reveal .cm-s-default .cm-def       { color: #2d6a4f; font-weight: 500; }
+.reveal .cm-s-default .cm-keyword   { color: var(--r-accent); font-weight: 500; }
+.reveal .cm-s-default .cm-def       { color: var(--syn-def); font-weight: 500; }
 .reveal .cm-s-default .cm-variable  { color: var(--r-main-color); }
-.reveal .cm-s-default .cm-variable-2 { color: #5a4a78; }
-.reveal .cm-s-default .cm-string    { color: #4a7a5a; }
-.reveal .cm-s-default .cm-string-2  { color: #4a7a5a; }
-.reveal .cm-s-default .cm-number    { color: #a05a5a; }
+.reveal .cm-s-default .cm-variable-2 { color: var(--syn-variable2); }
+.reveal .cm-s-default .cm-string    { color: var(--syn-string); }
+.reveal .cm-s-default .cm-string-2  { color: var(--syn-string); }
+.reveal .cm-s-default .cm-number    { color: var(--syn-number); }
 .reveal .cm-s-default .cm-comment   { color: var(--r-muted); font-style: italic; }
-.reveal .cm-s-default .cm-builtin   { color: #4a6a8a; }
-.reveal .cm-s-default .cm-operator  { color: #7a5a3a; }
+.reveal .cm-s-default .cm-builtin   { color: var(--syn-builtin); }
+.reveal .cm-s-default .cm-operator  { color: var(--syn-operator); }
 .reveal .cm-s-default .cm-meta      { color: var(--r-muted); }
-.reveal .cm-s-default .cm-property  { color: #5a5a7a; }
-.reveal .cm-s-default .cm-atom      { color: #8a4a6a; }
+.reveal .cm-s-default .cm-property  { color: var(--syn-attr); }
+.reveal .cm-s-default .cm-atom      { color: var(--syn-atom); }
 .reveal .cm-s-default .cm-punctuation { color: var(--r-muted); }
 
 /*********************************************
