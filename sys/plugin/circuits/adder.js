@@ -50,20 +50,10 @@
 			mk('text', {x:cx,y:FAy+4,'text-anchor':'middle','dominant-baseline':'middle',fill:OFF_T,'font-size':'11','font-weight':'bold',id:'fL'+b}).textContent = 'FA' + SUB[b];
 
 			// Input A
-			(function(bit, ax) {
-				var g = mk('g', {cursor:'pointer'});
-				g.addEventListener('click', function() { A[bit] ^= 1; calc(); });
-				mk('rect', {x:ax-BW/2,y:Ay-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'rA'+bit}, g);
-				mk('text', {x:ax,y:Ay+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'tA'+bit}, g).textContent = '0';
-			})(b, awX);
+			CircuitKit.mkBitInput(mk, awX, Ay, BW, BH, 'rA'+b, 'tA'+b, A, b, calc);
 
 			// Input B
-			(function(bit, bx) {
-				var g = mk('g', {cursor:'pointer'});
-				g.addEventListener('click', function() { B[bit] ^= 1; calc(); });
-				mk('rect', {x:bx-BW/2,y:By-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'rB'+bit}, g);
-				mk('text', {x:bx,y:By+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'tB'+bit}, g).textContent = '0';
-			})(b, bwX);
+			CircuitKit.mkBitInput(mk, bwX, By, BW, BH, 'rB'+b, 'tB'+b, B, b, calc);
 
 			// Sum output
 			mk('rect', {x:cx-BW/2,y:Sy-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'sB'+b});

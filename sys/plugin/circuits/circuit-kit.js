@@ -31,5 +31,15 @@ window.CircuitKit = {
 		var out = 0;
 		for (var i = 0; i < bits.length; i++) out += bits[i] << i;
 		return out;
+	},
+
+	// Create a clickable bit-input box (rect + text) inside an SVG group
+	mkBitInput: function(mk, x, y, w, h, rectId, textId, array, bit, onToggle) {
+		var C = this.COLORS;
+		var g = mk('g', {cursor:'pointer'});
+		g.addEventListener('click', function() { array[bit] ^= 1; onToggle(); });
+		mk('rect', {x:x-w/2, y:y-h/2, width:w, height:h, rx:'3', fill:C.SRF, stroke:C.OFF_B, 'stroke-width':'1.3', id:rectId}, g);
+		mk('text', {x:x, y:y+5, 'text-anchor':'middle', fill:C.OFF_T, 'font-size':'14', 'font-weight':'800', id:textId}, g).textContent = '0';
+		return g;
 	}
 };

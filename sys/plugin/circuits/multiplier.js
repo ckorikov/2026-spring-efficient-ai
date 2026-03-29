@@ -155,23 +155,11 @@
 		for (var op = 0; op < 4; op++) addObstacle(PX[op], PY, BW, BH, 2);
 
 		for (var i = 0; i < 2; i++) {
-			(function(bit) {
-				var gx = AX[bit];
-				var ga = mk('g', {cursor:'pointer'});
-				ga.addEventListener('click', function() { A[bit] ^= 1; calc(); });
-				mk('rect', {x:gx-BW/2,y:AY-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'mA'+bit}, ga);
-				mk('text', {x:gx,y:AY+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'mAt'+bit}, ga).textContent = '0';
-			})(i);
+			CircuitKit.mkBitInput(mk, AX[i], AY, BW, BH, 'mA'+i, 'mAt'+i, A, i, calc);
 		}
 
 		for (var j = 0; j < 2; j++) {
-			(function(bit) {
-				var gx = BX[bit];
-				var gb = mk('g', {cursor:'pointer'});
-				gb.addEventListener('click', function() { B[bit] ^= 1; calc(); });
-				mk('rect', {x:gx-BW/2,y:BY-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'mB'+bit}, gb);
-				mk('text', {x:gx,y:BY+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'mBt'+bit}, gb).textContent = '0';
-			})(j);
+			CircuitKit.mkBitInput(mk, BX[j], BY, BW, BH, 'mB'+j, 'mBt'+j, B, j, calc);
 		}
 
 		for (var a = 0; a < 2; a++) {
