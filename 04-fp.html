@@ -103,9 +103,9 @@
 					<a href="https://ckorikov.github.io/sim8/" target="_blank">
 						<img src="assets/02-simulator/sim8-v2.png"
 							alt="sim8 v2"
-							style="max-width: 100%; max-height: 460px; border-radius: 6px; border: 1px solid #d5d0c8;">
+							class="fp-img-bordered">
 					</a>
-					<p class="text-muted" style="font-size: 11px; margin-top: 8px;">
+					<p class="text-muted fp-caption">
 						<a href="https://ckorikov.github.io/sim8/" target="_blank">ckorikov.github.io/sim8</a>
 					</p>
 				</div>
@@ -143,11 +143,11 @@
 
 						<!-- symbol descriptions -->
 						<div class="fpfmt-symbols">
-							<span class="fsym" style="color:#7a9a7a">\(d_i\)</span>
+							<span class="fsym fsym-mant">\(d_i\)</span>
 							<span class="fdef">цифры мантиссы, \(d_i \in \{0,\ldots,\beta{-}1\}\)</span>
-							<span class="fsym" style="color:#6a8fa5">\(\beta\)</span>
+							<span class="fsym fsym-exp">\(\beta\)</span>
 							<span class="fdef">основание (radix)</span>
-							<span class="fsym" style="color:#6a8fa5">\(e\)</span>
+							<span class="fsym fsym-exp">\(e\)</span>
 							<span class="fdef">порядок, \(e \in [e_\text{min},\; e_\text{max}]\); обычно симметрично: \(e_\text{min} = 1 - e_\text{max}\)</span>
 							<span class="fsym">\(p\)</span>
 							<span class="fdef">точность — число значимых цифр</span>
@@ -177,9 +177,9 @@
 
 						<!-- symbol descriptions -->
 						<div class="fpfmt-symbols">
-							<span class="fsym" style="color:#5a8a5a">\(d_0 \neq 0\)</span>
+							<span class="fsym fsym-ok">\(d_0 \neq 0\)</span>
 							<span class="fdef">единственность представления, максимальная точность при данном \(p\)</span>
-							<span class="fsym" style="color:#6a8fa5">\(e_{\min}\)</span>
+							<span class="fsym fsym-exp">\(e_{\min}\)</span>
 							<span class="fdef">наименьшее нормальное: \(\beta^{e_{\min}}\) — провал \((0,\;\beta^{e_{\min}})\) без чисел (gradual underflow)</span>
 						</div>
 
@@ -197,14 +197,14 @@
 						</div>
 
 						<div class="fpfmt-symbols">
-							<span class="fsym" style="color:#a07060">\(d_0 = 0\)</span>
+							<span class="fsym fsym-err">\(d_0 = 0\)</span>
 							<span class="fdef">ненормализованная мантисса</span>
-							<span class="fsym" style="color:#6a8fa5">\(e = e_{\min}\)</span>
+							<span class="fsym fsym-exp">\(e = e_{\min}\)</span>
 							<span class="fdef">порядок зафиксирован</span>
 						</div>
 
 						<div class="fpfmt-symbols" style="margin-top:8px">
-							<span class="fdef" style="grid-column:1/-1">Диапазон \((0,\;\beta^{e_{\min}})\) используется для кодирования очень маленьких значений ценой потери точности (gradual underflow)</span>
+							<span class="fdef fpfmt-full-row">Диапазон \((0,\;\beta^{e_{\min}})\) используется для кодирования очень маленьких значений ценой потери точности (gradual underflow)</span>
 						</div>
 
 					</div>
@@ -262,13 +262,13 @@
 
 						<!-- Definitions — chain: ε → ulp → bounds (nearest) -->
 						<div class="re-defs">
-							<span class="re-def"><span class="re-def-lbl">ε</span> \(= \tfrac{\beta}{2}\,\beta^{-p}\)<br><span style="font-size:10px">машинный эпсилон</span></span>
+							<span class="re-def"><span class="re-def-lbl">ε</span> \(= \tfrac{\beta}{2}\,\beta^{-p}\)<br><span class="fp-note-sm">машинный эпсилон</span></span>
 							<span class="re-def-sep">→</span>
-							<span class="re-def"><span class="re-def-lbl">ulp</span> \(\approx 2\varepsilon\,|x|\)<br><span style="font-size:10px">шаг сетки<br>(<b>u</b>nit in the <b>l</b>ast <b>p</b>lace)</span></span>
+							<span class="re-def"><span class="re-def-lbl">ulp</span> \(\approx 2\varepsilon\,|x|\)<br><span class="fp-note-sm">шаг сетки<br>(<b>u</b>nit in the <b>l</b>ast <b>p</b>lace)</span></span>
 							<span class="re-def-sep">→</span>
-							<span class="re-def"><span class="re-def-lbl">|err|</span> \(\leq \tfrac{1}{2}\,\mathrm{ulp}\)<br><span style="font-size:10px">абсолютная ошибка<br>при округлении до ближайшего</span></span>
+							<span class="re-def"><span class="re-def-lbl">|err|</span> \(\leq \tfrac{1}{2}\,\mathrm{ulp}\)<br><span class="fp-note-sm">абсолютная ошибка<br>при округлении до ближайшего</span></span>
 							<span class="re-def-sep">→</span>
-							<span class="re-def"><span class="re-def-lbl">|err|/|x|</span> \(\leq \varepsilon\)<br><span style="font-size:10px">относительная ошибка<br>при округлении до ближайшего</span></span>
+							<span class="re-def"><span class="re-def-lbl">|err|/|x|</span> \(\leq \varepsilon\)<br><span class="fp-note-sm">относительная ошибка<br>при округлении до ближайшего</span></span>
 						</div>
 
 					</div>
@@ -438,7 +438,7 @@
 
 			<!-- SLIDE 19 — Площадь треугольника: Герон vs Кэхэн -->
 			<section data-header="Площадь треугольника">
-				<div class="slide-two-col" id="heron-viz" style="grid-template-columns:3fr 2fr; color:#2d2a26;">
+				<div class="slide-two-col cols-3-2" id="heron-viz">
 					<div class="heron-canvas-wrap">
 						<svg id="heron-svg" class="heron-svg" aria-label="triangle visualization"></svg>
 					</div>
@@ -716,7 +716,7 @@
 
 			<!-- SLIDE 24 — Задание 1: dot product -->
 			<section data-init="codemirror" data-header="Задание 1">
-				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+				<div class="slide-two-col cols-3-2">
 					<div class="col-left">
 						<textarea data-lang="asm8">JMP start
 vec_a: DB 2.0_o3, 3.0_o3, 1.5_o3
@@ -742,7 +742,7 @@ start:
 
 			<!-- SLIDE 25 — Задание 2: matvec -->
 			<section data-init="codemirror" data-header="Задание 2">
-				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+				<div class="slide-two-col cols-3-2">
 					<div class="col-left">
 						<textarea data-lang="asm8">JMP start
 m:   DB 2
@@ -771,7 +771,7 @@ start:
 
 			<!-- SLIDE 26 — Задание 3: экспонента -->
 			<section data-init="codemirror" data-header="Задание 3">
-				<div class="slide-two-col" style="grid-template-columns: 3fr 2fr;">
+				<div class="slide-two-col cols-3-2">
 					<div class="col-left">
 						<textarea data-lang="asm8">JMP start
 x:   DB 1.0_h

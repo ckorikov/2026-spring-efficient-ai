@@ -421,6 +421,10 @@
   grid-template-columns: 1.2fr 1fr;
 }
 
+.slide-two-col.cols-3-2 {
+  grid-template-columns: 3fr 2fr;
+}
+
 .slide-two-col.cols-wide-right {
   grid-template-columns: 1fr 1.2fr;
 }

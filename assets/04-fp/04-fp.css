@@ -318,6 +318,30 @@
 	font-size: 10px;
 	color: var(--fp-subtle);
 }
+
+/* ── Semantic color classes for symbol annotations ───── */
+.fsym-mant { color: var(--fp-col-mant); }
+.fsym-exp  { color: var(--fp-col-exp); }
+.fsym-ok   { color: var(--fp-col-ok); }
+.fsym-err  { color: var(--fp-col-err); }
+
+.fp-caption {
+	font-size: 11px;
+	margin-top: 8px;
+}
+.fp-note-sm {
+	font-size: 10px;
+}
+.fp-img-bordered {
+	max-width: 100%;
+	max-height: 460px;
+	border-radius: 6px;
+	border: 1px solid var(--fp-border);
+}
+.fpfmt-full-row {
+	grid-column: 1 / -1;
+}
+
 /* ── Ошибка представления ────────────────────────────── */
 .repr-err-viz {
 	gap: 14px;
