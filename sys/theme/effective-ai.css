@@ -100,11 +100,10 @@
   word-wrap: break-word;
 }
 
-.reveal h1 { font-size: var(--r-heading1-size); }
+.reveal h1 { font-size: var(--r-heading1-size); text-shadow: var(--r-heading1-text-shadow); }
 .reveal h2 { font-size: var(--r-heading2-size); }
 .reveal h3 { font-size: var(--r-heading3-size); }
 .reveal h4 { font-size: var(--r-heading4-size); }
-.reveal h1 { text-shadow: var(--r-heading1-text-shadow); }
 
 /*********************************************
  * OTHER

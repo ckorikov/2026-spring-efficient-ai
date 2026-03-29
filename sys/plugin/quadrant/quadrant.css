@@ -76,33 +76,14 @@
 	opacity: 0.6;
 }
 
-.quadrant-corner-tl {
-	top: 0;
-	left: 0;
-	border-top: 1.5px solid var(--r-subtle);
-	border-left: 1.5px solid var(--r-subtle);
-}
-
-.quadrant-corner-tr {
-	top: 0;
-	right: 0;
-	border-top: 1.5px solid var(--r-subtle);
-	border-right: 1.5px solid var(--r-subtle);
-}
-
-.quadrant-corner-bl {
-	bottom: 0;
-	left: 0;
-	border-bottom: 1.5px solid var(--r-subtle);
-	border-left: 1.5px solid var(--r-subtle);
-}
-
-.quadrant-corner-br {
-	bottom: 0;
-	right: 0;
-	border-bottom: 1.5px solid var(--r-subtle);
-	border-right: 1.5px solid var(--r-subtle);
-}
+.quadrant-corner-tl,
+.quadrant-corner-tr { top: 0; border-top: 1.5px solid var(--r-subtle); }
+.quadrant-corner-bl,
+.quadrant-corner-br { bottom: 0; border-bottom: 1.5px solid var(--r-subtle); }
+.quadrant-corner-tl,
+.quadrant-corner-bl { left: 0; border-left: 1.5px solid var(--r-subtle); }
+.quadrant-corner-tr,
+.quadrant-corner-br { right: 0; border-right: 1.5px solid var(--r-subtle); }
 
 /* Stickers */
 .quadrant-sticker {
@@ -110,7 +91,7 @@
 	z-index: 10;
 	width: 112px;
 	min-height: 64px;
-	background: #f5b8c4;
+	background: var(--quadrant-sticker-bg, #f5b8c4);
 	border-radius: 2px;
 	padding: 8px 10px 6px;
 	box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.12),
@@ -132,7 +113,7 @@
 .quadrant-sticker-text {
 	font-size: 9px;
 	font-weight: 500;
-	color: #2d2a26;
+	color: var(--r-main-color);
 	line-height: 1.35;
 	letter-spacing: -0.01em;
 	overflow-wrap: break-word;
@@ -152,11 +133,11 @@
 	align-items: center;
 	gap: 3px;
 	font-size: 9px;
-	color: #2d2a26;
+	color: var(--r-main-color);
 }
 
 .quadrant-vote-like {
-	color: #d94040;
+	color: var(--quadrant-like-color, #d94040);
 }
 
 /*********************************************

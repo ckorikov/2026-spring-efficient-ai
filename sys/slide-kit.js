@@ -41,29 +41,20 @@
 	}
 
 	function updateMargins(slide) {
-		var corners = {
-			tl: document.querySelector('.slide-margins .slide-corner-tl'),
-			tr: document.querySelector('.slide-margins .slide-corner-tr'),
-			bl: document.querySelector('.slide-margins .slide-corner-bl'),
-			br: document.querySelector('.slide-margins .slide-corner-br')
-		};
-
-		// Top-left: data-tl (plain) or empty — structured header moved to .slide-header
 		var header = slide.getAttribute('data-header');
-		var dataTl = slide.getAttribute('data-tl');
-		setCorner(corners.tl, (dataTl !== null && header === null) ? dataTl : '', '');
-
-		// Top-right: data-tr or default (with optional link)
-		var dataTr = slide.getAttribute('data-tr');
-		setCorner(corners.tr, dataTr !== null ? dataTr : defaults.tr, dataTr === null ? defaults.trUrl : '');
-
-		// Bottom-left: data-bl or default (with optional link)
-		var dataBl = slide.getAttribute('data-bl');
-		setCorner(corners.bl, dataBl !== null ? dataBl : defaults.bl, dataBl === null ? defaults.blUrl : '');
-
-		// Bottom-right: data-br or empty
-		var dataBr = slide.getAttribute('data-br');
-		setCorner(corners.br, dataBr !== null ? dataBr : '', '');
+		var cornerDefs = [
+			{ pos: 'tl', fallback: '',         fallbackUrl: '', guard: function(v) { return (v !== null && header === null) ? v : ''; } },
+			{ pos: 'tr', fallback: defaults.tr, fallbackUrl: defaults.trUrl },
+			{ pos: 'bl', fallback: defaults.bl, fallbackUrl: defaults.blUrl },
+			{ pos: 'br', fallback: '',         fallbackUrl: '' }
+		];
+		cornerDefs.forEach(function(def) {
+			var el = document.querySelector('.slide-margins .slide-corner-' + def.pos);
+			var val = slide.getAttribute('data-' + def.pos);
+			var text = def.guard ? def.guard(val) : (val !== null ? val : def.fallback);
+			var url = val === null ? def.fallbackUrl : '';
+			setCorner(el, text, url);
+		});
 
 		// In-section header — consistent across all viewports
 		updateSlideHeader(slide, header);

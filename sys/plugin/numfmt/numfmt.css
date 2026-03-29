@@ -3,16 +3,16 @@
  * ================================================================ */
 
 .numfmt-viz {
-  --nf-bg:       #f0ede8;
-  --nf-bg2:      #e8e4dc;
-  --nf-border:   #d5d0c8;
-  --nf-ink:      #2d2a26;
-  --nf-muted:    #8a857d;
-  --nf-subtle:   #b5b0a8;
-  --nf-accent-x: #6a8fa5;
-  --nf-accent-y: #a07060;
-  --nf-accent-ok:#5a8a5a;
-  --nf-font:     'IBM Plex Mono', monospace;
+  --nf-bg:       var(--fp-field-bg, #f0ede8);
+  --nf-bg2:      var(--fp-border-row, #e8e4dc);
+  --nf-border:   var(--fp-border, #d5d0c8);
+  --nf-ink:      var(--r-main-color, #2d2a26);
+  --nf-muted:    var(--r-muted, #8a857d);
+  --nf-subtle:   var(--r-subtle, #b5b0a8);
+  --nf-accent-x: var(--fp-col-exp, #6a8fa5);
+  --nf-accent-y: var(--fp-col-err, #a07060);
+  --nf-accent-ok:var(--fp-col-ok, #5a8a5a);
+  --nf-font:     var(--r-code-font, 'IBM Plex Mono', monospace);
 
   font-family: var(--nf-font);
   font-size: 11px;
