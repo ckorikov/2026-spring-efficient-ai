@@ -5,7 +5,7 @@
 
 	var OFF_W = COLORS.OFF_W, OFF_B = COLORS.OFF_B, OFF_T = COLORS.OFF_T;
 	var ON_A = COLORS.ON_A, ON_C = COLORS.ON_C, ON_S = COLORS.ON_S;
-	var SRF = COLORS.SRF, HATCH = COLORS.HATCH, DIM = COLORS.DIM, FA_CLR = COLORS.FA_CLR;
+	var SRF = COLORS.SRF, HATCH = COLORS.HATCH, FA_CLR = COLORS.FA_CLR;
 	var BG_A = COLORS.BG_A, BG_C = COLORS.BG_C, BG_S = COLORS.BG_S;
 
 	var sv, mk;
@@ -32,7 +32,7 @@
 
 		// Weight labels
 		for (var b = 3; b >= 0; b--)
-			mk('text', {x:CX[b],y:Ay-28,'text-anchor':'middle',fill:DIM,'font-size':'9'}).textContent = '2' + ['\u2070','\u00B9','\u00B2','\u00B3'][b];
+			mk('text', {x:CX[b],y:Ay-28,'text-anchor':'middle',fill:OFF_B,'font-size':'9'}).textContent = '2' + ['\u2070','\u00B9','\u00B2','\u00B3'][b];
 
 		// Row labels
 		mk('text', {x:CX[3]-50,y:Ay+6,'text-anchor':'end',fill:OFF_T,'font-size':'13','font-weight':'bold'}).textContent = 'A';
@@ -68,7 +68,7 @@
 			// Sum output
 			mk('rect', {x:cx-BW/2,y:Sy-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'sB'+b});
 			mk('text', {x:cx,y:Sy+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'tS'+b}).textContent = '0';
-			mk('text', {x:cx,y:Sy-18,'text-anchor':'middle',fill:DIM,'font-size':'8'}).textContent = 'S' + b;
+			mk('text', {x:cx,y:Sy-18,'text-anchor':'middle',fill:OFF_B,'font-size':'8'}).textContent = 'S' + b;
 		}
 
 		// Carry chain — Cin
@@ -78,13 +78,13 @@
 		gCin.addEventListener('click', function() { Cin ^= 1; calc(); });
 		mk('rect', {x:cinX-BW/2,y:FAy-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3','stroke-dasharray':'4 3',id:'rCin'}, gCin);
 		mk('text', {x:cinX,y:FAy+5,'text-anchor':'middle',fill:OFF_T,'font-size':'13','font-weight':'800',id:'tCin'}, gCin).textContent = '0';
-		mk('text', {x:cinX,y:FAy-18,'text-anchor':'middle',fill:DIM,'font-size':'8'}).textContent = 'C\u1D62\u2099';
+		mk('text', {x:cinX,y:FAy-18,'text-anchor':'middle',fill:OFF_B,'font-size':'8'}).textContent = 'C\u1D62\u2099';
 
 		// Inter-FA carry wires
 		for (var i = 0; i < 3; i++) {
 			var x1 = CX[i] - FAW/2, x2 = CX[i+1] + FAW/2;
 			mk('line', {x1:x1,y1:FAy,x2:x2,y2:FAy,stroke:OFF_W,'stroke-width':'1.8',id:'wC'+(i+1)});
-			mk('text', {x:(x1+x2)/2,y:FAy-9,'text-anchor':'middle',fill:DIM,'font-size':'7.5',id:'cL'+(i+1)}).textContent = 'C' + (i+1);
+			mk('text', {x:(x1+x2)/2,y:FAy-9,'text-anchor':'middle',fill:OFF_B,'font-size':'7.5',id:'cL'+(i+1)}).textContent = 'C' + (i+1);
 		}
 
 		// Cout
@@ -93,7 +93,7 @@
 		mk('line', {x1:coTurnX,y1:FAy,x2:coTurnX,y2:Sy+BH/2,stroke:OFF_W,'stroke-width':'1.8',id:'wCoV'});
 		mk('rect', {x:coTurnX-BW/2,y:Sy-BH/2,width:BW,height:BH,rx:'3',fill:'transparent',stroke:OFF_B,'stroke-width':'1.3','stroke-dasharray':'4 3',id:'coR'});
 		mk('text', {x:coTurnX,y:Sy+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'tCo'}).textContent = '0';
-		mk('text', {x:coTurnX,y:Sy-18,'text-anchor':'middle',fill:DIM,'font-size':'8'}).textContent = 'C\u2092\u1D64\u209C';
+		mk('text', {x:coTurnX,y:Sy-18,'text-anchor':'middle',fill:OFF_B,'font-size':'8'}).textContent = 'C\u2092\u1D64\u209C';
 
 		// Decimal values
 		var dvX = CX[0] + 52;
@@ -143,7 +143,7 @@
 		for (var i = 1; i <= 3; i++) {
 			var on = C[i];
 			sA('wC'+i, 'stroke', on ? ON_C : OFF_W);
-			sT('cL'+i, 'C'+i+(on ? '=1' : ''), on ? ON_C : DIM);
+			sT('cL'+i, 'C'+i+(on ? '=1' : ''), on ? ON_C : OFF_B);
 		}
 
 		// Cout

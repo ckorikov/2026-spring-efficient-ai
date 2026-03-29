@@ -5,7 +5,7 @@
 
 	var OFF_W = COLORS.OFF_W, OFF_B = COLORS.OFF_B, OFF_T = COLORS.OFF_T;
 	var ON_A = COLORS.ON_A, ON_C = COLORS.ON_C, ON_S = COLORS.ON_S;
-	var SRF = COLORS.SRF, HATCH = COLORS.HATCH, DIM = COLORS.DIM, FA_CLR = COLORS.FA_CLR;
+	var SRF = COLORS.SRF, HATCH = COLORS.HATCH, FA_CLR = COLORS.FA_CLR;
 	var BG_A = COLORS.BG_A, BG_C = COLORS.BG_C, BG_S = COLORS.BG_S;
 
 	var sv, mk;
@@ -143,7 +143,7 @@
 		mk('text', {x:BX[1]-BW/2-24,y:BY+6,'text-anchor':'end',fill:OFF_T,'font-size':'13','font-weight':'bold'}).textContent = 'B';
 		mk('text', {x:PX[3]-50,y:PY+6,'text-anchor':'end',fill:ON_S,'font-size':'13','font-weight':'bold'}).textContent = 'P';
 		for (var w = 0; w < 2; w++)
-			mk('text', {x:PX[w],y:AY-28,'text-anchor':'middle',fill:DIM,'font-size':'9'}).textContent = '2' + ['\u2070','\u00B9'][w];
+			mk('text', {x:PX[w],y:AY-28,'text-anchor':'middle',fill:OFF_B,'font-size':'9'}).textContent = '2' + ['\u2070','\u00B9'][w];
 
 		var obstacles = [];
 		function addObstacle(cx, cy, w, h, pad) {
@@ -238,7 +238,7 @@
 
 		mk('circle', {cx:PX[1],cy:RAIL_Y,r:'2.5',fill:OFF_W,id:'mJRail1'});
 		mk('line', {x1:PX[1]-NW/2,y1:NODE_Y,x2:PX[2]+NW/2,y2:NODE_Y,stroke:OFF_W,'stroke-width':'1.8',id:'mCarry1'});
-		mk('text', {x:(PX[1]+PX[2])/2,y:NODE_Y-9,'text-anchor':'middle',fill:DIM,'font-size':'7.5',id:'mCarryL1'}).textContent = 'C' + SUB[2];
+		mk('text', {x:(PX[1]+PX[2])/2,y:NODE_Y-9,'text-anchor':'middle',fill:OFF_B,'font-size':'7.5',id:'mCarryL1'}).textContent = 'C' + SUB[2];
 
 		mk('polyline', {
 			points: (PX[2]-NW/2)+','+NODE_Y+' '+PX[3]+','+NODE_Y+' '+PX[3]+','+(PY+BH/2),
@@ -248,7 +248,7 @@
 		for (var out = 0; out < 4; out++) {
 			mk('rect', {x:PX[out]-BW/2,y:PY-BH/2,width:BW,height:BH,rx:'3',fill:SRF,stroke:OFF_B,'stroke-width':'1.3',id:'mP'+out});
 			mk('text', {x:PX[out],y:PY+5,'text-anchor':'middle',fill:OFF_T,'font-size':'14','font-weight':'800',id:'mPt'+out}).textContent = '0';
-			mk('text', {x:PX[out],y:PY-18,'text-anchor':'middle',fill:DIM,'font-size':'8'}).textContent = 'P' + SUB[out];
+			mk('text', {x:PX[out],y:PY-18,'text-anchor':'middle',fill:OFF_B,'font-size':'8'}).textContent = 'P' + SUB[out];
 		}
 
 		var dvX = PX[0] + 52;
@@ -327,7 +327,7 @@
 
 		var cOn = carry[2];
 		sA('mCarry1', 'stroke', cOn ? ON_C : OFF_W);
-		sT('mCarryL1', 'C' + SUB[2] + (cOn ? '=1' : ''), cOn ? ON_C : DIM);
+		sT('mCarryL1', 'C' + SUB[2] + (cOn ? '=1' : ''), cOn ? ON_C : OFF_B);
 		sA('mWo7', 'stroke', carry[3] ? ON_S : OFF_W);
 
 		sT('mDA', '= ' + val(A), OFF_T);
