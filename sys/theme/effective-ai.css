@@ -675,21 +675,6 @@
 .reveal .cm-s-default .cm-punctuation { color: var(--r-muted); }
 
 /*********************************************
- * Paper.js canvas container
- *********************************************/
-.diagram-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.diagram-container canvas {
-  width: 100%;
-  height: 100%;
-}
-
-/*********************************************
  * COMPONENT — section divider
  *********************************************/
 .slide-divider {
