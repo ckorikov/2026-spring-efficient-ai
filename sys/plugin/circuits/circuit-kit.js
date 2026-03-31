@@ -11,7 +11,7 @@ window.CircuitKit = {
 	mkFor: function(svgEl) {
 		return function(t, a, p) {
 			var e = document.createElementNS('http://www.w3.org/2000/svg', t);
-			for (var k in a) if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]);
+			for (var k in a) if (Object.prototype.hasOwnProperty.call(a, k)) e.setAttribute(k, a[k]);
 			(p || svgEl).appendChild(e);
 			return e;
 		};
