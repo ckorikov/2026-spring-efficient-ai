@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Векторные команды — Effective AI 2026</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap"
+		rel="stylesheet">
+
+	<!-- Reveal.js core -->
+	<link rel="stylesheet" href="sys/reset.css">
+	<link rel="stylesheet" href="sys/reveal.css">
+	<link rel="stylesheet" href="sys/theme/effective-ai.css" id="theme">
+
+	<!-- CodeMirror -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<div class="slide-margins">
+				<div class="slide-corner-tl"></div>
+				<div class="slide-corner-tr"></div>
+				<div class="slide-corner-bl"></div>
+				<div class="slide-corner-br"></div>
+			</div>
+
+			<!-- SLIDE 01 — Title -->
+			<section data-tl="Занятие 06 · 15" data-bl="8 апреля 2026">
+				<div class="slide-single align-left">
+					<h1 class="slide-title">Векторные команды</h1>
+					<p class="slide-subtitle text-muted">
+						Эффективные методы реализации моделей ИИ
+					</p>
+					<div class="author">
+						<div class="author-photo has-image">
+							<img src="assets/ck.jpeg" alt="Constantine Korikov"
+								onerror="this.parentElement.classList.remove('has-image')">
+						</div>
+						<div>
+							<div class="author-name">Константин Кориков</div>
+							<div class="author-role">PhD, AI Research Engineer</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 02 — TOC -->
+			<section data-header="План">
+				<div class="slide-single align-center">
+					<div class="toc">
+						<div class="toc-item">
+							<span class="toc-title">Домашнее задание</span>
+							<span class="toc-page">5 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">sim8 v3</span>
+							<span class="toc-page">25 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Ассемблерная эстафета</span>
+							<span class="toc-page">30 мин</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 1: Домашнее задание ───────────────────────── -->
+
+			<!-- SLIDE 03 — Divider: Домашнее задание -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Домашнее задание</h2>
+					<p class="divider-sub"><a href="05-nn.html#/15">Занятие 05</a></p>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 2: Симулятор v3 ───────────────────────────── -->
+
+			<!-- SLIDE 04 — Divider: sim8 v3 -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>sim8 v3</h2>
+					<p class="divider-sub">Векторный модуль (VU) поверх FPU-ядра</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 05 — sim8 v3 -->
+			<section data-header="sim8 v3">
+				<div class="slide-single align-center">
+					<a href="https://ckorikov.github.io/sim8/" target="_blank">
+						<img src="assets/02-simulator/sim8-v3.png"
+							alt="sim8 v3"
+							style="max-width: 100%; max-height: 460px; border-radius: 6px; border: 1px solid var(--r-subtle);">
+					</a>
+					<p class="text-muted" style="font-size: 11px; margin-top: 8px;">
+						<a href="https://ckorikov.github.io/sim8/" target="_blank">ckorikov.github.io/sim8</a>
+					</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 06 — Скалярный подход -->
+			<section data-init="codemirror" data-header="Скалярный подход">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<textarea data-lang="asm8">; сумма 64 элементов — скалярно
+	MOV A, 0      ; сумма
+	MOV B, data   ; указатель
+	MOV C, 64     ; счётчик
+loop:
+	ADD A, [B]
+	INC B
+	DEC C
+	JNZ loop
+	HLT           ; 64 × 4 = 256 тактов</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Один элемент за раз</p>
+						<p class="text-muted">
+							Скалярная инструкция обрабатывает
+							<span class="text-ink">один</span> элемент за такт.
+						</p>
+						<p class="text-muted">
+							64 элемента → 256 тактов в цикле.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 06 — Векторный подход -->
+			<section data-init="codemirror" data-header="Векторный подход">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<textarea data-lang="asm8">; сумма 64 элементов — векторно
+	VSET VL, 64
+	VSET VA, data
+	VADD.U VC, VA    ; reduction
+	VWAIT
+	HLT              ; ~6 тактов CPU</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">VL элементов за команду</p>
+						<p class="text-muted">
+							Векторная инструкция обрабатывает
+							<span class="text-ink">VL элементов</span> за одну команду.
+						</p>
+						<p class="text-muted">
+							64 элемента → 4 такта (16 байт / такт).
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 06 — Закон Амдала -->
+			<section data-header="Закон Амдала">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left">
+						<p style="margin: 1em 0;">
+							$$S = \frac{1}{(1 - p) + \dfrac{p}{n}}$$
+						</p>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Предел ускорения</p>
+						<p class="text-muted">
+							Ускорение ограничено долей кода, которую
+							<span class="text-ink">нельзя</span> распараллелить.
+						</p>
+						<p class="text-muted">
+							\(p\) — доля параллелизуемого кода,
+							\(n\) — число параллельных юнитов.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 07 — Обзор симулятора -->
+			<section data-header="Обзор VU">
+				<div class="slide-single align-center">
+					<div class="toc">
+						<div class="toc-item">
+							<span class="toc-title">Регистры</span>
+							<span class="toc-page">VA, VB, VC, VM, VL</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Форматы</span>
+							<span class="toc-page">.F .H .BF .O3 .O2 .U .I</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Арифметика</span>
+							<span class="toc-page">VADD VSUB VMUL VDIV VDOT</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Унарные</span>
+							<span class="toc-page">VSQRT VNEG VABS</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Сравнение</span>
+							<span class="toc-page">VCMP VSEL VMAX VMIN</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Память</span>
+							<span class="toc-page">VMOV VFILL VSET</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Синхронизация</span>
+							<span class="toc-page">VWAIT VFSTAT VFCLR</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 3: Ассемблерная эстафета ──────────────────── -->
+
+			<!-- SLIDE 08 — Divider: Ассемблерная эстафета -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Ассемблерная эстафета</h2>
+					<p class="divider-sub">4 задания</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 09 — Задание 1: Сумма массива -->
+			<section data-init="codemirror" data-header="Задание 1">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left">
+						<textarea data-lang="asm8">JMP start
+data: DB 10, 20, 30, 15, 25
+      DB 40, 10, 5, 35, 10
+len:  DB 10
+
+start:
+    ; Решение
+
+    HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Сумма массива</p>
+						<p>\(\sum_{i} x_i\)</p>
+						<p class="text-muted">Массив из 10 чисел (UINT8). Посчитайте сумму используя векторные инструкции. Результат запишите в регистр A.</p>
+						<p class="text-muted"><a href="02-simulator.html#/9">Скалярная версия → Занятие 02</a></p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 10 — Задание 2: Скалярное произведение -->
+			<section data-init="codemirror" data-header="Задание 2">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left">
+						<textarea data-lang="asm8">JMP start
+vec_a: DB 3, 5, 2, 4, 1
+vec_b: DB 4, 1, 6, 2, 3
+len:   DB 5
+
+start:
+    ; Решение
+
+    HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Скалярное произведение</p>
+						<p>\(\mathbf{a} \cdot \mathbf{b} = \sum_{i} a_i b_i\)</p>
+						<p class="text-muted">Два вектора длины 5 (UINT8). Вычислите скалярное произведение с помощью векторных инструкций. Результат запишите в регистр A.</p>
+						<p class="text-muted"><a href="02-simulator.html#/11">Скалярная версия → Занятие 02</a></p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 11 — Задание 3: Matvec -->
+			<section data-init="codemirror" data-header="Задание 3">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left">
+						<textarea data-lang="asm8">JMP start
+m:   DB 2
+n:   DB 3
+mat: DB 1.0_o3, 2.0_o3, 0.5_o3
+     DB 1.5_o3, 1.0_o3, 2.0_o3
+vec: DB 2.0_o3, 1.0_o3, 1.5_o3
+res: DB 0.0_h, 0.0_h
+
+start:
+    MOV A, mat
+    MOV B, vec
+    MOV C, m
+    MOV D, res
+    ; Решение
+
+    HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Матрица × вектор</p>
+						<p>\(\mathbf{y} = W\mathbf{x}\)</p>
+						<p class="text-muted">Матрица W [2,3] и вектор x [3] в формате OFP8 E4M3. Реализуйте умножение матрицы на вектор с помощью векторных инструкций. Результат (float16) запишите в <code>res</code>.</p>
+						<p class="text-muted"><a href="04-fp.html#/25">FP-версия → Занятие 04</a></p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 12 — Задание 4: Softmax -->
+			<section data-init="codemirror" data-header="Задание 4">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left">
+						<textarea data-lang="asm8">JMP start
+logits: DB 1.0_h, 2.0_h, 0.5_h
+len:    DB 3
+res:    DB 0.0_h, 0.0_h, 0.0_h
+
+start:
+    ; Решение
+
+    HLT</textarea>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Softmax</p>
+						<p>$$\text{softmax}(x_i) = \frac{e^{x_i - \max}}{\sum_j e^{x_j - \max}}$$</p>
+						<p class="text-muted">Вектор logits в формате float16. Вычислите softmax с помощью векторных инструкций. Вычитание max стабилизирует экспоненту. Результат запишите в <code>res</code>.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 13 — Final -->
+			<section data-header="" data-tr="" data-bl="">
+				<div class="slide-single align-center">
+					<p class="text-muted" style="font-size: 13px;">
+						<a href="mailto:constantine.korikov@gmail.com">constantine.korikov@gmail.com</a>
+					</p>
+				</div>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="sys/reveal.js"></script>
+	<script src="sys/plugin/notes/notes.js"></script>
+	<script src="sys/plugin/highlight/highlight.js"></script>
+	<script src="sys/plugin/math/math.js"></script>
+	<script src="sys/slide-kit.js"></script>
+	<script src="sys/codemirror-kit.js"></script>
+
+	<script>
+		SlideKit.configure({
+			tr: 'Effective AI 2026',
+			trUrl: 'https://korikov.cc/teaching/2026-mipt-effective-ai-2026/',
+			bl: 'Константин Кориков',
+			blUrl: 'https://korikov.cc/about/',
+			sub: 'Занятие 06'
+		});
+
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			center: false,
+			hash: true,
+			transition: 'fade',
+			plugins: [RevealNotes, RevealHighlight, RevealMath.KaTeX]
+		});
+	</script>
+</body>
+</html>
