@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Квантизация — Effective AI 2026</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap"
+		rel="stylesheet">
+
+	<!-- Reveal.js core -->
+	<link rel="stylesheet" href="sys/reset.css">
+	<link rel="stylesheet" href="sys/reveal.css">
+	<link rel="stylesheet" href="sys/theme/effective-ai.css" id="theme">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<div class="slide-margins">
+				<div class="slide-corner-tl"></div>
+				<div class="slide-corner-tr"></div>
+				<div class="slide-corner-bl"></div>
+				<div class="slide-corner-br"></div>
+			</div>
+
+			<!-- SLIDE 01 — Title -->
+			<section data-tl="Занятие 08 · 15" data-bl="22 апреля 2026">
+				<div class="slide-single align-left">
+					<h1 class="slide-title">Квантизация</h1>
+					<p class="slide-subtitle text-muted">
+						Эффективные методы реализации моделей ИИ
+					</p>
+					<div class="author">
+						<div class="author-photo has-image">
+							<img src="assets/ck.jpeg" alt="Constantine Korikov"
+								onerror="this.parentElement.classList.remove('has-image')">
+						</div>
+						<div>
+							<div class="author-name">Константин Кориков</div>
+							<div class="author-role">PhD, AI Research Engineer</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 02 — TOC -->
+			<section data-header="План">
+				<div class="slide-single align-center">
+					<div class="toc">
+						<div class="toc-item">
+							<span class="toc-title">Разбор хакатона</span>
+							<span class="toc-page">15 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Виды квантизации</span>
+							<span class="toc-page">25 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Проблемы квантизации</span>
+							<span class="toc-page">5 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Квантизация в нейронных сетях</span>
+							<span class="toc-page">15 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Домашнее задание</span>
+							<span class="toc-page">10 мин</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 1: Разбор хакатона ────────────────────────── -->
+
+			<!-- SLIDE 03 — Divider: Разбор хакатона -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Разбор хакатона</h2>
+					<p class="divider-sub"><a href="07-hack.html">Занятие 07</a> · MNIST на sim8 v3</p>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 2: Виды квантизации ───────────────────────── -->
+
+			<!-- SLIDE 06 — Divider: Виды квантизации -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Виды квантизации</h2>
+					<p class="divider-sub">Как расположить уровни?</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 04 — Квантизация = дискретизация -->
+			<section data-header="Виды квантизации">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Квантизация = дискретизация</p>
+						<p>Непрерывный сигнал → конечное число уровней</p>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Две оси классификации</p>
+						<ul>
+							<li><strong>Скалярная</strong> vs <strong>Векторная</strong></li>
+							<li><strong>Uniform</strong> vs <strong>Non-uniform</strong></li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 08 — Uniform quantization -->
+			<section data-header="Виды квантизации">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Равномерная (uniform)</p>
+						<p>$$Q(x) = \text{clamp}\!\left(\text{round}\!\left(\frac{x}{s}\right) + z,\; 0,\; 2^b{-}1\right)$$</p>
+						<p>$$\hat{x} = s \cdot (Q(x) - z)$$</p>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Параметры</p>
+						<ul>
+							<li><strong>Scale</strong> $s = \frac{x_{\max} - x_{\min}}{2^b - 1}$ — шаг сетки</li>
+							<li><strong>Zero-point</strong> $z$ — смещение</li>
+						</ul>
+						<p class="text-muted">Это INT8 / INT4 в индустрии</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 09 — Non-uniform quantization -->
+			<section data-header="Виды квантизации">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Неравномерная (non-uniform)</p>
+						<p class="text-muted">Сетка сгущается в областях, где значений больше — обычно у нуля.</p>
+						<p><strong>Float-форматы</strong> — логарифмическая сетка: мелкие числа представлены точнее.</p>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Примеры</p>
+						<ul>
+							<li><strong>OFP8 E4M3</strong> — на sim8 в хакатоне</li>
+							<li><strong>FP8 E5M2</strong> — шире dynamic range</li>
+							<li><strong>BF16</strong> — Google Brain</li>
+							<li><strong>NF4</strong> — оптимальная для $\mathcal{N}(0,1)$</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 10 — Нелинейная квантизация -->
+			<section data-header="Виды квантизации">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Кластеризация (k-means)</p>
+						<p class="text-muted">Не навязывать сетку, а найти оптимальные уровни из данных.</p>
+						<p>Хранить: таблица центров ($32 \text{ бит} \times 2^b$) + индексы ($b \text{ бит} \times n$)</p>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Предельные случаи</p>
+						<ul>
+							<li><strong>Binary</strong> $\{-1, +1\}$ — 1 бит</li>
+							<li><strong>Ternary</strong> $\{-1, 0, +1\}$ — 1.58 бит</li>
+							<li><strong>LUT</strong> — любые $2^b$ значений в таблице</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 3: Проблемы квантизации ───────────────────── -->
+
+			<!-- SLIDE 12 — Divider: Проблемы -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Проблемы квантизации</h2>
+					<p class="divider-sub">Outlier'ы</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 10 — Outlier'ы -->
+			<section data-header="Проблемы квантизации">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Outlier'ы растягивают диапазон</p>
+						<p>$[0.1,\; 0.3,\; 0.2,\; 0.4,\; 0.15,\; 0.25,\; 0.35,\; 47.0]$</p>
+						<p class="text-muted">range = 46.9 → scale ≈ 0.184<br>
+							Числа 0.1–0.4 → уровни 0–2</p>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Результат</p>
+						<p><strong>Один outlier убил точность для 7 из 8 чисел.</strong></p>
+						<p class="text-muted">Ошибка 50–100% для нормальных значений</p>
+					</div>
+				</div>
+			</section>
+
+
+
+			<!-- ─── БЛОК 4: Квантизация в нейронных сетях ──────────── -->
+
+			<!-- SLIDE 16 — Divider: Нейронные сети -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Квантизация в нейронных сетях</h2>
+					<p class="divider-sub">Чем особенная?</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 14 — Почему работает -->
+			<section data-header="Квантизация в НС">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Избыточность</p>
+						<p class="text-muted">Миллионы параметров кодируют простые закономерности. Шум квантизации — ещё один вид регуляризации.</p>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Гладкость loss landscape</p>
+						<p class="text-muted">Малые изменения весов → малые изменения выхода. Нейронная сеть — не система уравнений, а статистическая модель.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 18 — PTQ vs QAT -->
+			<section data-header="Квантизация в НС">
+				<div class="slide-two-col cols-equal">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">PTQ</p>
+						<p class="text-muted">Post-Training Quantization</p>
+						<ul>
+							<li>После обучения</li>
+							<li>Нужна модель + калибровочные данные</li>
+							<li>Минуты</li>
+							<li>Хорошо до 8 бит</li>
+						</ul>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">QAT</p>
+						<p class="text-muted">Quantization-Aware Training</p>
+						<ul>
+							<li>Во время обучения</li>
+							<li>Нужен тренировочный пайплайн</li>
+							<li>Часы–дни</li>
+							<li>Лучше при 4, 2, 1 бит</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<!-- ─── БЛОК 5: Домашнее задание ───────────────────────── -->
+
+			<!-- SLIDE 20 — Divider: ДЗ -->
+			<section data-tr="" data-bl="">
+				<div class="slide-divider">
+					<h2>Домашнее задание</h2>
+					<p class="divider-sub">SmoothQuant</p>
+				</div>
+			</section>
+
+			<!-- SLIDE 18 — ДЗ: SmoothQuant -->
+			<section data-header="Домашнее задание">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Разобрать SmoothQuant</p>
+						<p class="text-muted">Xiao et al., 2023 — Abstract + Section 3</p>
+						<ol>
+							<li>Какую проблему решает?</li>
+							<li>Объяснить формулу</li>
+							<li>Числовой пример</li>
+							<li>Реализация на sim8 v3?</li>
+						</ol>
+					</div>
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">Ключевая формула</p>
+						<p>$$Y = (X \cdot \text{diag}(s)^{-1}) \cdot (\text{diag}(s) \cdot W)$$</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 22 — Final -->
+			<section data-header="" data-tr="" data-bl="">
+				<div class="slide-single align-center">
+					<p class="text-muted" style="font-size: 13px;">
+						<a href="mailto:constantine.korikov@gmail.com">constantine.korikov@gmail.com</a>
+					</p>
+				</div>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="sys/reveal.js"></script>
+	<script src="sys/plugin/notes/notes.js"></script>
+	<script src="sys/plugin/highlight/highlight.js"></script>
+	<script src="sys/plugin/math/math.js"></script>
+	<script src="sys/slide-kit.js"></script>
+
+	<script>
+		SlideKit.configure({
+			tr: 'Effective AI 2026',
+			trUrl: 'https://korikov.cc/teaching/2026-mipt-effective-ai-2026/',
+			bl: 'Константин Кориков',
+			blUrl: 'https://korikov.cc/about/',
+			sub: 'Занятие 08'
+		});
+
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			center: false,
+			hash: true,
+			transition: 'fade',
+			plugins: [RevealNotes, RevealHighlight, RevealMath.KaTeX]
+		});
+	</script>
+</body>
+</html>
