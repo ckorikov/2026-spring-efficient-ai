@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Хакатон MNIST — Effective AI 2026</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap"
+		rel="stylesheet">
+
+	<!-- Reveal.js core -->
+	<link rel="stylesheet" href="sys/reset.css">
+	<link rel="stylesheet" href="sys/reveal.css">
+	<link rel="stylesheet" href="sys/theme/effective-ai.css" id="theme">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<div class="slide-margins">
+				<div class="slide-corner-tl"></div>
+				<div class="slide-corner-tr"></div>
+				<div class="slide-corner-bl"></div>
+				<div class="slide-corner-br"></div>
+			</div>
+
+			<!-- SLIDE 01 — Title -->
+			<section data-tl="Занятие 07 · 15" data-bl="15 апреля 2026">
+				<div class="slide-single align-left">
+					<h1 class="slide-title">Хакатон MNIST</h1>
+					<p class="slide-subtitle text-muted">
+						Эффективные методы реализации моделей ИИ
+					</p>
+					<div class="author">
+						<div class="author-photo has-image">
+							<img src="assets/ck.jpeg" alt="Constantine Korikov"
+								onerror="this.parentElement.classList.remove('has-image')">
+						</div>
+						<div>
+							<div class="author-name">Константин Кориков</div>
+							<div class="author-role">PhD, AI Research Engineer</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 02 — TOC -->
+			<section data-header="План">
+				<div class="slide-single align-center">
+					<div class="toc">
+						<div class="toc-item">
+							<span class="toc-title">Задание</span>
+							<span class="toc-page">5 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Хакатон</span>
+							<span class="toc-page">70 мин</span>
+						</div>
+						<div class="toc-item">
+							<span class="toc-title">Результаты</span>
+							<span class="toc-page">5 мин</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 03 — Задание хакатона -->
+			<section data-header="Задание">
+				<div class="slide-two-col cols-3-2">
+					<div class="col-left col-prose">
+						<p class="col-prose-heading">MLP-классификатор MNIST на sim8 v3</p>
+						<ol>
+							<li>Обучить модель на Python</li>
+							<li>Закодировать веса в удобном формате</li>
+							<li>Реализовать классификатор с чтением с pad</li>
+							<li>Выход: предсказанный класс → вывести на дисплей</li>
+						</ol>
+					</div>
+					<div class="col-left">
+						<img src="assets/07-hack/mnist_plot.png" alt="MNIST digits"
+							style="max-width: 100%; max-height: 240px; border-radius: 6px;">
+					</div>
+				</div>
+			</section>
+
+			<!-- SLIDE 04 — Final -->
+			<section data-header="" data-tr="" data-bl="">
+				<div class="slide-single align-center">
+					<p class="text-muted" style="font-size: 13px;">
+						<a href="mailto:constantine.korikov@gmail.com">constantine.korikov@gmail.com</a>
+					</p>
+				</div>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="sys/reveal.js"></script>
+	<script src="sys/plugin/notes/notes.js"></script>
+	<script src="sys/plugin/highlight/highlight.js"></script>
+	<script src="sys/plugin/math/math.js"></script>
+	<script src="sys/slide-kit.js"></script>
+
+	<script>
+		SlideKit.configure({
+			tr: 'Effective AI 2026',
+			trUrl: 'https://korikov.cc/teaching/2026-mipt-effective-ai-2026/',
+			bl: 'Константин Кориков',
+			blUrl: 'https://korikov.cc/about/',
+			sub: 'Занятие 07'
+		});
+
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			center: false,
+			hash: true,
+			transition: 'fade',
+			plugins: [RevealNotes, RevealHighlight, RevealMath.KaTeX]
+		});
+	</script>
+</body>
+</html>
