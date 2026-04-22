@@ -94,24 +94,23 @@
 			<section data-tr="" data-bl="">
 				<div class="slide-divider">
 					<h2>Виды квантизации</h2>
-					<p class="divider-sub">Как расположить уровни?</p>
 				</div>
 			</section>
 
 			<!-- SLIDE 04 — Квантизация = дискретизация -->
 			<section data-header="Виды квантизации">
-				<div class="slide-two-col cols-equal">
-					<div class="col-left col-prose">
-						<p class="col-prose-heading">Квантизация = дискретизация</p>
-						<p>Непрерывный сигнал → конечное число уровней</p>
-					</div>
-					<div class="col-left col-prose">
-						<p class="col-prose-heading">Две оси классификации</p>
-						<ul>
-							<li><strong>Скалярная</strong> vs <strong>Векторная</strong></li>
-							<li><strong>Uniform</strong> vs <strong>Non-uniform</strong></li>
-						</ul>
-					</div>
+				<div class="slide-single align-center">
+					<p class="text-muted" style="font-size:0.7em">Квантование (quantization) — разделение величины на дискретное число малых частей.</p>
+					<table class="table-compact">
+						<thead>
+							<tr><th></th><th>Виды</th><th>Про что это?</th></tr>
+						</thead>
+						<tbody>
+							<tr><td>Структура</td><td>Scalar / Vector</td><td>Кодируем числа по одному или группой?</td></tr>
+							<tr><td>Сетка</td><td>Uniform / Non-uniform</td><td>Равномерные шаги или переменные?</td></tr>
+							<tr><td>Гранулярность scale</td><td>per-tensor / per-channel / per-group / per-token / per-element</td><td>Сколько значений делят один scale?</td></tr>
+						</tbody>
+					</table>
 				</div>
 			</section>
 
@@ -123,13 +122,8 @@
 						<p>$$Q(x) = \text{clamp}\!\left(\text{round}\!\left(\frac{x}{s}\right) + z,\; 0,\; 2^b{-}1\right)$$</p>
 						<p>$$\hat{x} = s \cdot (Q(x) - z)$$</p>
 					</div>
-					<div class="col-left col-prose">
-						<p class="col-prose-heading">Параметры</p>
-						<ul>
-							<li><strong>Scale</strong> $s = \frac{x_{\max} - x_{\min}}{2^b - 1}$ — шаг сетки</li>
-							<li><strong>Zero-point</strong> $z$ — смещение</li>
-						</ul>
-						<p class="text-muted">Это INT8 / INT4 в индустрии</p>
+					<div class="col-right" style="display:flex;align-items:center;justify-content:center">
+						<canvas id="uniform-viz" style="width:100%;height:100px"></canvas>
 					</div>
 				</div>
 			</section>
@@ -142,33 +136,37 @@
 						<p class="text-muted">Сетка сгущается в областях, где значений больше — обычно у нуля.</p>
 						<p><strong>Float-форматы</strong> — логарифмическая сетка: мелкие числа представлены точнее.</p>
 					</div>
-					<div class="col-left col-prose">
-						<p class="col-prose-heading">Примеры</p>
-						<ul>
-							<li><strong>OFP8 E4M3</strong> — на sim8 в хакатоне</li>
-							<li><strong>FP8 E5M2</strong> — шире dynamic range</li>
-							<li><strong>BF16</strong> — Google Brain</li>
-							<li><strong>NF4</strong> — оптимальная для $\mathcal{N}(0,1)$</li>
-						</ul>
+					<div class="col-right" style="display:flex;align-items:center;justify-content:center">
+						<canvas id="nonuniform-viz" style="width:100%;height:100px"></canvas>
 					</div>
 				</div>
 			</section>
 
-			<!-- SLIDE 10 — Нелинейная квантизация -->
+			<!-- SLIDE 10 — Векторная квантизация -->
 			<section data-header="Виды квантизации">
 				<div class="slide-two-col cols-3-2">
 					<div class="col-left col-prose">
-						<p class="col-prose-heading">Кластеризация (k-means)</p>
-						<p class="text-muted">Не навязывать сетку, а найти оптимальные уровни из данных.</p>
-						<p>Хранить: таблица центров ($32 \text{ бит} \times 2^b$) + индексы ($b \text{ бит} \times n$)</p>
+						<p class="col-prose-heading">Векторная квантизация</p>
+						<p class="text-muted">Квантуем не отдельные числа, а группы (векторы) целиком.</p>
+						<p><strong>k-means:</strong> найти $2^b$ центроидов из данных, хранить индексы ($b$ бит) + таблицу центров.</p>
 					</div>
+					<div class="col-right" style="display:flex;align-items:center;justify-content:center">
+						<svg id="kmeans-viz" viewBox="0 0 300 280" style="width:100%;max-width:340px">
+						</svg>
+					</div>
+				</div>
+			</section>
+			<!-- SLIDE 11 — MXFP: группировка -->
+			<section data-header="Виды квантизации">
+				<div class="slide-two-col cols-3-2">
 					<div class="col-left col-prose">
-						<p class="col-prose-heading">Предельные случаи</p>
-						<ul>
-							<li><strong>Binary</strong> $\{-1, +1\}$ — 1 бит</li>
-							<li><strong>Ternary</strong> $\{-1, 0, +1\}$ — 1.58 бит</li>
-							<li><strong>LUT</strong> — любые $2^b$ значений в таблице</li>
-						</ul>
+						<p class="col-prose-heading">MXFP — Microscaling</p>
+						<p class="text-muted">Группа из $k$ элементов делит один общий scale (shared exponent).</p>
+						<p>Каждый элемент хранится в узком float (FP8, FP6, FP4), а scale — в более широком формате (E8M0).</p>
+						<p class="text-muted">Blackwell (B200), Huawei Ascend A5 — нативная поддержка MXFP.</p>
+					</div>
+					<div class="col-right" style="display:flex;align-items:center;justify-content:center">
+						<svg id="mxfp-viz" viewBox="0 0 340 110" style="width:100%;max-width:380px"></svg>
 					</div>
 				</div>
 			</section>
@@ -212,20 +210,26 @@
 				</div>
 			</section>
 
-			<!-- SLIDE 14 — Почему работает -->
+			<!-- SLIDE 14 — Матричное умножение -->
 			<section data-header="Квантизация в НС">
 				<div class="slide-two-col cols-equal">
 					<div class="col-left col-prose">
-						<p class="col-prose-heading">Избыточность</p>
-						<p class="text-muted">Миллионы параметров кодируют простые закономерности. Шум квантизации — ещё один вид регуляризации.</p>
+						<p class="col-prose-heading">Линейный слой</p>
+						<p>$$\mathbf{y} = \sigma(\mathbf{W}\mathbf{x} + \mathbf{b})$$</p>
+						<p class="text-muted">$\mathbf{W} \in \mathbb{R}^{m \times n}$ — веса,
+							$\mathbf{x}$ — активации (вход),
+							$\mathbf{b}$ — смещение</p>
 					</div>
 					<div class="col-left col-prose">
-						<p class="col-prose-heading">Гладкость loss landscape</p>
-						<p class="text-muted">Малые изменения весов → малые изменения выхода. Нейронная сеть — не система уравнений, а статистическая модель.</p>
+						<p class="col-prose-heading">Что квантовать?</p>
+						<ul>
+							<li><strong>Веса</strong> — известны заранее, квантуем офлайн</li>
+							<li><strong>Активации</strong> — зависят от входа, нужна калибровка или динамическая квантизация</li>
+							<li><strong>W + A вместе</strong> — максимальное ускорение (INT8×INT8 на тензорных ядрах)</li>
+						</ul>
 					</div>
 				</div>
 			</section>
-
 			<!-- SLIDE 18 — PTQ vs QAT -->
 			<section data-header="Квантизация в НС">
 				<div class="slide-two-col cols-equal">
@@ -235,8 +239,6 @@
 						<ul>
 							<li>После обучения</li>
 							<li>Нужна модель + калибровочные данные</li>
-							<li>Минуты</li>
-							<li>Хорошо до 8 бит</li>
 						</ul>
 					</div>
 					<div class="col-left col-prose">
@@ -245,8 +247,6 @@
 						<ul>
 							<li>Во время обучения</li>
 							<li>Нужен тренировочный пайплайн</li>
-							<li>Часы–дни</li>
-							<li>Лучше при 4, 2, 1 бит</li>
 						</ul>
 					</div>
 				</div>
@@ -308,6 +308,359 @@
 			blUrl: 'https://korikov.cc/about/',
 			sub: 'Занятие 08'
 		});
+
+		/* ── Quantization axis helpers (FP-lecture style) ── */
+		(function () {
+			var BG    = '#f7f5f2';
+			var AXIS  = '#c8c3bb';
+			var INK   = '#2d2a26';
+			var MUTED = '#a09a92';
+			var COL_U = '#6a8fa5';   // uniform — blue like int axis
+			var COL_N = '#7a9a7a';   // non-uniform — green like frac
+			var COL_S = '#a07060';   // sample dots
+			var FONT  = '"IBM Plex Mono", monospace';
+			var DPR   = window.devicePixelRatio || 1;
+			var PAD   = 24;
+			var AY    = 46;
+			var CH    = 100;
+
+			function setup(id) {
+				var c = document.getElementById(id);
+				if (!c) return null;
+				var W = c.parentElement.offsetWidth || 400;
+				c.width = W * DPR; c.height = CH * DPR;
+				c.style.width = W + 'px'; c.style.height = CH + 'px';
+				var ctx = c.getContext('2d');
+				ctx.scale(DPR, DPR);
+				ctx.clearRect(0, 0, W, CH);
+				return { ctx: ctx, W: W, len: W - PAD * 2 };
+			}
+
+			function axisLine(ctx, W) {
+				ctx.strokeStyle = AXIS; ctx.lineWidth = 1;
+				ctx.beginPath(); ctx.moveTo(PAD, AY); ctx.lineTo(W - PAD, AY); ctx.stroke();
+			}
+
+			function tick(ctx, x, color, h) {
+				h = h || 6;
+				ctx.strokeStyle = color; ctx.lineWidth = 1;
+				ctx.beginPath(); ctx.moveTo(x, AY - h); ctx.lineTo(x, AY + h); ctx.stroke();
+			}
+
+			function label(ctx, x, y, txt, color, size, bold) {
+				ctx.fillStyle = color;
+				ctx.font = (bold ? 'bold ' : '') + (size || 10) + 'px ' + FONT;
+				ctx.textAlign = 'center';
+				ctx.fillText(txt, x, y);
+			}
+
+			/* ── Uniform ── */
+			function drawUniform(canvasId) {
+				var s = setup(canvasId || 'uniform-viz');
+				if (!s) return;
+				var ctx = s.ctx, W = s.W, len = s.len;
+				axisLine(ctx, W);
+
+				// 16 equally-spaced levels (4-bit)
+				var N = 16;
+				for (var i = 0; i < N; i++) {
+					var x = PAD + (i / (N - 1)) * len;
+					tick(ctx, x, COL_U, 7);
+				}
+				// endpoint ticks thicker
+				ctx.strokeStyle = COL_U; ctx.lineWidth = 2;
+				[PAD, PAD + len].forEach(function (x) {
+					ctx.beginPath(); ctx.moveTo(x, AY - 8); ctx.lineTo(x, AY + 8); ctx.stroke();
+				});
+
+				// sample points snapping
+				var samples = [0.05, 0.15, 0.25, 0.38, 0.5, 0.62, 0.7, 0.85, 0.95];
+				samples.forEach(function (v) {
+					var x = PAD + v * len;
+					var snapX = PAD + Math.round(v * (N - 1)) / (N - 1) * len;
+					ctx.strokeStyle = COL_S + '55'; ctx.lineWidth = 0.7;
+					ctx.beginPath(); ctx.moveTo(x, AY - 14); ctx.lineTo(snapX, AY - 4); ctx.stroke();
+					ctx.fillStyle = COL_S;
+					ctx.beginPath(); ctx.arc(x, AY - 16, 2.5, 0, Math.PI * 2); ctx.fill();
+				});
+
+				// scale bracket
+				var s0 = PAD, s1 = PAD + len / (N - 1);
+				ctx.strokeStyle = COL_U; ctx.lineWidth = 1;
+				ctx.beginPath();
+				ctx.moveTo(s0, AY + 14); ctx.lineTo(s0, AY + 18);
+				ctx.lineTo(s1, AY + 18); ctx.lineTo(s1, AY + 14);
+				ctx.stroke();
+				label(ctx, (s0 + s1) / 2, AY + 30, 's', COL_U, 10, true);
+
+				// endpoint labels
+				label(ctx, PAD, AY + 42, 'x_min', MUTED, 9, false);
+				label(ctx, PAD + len, AY + 42, 'x_max', MUTED, 9, false);
+
+				// title
+				label(ctx, W / 2, 16, 'Равные шаги, фиксированный диапазон', INK, 11, true);
+			}
+
+			/* ── Non-uniform (same visual style as uniform) ── */
+			function drawNonUniform() {
+				var s = setup('nonuniform-viz');
+				if (!s) return;
+				var ctx = s.ctx, W = s.W, len = s.len;
+				axisLine(ctx, W);
+
+				// log-spaced levels (dense near zero)
+				var N = 16;
+				var levels = [];
+				for (var i = 0; i < N; i++) levels.push(Math.pow(i / (N - 1), 2.2));
+
+				levels.forEach(function (v) { tick(ctx, PAD + v * len, COL_U, 7); });
+
+				// endpoint ticks thicker
+				ctx.strokeStyle = COL_U; ctx.lineWidth = 2;
+				[PAD, PAD + len].forEach(function (x) {
+					ctx.beginPath(); ctx.moveTo(x, AY - 8); ctx.lineTo(x, AY + 8); ctx.stroke();
+				});
+
+				// sample points snapping to nearest level
+				var samples = [0.05, 0.15, 0.25, 0.38, 0.5, 0.62, 0.7, 0.85, 0.95];
+				samples.forEach(function (v) {
+					var x = PAD + v * len;
+					// find nearest level
+					var best = 0;
+					for (var j = 1; j < N; j++) {
+						if (Math.abs(levels[j] - v) < Math.abs(levels[best] - v)) best = j;
+					}
+					var snapX = PAD + levels[best] * len;
+					ctx.strokeStyle = COL_S + '55'; ctx.lineWidth = 0.7;
+					ctx.beginPath(); ctx.moveTo(x, AY - 14); ctx.lineTo(snapX, AY - 4); ctx.stroke();
+					ctx.fillStyle = COL_S;
+					ctx.beginPath(); ctx.arc(x, AY - 16, 2.5, 0, Math.PI * 2); ctx.fill();
+				});
+
+				// zero mark
+				ctx.strokeStyle = INK; ctx.lineWidth = 1.5;
+				ctx.beginPath(); ctx.moveTo(PAD, AY - 10); ctx.lineTo(PAD, AY + 10); ctx.stroke();
+				label(ctx, PAD, AY + 30, '0', INK, 10, true);
+
+				// endpoint labels
+				label(ctx, PAD + len, AY + 30, 'x_max', MUTED, 9, false);
+
+				// title
+				label(ctx, W / 2, 16, 'Переменный шаг: точнее у нуля', INK, 11, true);
+			}
+
+			/* ── Draw on slide change ── */
+			function tryDraw(slide) {
+				if (slide.querySelector('#uniform-viz')) drawUniform('uniform-viz');
+				if (slide.querySelector('#nonuniform-viz')) drawNonUniform();
+			}
+
+			Reveal.on('ready', function (e) { tryDraw(e.currentSlide); });
+			Reveal.on('slidechanged', function (e) { tryDraw(e.currentSlide); });
+		})();
+
+		/* ── MXFP8 E4M3 visualization ── */
+		(function () {
+			const svg = document.getElementById('mxfp-viz');
+			if (!svg) return;
+			const ns = 'http://www.w3.org/2000/svg';
+			const colors = {
+				scale: '#f58518',
+				sign: '#e45756',
+				exp: '#4c78a8',
+				mant: '#54a24b',
+				cell: '#cbd5e1'
+			};
+
+			// ── shared scale block (top) ──
+			const scaleY = 12;
+			const scaleW = 280, scaleH = 28, scaleX = 30;
+			const r1 = rect(scaleX, scaleY, scaleW, scaleH, colors.scale, '0.15');
+			svg.appendChild(r1);
+			const r1s = rect(scaleX, scaleY, scaleW, scaleH, 'none', '1');
+			r1s.setAttribute('stroke', colors.scale); r1s.setAttribute('stroke-width', '1.5');
+			r1s.setAttribute('rx', '4');
+			svg.appendChild(r1s);
+			svg.appendChild(text(scaleX + scaleW / 2, scaleY + 18, 'shared scale E8M0 (8 бит)', colors.scale, '11', '600'));
+
+			// ── 32 element cells (group row) ──
+			const groupY = 52;
+			const cellW = 8.5, cellGap = 0.5, cellH = 22;
+			const groupX = scaleX + (scaleW - 32 * (cellW + cellGap)) / 2;
+			for (let i = 0; i < 32; i++) {
+				const cx = groupX + i * (cellW + cellGap);
+				const c = rect(cx, groupY, cellW, cellH, colors.cell, '0.5');
+				c.setAttribute('rx', '1.5');
+				svg.appendChild(c);
+			}
+			svg.appendChild(text(scaleX + scaleW / 2, groupY + cellH + 14, '32 элемента × E4M3 (8 бит каждый)', '#64748b', '10', '400'));
+
+			// ── effective bitrate note ──
+			svg.appendChild(text(scaleX + scaleW / 2, groupY + cellH + 30, 'Битрейт: 8 + 8/32 = 8.25 бит/элемент', '#64748b', '10', '400'));
+
+			function rect(x, y, w, h, fill, opacity) {
+				var r = document.createElementNS(ns, 'rect');
+				r.setAttribute('x', x); r.setAttribute('y', y);
+				r.setAttribute('width', w); r.setAttribute('height', h);
+				r.setAttribute('fill', fill); r.setAttribute('opacity', opacity);
+				return r;
+			}
+			function text(x, y, content, fill, size, weight) {
+				var t = document.createElementNS(ns, 'text');
+				t.setAttribute('x', x); t.setAttribute('y', y);
+				t.setAttribute('text-anchor', 'middle');
+				t.setAttribute('font-size', size);
+				t.setAttribute('fill', fill);
+				t.setAttribute('font-weight', weight || '400');
+				t.setAttribute('font-family', 'inherit');
+				t.textContent = content;
+				return t;
+			}
+		})();
+
+		/* ── k-means visualization ── */
+		(function () {
+			const svg = document.getElementById('kmeans-viz');
+			if (!svg) return;
+			const W = 300, H = 280;
+			const colors = ['#e45756', '#4c78a8', '#54a24b', '#f58518'];
+			const K = 4;
+
+			// seeded random
+			let seed = 42;
+			function rand() { seed = (seed * 16807 + 0) % 2147483647; return seed / 2147483647; }
+
+			// generate clustered points
+			const points = [];
+			const cx = [70, 220, 80, 230], cy = [60, 70, 210, 200];
+			for (let c = 0; c < K; c++) {
+				for (let i = 0; i < 12; i++) {
+					points.push({
+						x: cx[c] + (rand() - 0.5) * 90,
+						y: cy[c] + (rand() - 0.5) * 80,
+						cluster: -1
+					});
+				}
+			}
+
+			// initial centroids
+			let centroids = [
+				{ x: 150, y: 140 }, { x: 100, y: 100 },
+				{ x: 200, y: 180 }, { x: 160, y: 60 }
+			];
+
+			function dist2(a, b) { return (a.x - b.x) ** 2 + (a.y - b.y) ** 2; }
+
+			function assign() {
+				points.forEach(p => {
+					let best = 0;
+					for (let k = 1; k < K; k++) {
+						if (dist2(p, centroids[k]) < dist2(p, centroids[best])) best = k;
+					}
+					p.cluster = best;
+				});
+			}
+
+			function updateCentroids() {
+				for (let k = 0; k < K; k++) {
+					const members = points.filter(p => p.cluster === k);
+					if (members.length === 0) continue;
+					centroids[k] = {
+						x: members.reduce((s, p) => s + p.x, 0) / members.length,
+						y: members.reduce((s, p) => s + p.y, 0) / members.length
+					};
+				}
+			}
+
+			function draw(showLines) {
+				const ns = 'http://www.w3.org/2000/svg';
+				svg.innerHTML = '';
+
+				// lines from points to centroids
+				if (showLines) {
+					points.forEach(p => {
+						if (p.cluster < 0) return;
+						const line = document.createElementNS(ns, 'line');
+						line.setAttribute('x1', p.x); line.setAttribute('y1', p.y);
+						line.setAttribute('x2', centroids[p.cluster].x);
+						line.setAttribute('y2', centroids[p.cluster].y);
+						line.setAttribute('stroke', colors[p.cluster]);
+						line.setAttribute('stroke-opacity', '0.2');
+						line.setAttribute('stroke-width', '1');
+						svg.appendChild(line);
+					});
+				}
+
+				// points
+				points.forEach(p => {
+					const c = document.createElementNS(ns, 'circle');
+					c.setAttribute('cx', p.x); c.setAttribute('cy', p.y);
+					c.setAttribute('r', '4');
+					c.setAttribute('fill', p.cluster >= 0 ? colors[p.cluster] : '#999');
+					c.setAttribute('opacity', '0.8');
+					svg.appendChild(c);
+				});
+
+				// centroids
+				centroids.forEach((ct, k) => {
+					const c = document.createElementNS(ns, 'circle');
+					c.setAttribute('cx', ct.x); c.setAttribute('cy', ct.y);
+					c.setAttribute('r', '8');
+					c.setAttribute('fill', colors[k]);
+					c.setAttribute('stroke', '#fff');
+					c.setAttribute('stroke-width', '2.5');
+					svg.appendChild(c);
+					// index label
+					const t = document.createElementNS(ns, 'text');
+					t.setAttribute('x', ct.x); t.setAttribute('y', ct.y + 20);
+					t.setAttribute('text-anchor', 'middle');
+					t.setAttribute('font-size', '11');
+					t.setAttribute('fill', colors[k]);
+					t.setAttribute('font-weight', '600');
+					t.textContent = 'idx ' + k;
+					svg.appendChild(t);
+				});
+			}
+
+			// animate on slide visible
+			let animated = false;
+			function runAnimation() {
+				if (animated) return;
+				animated = true;
+				// step 0: unassigned
+				draw(false);
+				const steps = [
+					() => { assign(); draw(true); },
+					() => { updateCentroids(); draw(true); },
+					() => { assign(); draw(true); },
+					() => { updateCentroids(); draw(true); },
+					() => { assign(); draw(true); },
+					() => { updateCentroids(); draw(true); },
+					() => { assign(); draw(true); }
+				];
+				steps.forEach((fn, i) => setTimeout(fn, 600 + i * 700));
+			}
+
+			// reset when leaving slide
+			function resetAnimation() {
+				animated = false;
+				seed = 42;
+				centroids = [
+					{ x: 150, y: 140 }, { x: 100, y: 100 },
+					{ x: 200, y: 180 }, { x: 160, y: 60 }
+				];
+				points.forEach(p => p.cluster = -1);
+				draw(false);
+			}
+
+			Reveal.on('slidechanged', function (e) {
+				if (e.currentSlide && e.currentSlide.querySelector('#kmeans-viz')) {
+					runAnimation();
+				} else {
+					resetAnimation();
+				}
+			});
+		})();
 
 		Reveal.initialize({
 			controls: true,

@@ -247,6 +247,12 @@
 .reveal table tbody tr:last-child th,
 .reveal table tbody tr:last-child td { border-bottom: none; }
 
+.reveal table.table-compact th,
+.reveal table.table-compact td {
+  font-size: 0.6em;
+  padding: 0.12em 0.35em;
+}
+
 .reveal sup { vertical-align: super; font-size: smaller; }
 .reveal sub { vertical-align: sub; font-size: smaller; }
 
