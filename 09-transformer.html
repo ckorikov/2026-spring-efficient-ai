@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Трансформеры — Effective AI 2026</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+	<!-- CodeMirror -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+
+	<link rel="stylesheet" href="sys/reset.css">
+	<link rel="stylesheet" href="sys/reveal.css">
+	<link rel="stylesheet" href="sys/theme/effective-ai.css" id="theme">
+</head>
+
+<body>
+<div class="reveal">
+<div class="slides">
+
+<div class="slide-margins">
+	<div class="slide-corner-tl"></div>
+	<div class="slide-corner-tr"></div>
+	<div class="slide-corner-bl"></div>
+	<div class="slide-corner-br"></div>
+</div>
+
+<!-- SLIDE 01 — Title -->
+<section data-tl="Занятие 09 · 15" data-bl="29 апреля 2026">
+	<div class="slide-single align-left">
+		<h1 class="slide-title">Трансформеры</h1>
+		<p class="slide-subtitle text-muted">Эффективные методы реализации моделей ИИ</p>
+		<div class="author">
+			<div class="author-photo has-image">
+				<img src="assets/ck.jpeg" alt="Constantine Korikov"
+					onerror="this.parentElement.classList.remove('has-image')">
+			</div>
+			<div>
+				<div class="author-name">Константин Кориков</div>
+				<div class="author-role">PhD, AI Research Engineer</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- SLIDE 02 — TOC -->
+<section data-header="План">
+	<div class="slide-single align-center">
+		<div class="toc">
+			<div class="toc-item">
+				<span class="toc-title">Что происходит, когда вы отправляете запрос в чат с ИИ?</span>
+				<span class="toc-page">75 мин</span>
+			</div>
+			<div class="toc-item">
+				<span class="toc-title">Домашнее задание</span>
+				<span class="toc-page">5 мин</span>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section data-tr="" data-bl="">
+	<div class="slide-divider">
+		<h4>Что происходит,<br>когда вы отправляете запрос в чат с ИИ?</h4>
+	</div>
+</section>
+
+<!-- ─── БЛОК 5: Домашнее задание ────────────────────────── -->
+
+<section data-tr="" data-bl="">
+	<div class="slide-divider">
+		<h2>Домашнее задание</h2>
+		<p class="divider-sub">sim8</p>
+	</div>
+</section>
+
+<!-- SLIDE: HW trans8 -->
+<section data-header="Домашнее задание">
+	<div class="slide-two-col cols-equal">
+		<div class="col-top col-prose">
+			<table class="table-compact" style="margin-top:8px; font-size:1.55em">
+				<tbody>
+					<tr><td class="text-muted">vocab</td><td>4&ensp;A B C D</td></tr>
+					<tr><td class="text-muted">d_model</td><td>6</td></tr>
+					<tr><td class="text-muted">n_heads</td><td>2&ensp;(d_head = 3)</td></tr>
+					<tr><td class="text-muted">n_layers</td><td>2</td></tr>
+					<tr><td class="text-muted">seq_len</td><td>10</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-top col-prose">
+			<p class="col-prose-heading">Задача</p>
+			<p class="text-muted"><code>A B A C D | A B A C D</code><br>
+				Повторение последовательности. Увидел «A» снова → предскажи «B».
+			</p>
+		</div>
+	</div>
+</section>
+
+<!-- SLIDE: Final -->
+<section data-header="" data-tr="" data-bl="">
+	<div class="slide-single align-center">
+		<p class="text-muted" style="font-size:13px;">
+			<a href="mailto:constantine.korikov@gmail.com">constantine.korikov@gmail.com</a>
+		</p>
+	</div>
+</section>
+
+</div>
+</div>
+
+<script src="sys/reveal.js"></script>
+<script src="sys/plugin/notes/notes.js"></script>
+<script src="sys/plugin/math/math.js"></script>
+<script src="sys/slide-kit.js"></script>
+<script src="sys/codemirror-kit.js"></script>
+
+<script>
+	SlideKit.configure({
+		tr: 'Effective AI 2026',
+		trUrl: 'https://korikov.cc/teaching/2026-mipt-effective-ai-2026/',
+		bl: 'Константин Кориков',
+		blUrl: 'https://korikov.cc/about/',
+		sub: 'Занятие 09'
+	});
+
+	Reveal.initialize({
+		controls: true,
+		progress: true,
+		center: false,
+		hash: true,
+		transition: 'fade',
+		plugins: [RevealNotes, RevealMath.KaTeX]
+	});
+</script>
+</body>
+</html>
