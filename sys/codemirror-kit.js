@@ -42,6 +42,35 @@
 		};
 	});
 
+	// Minimal JSON mode for slide snippets without external mode scripts
+	CodeMirror.defineMode('json', function() {
+		return {
+			token: function(stream) {
+				if (stream.eatSpace()) return null;
+
+				if (stream.match(/[\{\}\[\],]/)) return 'punctuation';
+				if (stream.match(':')) return 'operator';
+
+				if (stream.match('"')) {
+					var escaped = false;
+					while (!stream.eol()) {
+						var ch = stream.next();
+						if (ch === '"' && !escaped) break;
+						escaped = !escaped && ch === '\\';
+					}
+					var rest = stream.string.slice(stream.pos);
+					return /^\s*:/.test(rest) ? 'property' : 'string';
+				}
+
+				if (stream.match(/-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?/)) return 'number';
+				if (stream.match(/true|false|null/)) return 'atom';
+
+				stream.next();
+				return null;
+			}
+		};
+	});
+
 
 	var GAP = 32;
 	var instances = [];
